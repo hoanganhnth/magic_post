@@ -6,6 +6,7 @@ import ShoppingCart from '@/views/ShoppingCart.vue';
 import OrderHistory from '@/views/OrderHistory';
 import HomePage from '@/views/HomePage';
 import FormLogin from '@/views/FormLogin';
+import FormRegister from '@/views/FormRegister';
 
 
 const routes = [
@@ -14,6 +15,7 @@ const routes = [
   { path: '/order', component: OrderHistory },
   { path: '/home', component: HomePage },
   { path: '/login', component: FormLogin },
+  { path: '/register', component: FormRegister },
   { path: '/', component: HomePage },
 
 
