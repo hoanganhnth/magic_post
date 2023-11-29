@@ -1,5 +1,6 @@
 <template>
   <page-header></page-header>
+  
     <div>
       <h2>Order History</h2>
       <ul>
@@ -10,8 +11,9 @@
   
   <script>
 import PageHeader from '@/components/PageHeader.vue';
+
   export default {
-  components: { PageHeader },
+  components: { PageHeader},
     name: 'OrderHistory',
     data() {
     return {

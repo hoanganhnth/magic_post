@@ -47,18 +47,19 @@
       </div>
     </div>
     <div class="navbar">    
+   
+    <a class="item" ><router-link to="/home">Trang chủ</router-link></a>
     <div class="item">
         <a class="item" ><router-link to="/cart">Dịch vụ</router-link></a>
         <div class="chill-item">
-            <a class="item"><router-link to="/cart">Lựa chọn 1</router-link></a>
-            <a class="item" ><router-link to="/cart">Lựa chọn 2</router-link></a>
-            <a class="item" ><router-link to="/cart">Lựa chọn 3</router-link></a>
+            <a class="item"><router-link to="/cart">Giao hàng trong nước</router-link></a>
+            <a class="item" ><router-link to="/cart">Giao hàng nước ngoài</router-link></a>
+            <a class="item" ><router-link to="/cart">Giao hàng tiết kiệm</router-link></a>
         </div>
     </div>
-    <a class="item" ><router-link to="/home">Tra cứu</router-link></a>
     <a class="item" ><router-link to="/order">Tin tức</router-link></a>
     <a class="item" ><router-link to="/list">Giới thiệu</router-link></a>
-    <a class="item" ><router-link to="/list">Tuyển dụng</router-link></a>
+    <a class="item" ><router-link to="/transaction-points">Tuyển dụng</router-link></a>
     <a class="item" ><router-link to="/list">Liên hệ</router-link></a>
 </div>
 
@@ -98,6 +99,7 @@ export default {
 .bottom-header {
   height: 100%;
     color: rgb(19, 7, 54);
+    background-color: #ccc;
     display: flex;
     justify-content: space-between; 
      align-items: center;
@@ -153,14 +155,15 @@ export default {
 }
 
 .item {
-    padding: 20px;
+    padding:20px;
     position: relative;
     height: 100%;
 }
 
 .item:hover {
+
 color:white;
-  background: orange;
+  background: #007bff!important;
 }
 .item a {
     color: black;
