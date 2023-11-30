@@ -12,7 +12,7 @@
             <div class="col-md-6 col-lg-7 d-flex align-items-center">
               <div class="card-body p-4 p-lg-5 text-black">
 
-                <form>
+                <form @submit.prevent="login">
 
                   <div class="d-flex align-items-center mb-3 pb-1">
                     <i class="fas fa-cubes fa-2x me-3" style="color: #ff6219;"></i>
@@ -22,17 +22,17 @@
                   <h5 class="fw-normal mb-3 pb-3" style="letter-spacing: 1px;">Sign into your account</h5>
 
                   <div class="form-outline mb-4">
-                    <input type="email" id="form2Example17" class="form-control form-control-lg" />
+                    <input type="email" id="form2Example17" class="form-control form-control-lg"  v-model="username" required />
                     <label class="form-label" for="form2Example17">Email address</label>
                   </div>
 
                   <div class="form-outline mb-4">
-                    <input type="password" id="form2Example27" class="form-control form-control-lg" />
+                    <input type="password" id="form2Example27" class="form-control form-control-lg"   v-model="password" required/>
                     <label class="form-label" for="form2Example27">Password</label>
                   </div>
 
                   <div class="pt-1 mb-4">
-                    <button class="btn btn-dark btn-lg btn-block" type="button">Login</button>
+                    <button class="btn btn-dark btn-lg btn-block"  type="submit">Login</button>
                   </div>
 
                   <a class="small text-muted" href="#!">Forgot password?</a>
@@ -55,6 +55,31 @@
 <script>
   export default {
     name: 'FormLogin',
+    data() {
+    return {
+      username: '',
+      password: '',
+    };
+  },
+  methods: {
+    // async login() {
+    //   try {
+    //     const response = await this.$axios.post('https://65361260c620ba9358ecf36a.mockapi.io/data/api/v1/user', {
+    //       username: this.username,
+    //       password: this.password,
+    //     });
+
+    //     // const token = response.data.token;
+    //     // Lưu token vào local storage hoặc cookie
+    //     // localStorage.setItem('token', token);
+
+    //     console.log('Login successful');
+    //   } catch (error) {
+    //     console.error('Login failed:', error.response.data.message);
+    //   }
+    //   console.log(this.username )
+    //},
+  },
     // Add component logic here if needed
   }
   </script>

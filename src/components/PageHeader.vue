@@ -50,21 +50,23 @@
    
     <a class="item" ><router-link to="/home">Trang chủ</router-link></a>
     <div class="item">
-        <a class="item" ><router-link to="/cart">Dịch vụ</router-link></a>
+        <a class="item" ><router-link to="/boss">Dịch vụ</router-link></a>
         <div class="chill-item">
-            <a class="item"><router-link to="/cart">Giao hàng trong nước</router-link></a>
-            <a class="item" ><router-link to="/cart">Giao hàng nước ngoài</router-link></a>
-            <a class="item" ><router-link to="/cart">Giao hàng tiết kiệm</router-link></a>
+            <a class="item"><router-link to="/boss">Giao hàng trong nước</router-link></a>
+            <a class="item" ><router-link to="/boss">Giao hàng nước ngoài</router-link></a>
+            <a class="item" ><router-link to="/boss">Giao hàng tiết kiệm</router-link></a>
         </div>
     </div>
-    <a class="item" ><router-link to="/order">Tin tức</router-link></a>
-    <a class="item" ><router-link to="/list">Giới thiệu</router-link></a>
-    <a class="item" ><router-link to="/transaction-points">Tuyển dụng</router-link></a>
-    <a class="item" ><router-link to="/list">Liên hệ</router-link></a>
+    <a class="item" ><router-link to="/">Tin tức</router-link></a>
+    <a class="item" ><router-link to="/contact">Giới thiệu</router-link></a>
+    <a class="item" ><router-link to="/">Tuyển dụng</router-link></a>
+    <a class="item" ><router-link to="/contact">Liên hệ</router-link></a>
 </div>
 
         <div class="header-top">
         <router-link to="/login" class="login-button">Đăng nhập</router-link>
+        
+                     
     </div>
 
   </div>

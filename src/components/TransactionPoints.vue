@@ -1,6 +1,5 @@
 <template>
-  <page-header></page-header>
-  <collection-points></collection-points>
+
   <div class="transaction-list">
     <h1>Danh sách điểm giao dịch</h1>
     <h3 class="api-title">TestAPI</h3>
@@ -15,11 +14,11 @@
 
 <script>
 import axios from 'axios';
-import PageHeader from '@/components/PageHeader.vue';
-import CollectionPoints from '@/components/CollectionPoints.vue';
+
+
 
 export default {
-  components: { PageHeader, CollectionPoints },
+  components: { },
   data() {
     return {
       transactions_point: [],

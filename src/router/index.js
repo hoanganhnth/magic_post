@@ -2,35 +2,25 @@
 
 import { createRouter, createWebHistory } from 'vue-router';
 import UpdateEmployee from '@/views/UpdateEmployee.vue';
-import ShoppingCart from '@/views/ShoppingCart.vue';
-import OrderHistory from '@/views/OrderHistory';
 import HomePage from '@/views/HomePage';
 import FormLogin from '@/views/FormLogin';
 import FormRegister from '@/views/FormRegister';
+import BossDashboard from '@/views/BossDashboard';
+import Contact from '@/views/Contact.vue';
 
-import TransactionPoints from'@/views/TransactionPoints'
-import CollectionPoints from'@/components/CollectionPoints'
+
 
 
 const routes = [
   { path: '/list', component: UpdateEmployee },
-  { path: '/cart', component: ShoppingCart },
-  { path: '/order', component: OrderHistory },
+  { path: '/contact', component: Contact },
   { path: '/home', component: HomePage },
   { path: '/login', component: FormLogin },
   { path: '/register', component: FormRegister },
   { path: '/', component: HomePage },
-  {
-    path: '/collection-points',
-    name: 'CollectionPoints',
-    component: CollectionPoints,
-  },
+  { path: '/boss', component: BossDashboard },
 
-  {
-    path: '/transaction-points',
-    name: 'TransactionPoints',
-    component: TransactionPoints,
-  },
+
 
 
   // Thêm các routes khác nếu cần
