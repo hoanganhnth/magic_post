@@ -27,13 +27,16 @@
                   </div>
 
                   <div class="form-outline mb-4">
-                    <input type="password" id="form2Example27" class="form-control form-control-lg"   v-model="password" required/>
+                    <input type="password" id="form2Example27" class="form-control form-control-lg"   v-model="password"  required/>
                     <label class="form-label" for="form2Example27">Password</label>
                   </div>
 
                   <div class="pt-1 mb-4">
                     <button class="btn btn-dark btn-lg btn-block"  type="submit">Login</button>
                   </div>
+                  <div v-if="error" class="alert alert-danger" role="alert">
+      {{ error }}
+    </div>
 
                   <a class="small text-muted" href="#!">Forgot password?</a>
                   <p class="mb-5 pb-lg-2" style="color: #393f81;">Don't have an account? </p>
@@ -52,37 +55,34 @@
   </div>
 </section>
 </template>
+
 <script>
+import AuthService from '@/service/AuthService';
   export default {
     name: 'FormLogin',
     data() {
     return {
       username: '',
       password: '',
+      error: null, // Thêm biến error để lưu thông báo lỗi
     };
   },
   methods: {
-    // async login() {
-    //   try {
-    //     const response = await this.$axios.post('https://65361260c620ba9358ecf36a.mockapi.io/data/api/v1/user', {
-    //       username: this.username,
-    //       password: this.password,
-    //     });
-
-    //     // const token = response.data.token;
-    //     // Lưu token vào local storage hoặc cookie
-    //     // localStorage.setItem('token', token);
-
-    //     console.log('Login successful');
-    //   } catch (error) {
-    //     console.error('Login failed:', error.response.data.message);
-    //   }
-    //   console.log(this.username )
-    //},
+    async login() {
+      try {
+        const response = await AuthService.login(this.username, this.password);
+        console.log(response);
+        // Nếu đăng nhập thành công, chuyển hướng đến trang chính
+        this.$router.push('/');
+      } catch (error) {
+        console.error(error);
+        // Nếu có lỗi, hiển thị thông báo lỗi
+        this.error = 'Tài khoản hoặc mật khẩu chưa chính xác!';
+      }
+    },
   },
-    // Add component logic here if needed
-  }
-  </script>
+};
+</script>
   
   <style scoped>
   /* Add component-specific styles here */

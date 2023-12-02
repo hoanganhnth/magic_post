@@ -58,7 +58,7 @@
         </div>
     </div>
     <a class="item" ><router-link to="/">Tin tức</router-link></a>
-    <a class="item" ><router-link to="/contact">Giới thiệu</router-link></a>
+    <a class="item" ><router-link to="/introduct">Giới thiệu</router-link></a>
     <a class="item" ><router-link to="/">Tuyển dụng</router-link></a>
     <a class="item" ><router-link to="/contact">Liên hệ</router-link></a>
 </div>

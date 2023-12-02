@@ -1,5 +1,5 @@
 <template>
-
+<nap-bar-boss></nap-bar-boss>
   <div class="transaction-list">
     <h1>Danh sách điểm giao dịch</h1>
     <h3 class="api-title">TestAPI</h3>
@@ -14,11 +14,12 @@
 
 <script>
 import axios from 'axios';
+import NapBarBoss from '@/components/NapBarBoss.vue';
 
 
 
 export default {
-  components: { },
+  components: {NapBarBoss },
   data() {
     return {
       transactions_point: [],

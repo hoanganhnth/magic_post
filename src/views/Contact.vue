@@ -74,6 +74,7 @@
                         src="data:image/png;base64,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"
                         alt="icon email">
                     <div class="contact__right-form-title-title">Liên hệ với chúng tôi</div>
+                    
                 </div>
                 <form class="form-contact" siq_id="autopick_2474">
                     <div class="form-group"><input type="text" required="" placeholder="Tên của bạn" name="name" value=""
@@ -140,9 +141,11 @@ export default {
     margin-bottom: 20px;
 }
 
-img-top-contact {
-    width: 10%;
-    vertical-align: middle;
+.img-top-contact img {
+    display: block;
+    width: 50px; /* Đặt chiều rộng mong muốn */
+            height: auto; 
+
     border-style: none;
     overflow-clip-margin: content-box;
     overflow: clip;
@@ -167,6 +170,30 @@ ul {
     vertical-align: middle;
     border-style: none;
     width: 80%;
+}
+.row {
+    background-color: antiquewhite;
+}
+.contact__right-form-title {
+display: flex;
+    
+    width: 50%;
+    height: 50px;
+    flex-shrink: 0;
+    margin-right: 5px;
+}
+.contact__right-form-title-title {
+    margin-top:12px ;
+}
+/* .contact__left-form {
+    
+} */
+.contact__right-form {
+    margin: 40px;
+    border-radius: 5%;
+    background-color: beige;
+    padding:  20px;
+
 }
 .contact__right-form button {
     background: #f7941e;

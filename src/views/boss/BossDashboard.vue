@@ -1,24 +1,22 @@
 <template>
-    <page-header></page-header>
+   <nap-bar-boss></nap-bar-boss>
     
       <div>
         <h2>Quản lý</h2>
         <ul>
         <li >
-            <transaction-points></transaction-points>
-            <collection-points></collection-points>
+            abc
         </li>
       </ul>
       </div>
     </template>
     
     <script>
-  import PageHeader from '@/components/PageHeader.vue';
-import TransactionPoints from '../components/TransactionPoints.vue';
-import CollectionPoints from '@/components/CollectionPoints.vue';
+
+import NapBarBoss from '@/components/NapBarBoss.vue';
   
     export default {
-    components: { PageHeader, TransactionPoints, CollectionPoints},
+    components: { NapBarBoss},
       name: 'BossDashboard',
       data() {
       return {
