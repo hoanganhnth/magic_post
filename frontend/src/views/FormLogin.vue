@@ -22,7 +22,7 @@
                   <h5 class="fw-normal mb-3 pb-3" style="letter-spacing: 1px;">Sign into your account</h5>
 
                   <div class="form-outline mb-4">
-                    <input type="email" id="form2Example17" class="form-control form-control-lg"  v-model="username" required />
+                    <input type="text" id="form2Example17" class="form-control form-control-lg"  v-model="username" required />
                     <label class="form-label" for="form2Example17">Email address</label>
                   </div>
 
@@ -58,6 +58,7 @@
 
 <script>
 import AuthService from '@/service/AuthService';
+import { useAuthStore } from '../store/auth';
   export default {
     name: 'FormLogin',
     data() {
@@ -70,8 +71,13 @@ import AuthService from '@/service/AuthService';
   methods: {
     async login() {
       try {
-        const response = await AuthService.login(this.username, this.password);
-        console.log(response);
+        const payload = {
+        username: this.username,
+        password: this.password,
+        };
+        // const response = await AuthService.login(this.username, this.password);
+        const data = await useAuthStore().login(payload)
+        console.log(data);
         // Nếu đăng nhập thành công, chuyển hướng đến trang chính
         this.$router.push('/');
       } catch (error) {
