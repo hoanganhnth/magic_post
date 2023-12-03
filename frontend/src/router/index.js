@@ -16,13 +16,13 @@ import BossDashboard from '@/views/boss/BossDashboard';
 
 
 const routes = [
-  { path: '/contact', component: Contact },
-  { path: '/home', component: HomePage },
-  { path: '/login', component: FormLogin },
-  { path: '/register', component: FormRegister },
+  { path: '/contact', name: 'contact', component: Contact },
+  { path: '/home', name: 'home', component: HomePage },
+  { path: '/login', name: 'login', component: FormLogin },
+  { path: '/register', name: 'register', component: FormRegister },
   { path: '/', component: HomePage },
  
-  { path: '/introduct', component: Introduction },
+  { path: '/introduct', name: 'introduct', component: Introduction },
 
   { path: '/boss', component: BossDashboard },
 

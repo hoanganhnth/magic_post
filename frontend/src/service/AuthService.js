@@ -1,15 +1,15 @@
 // AuthService.js
 
-import axios from 'axios';
+import {useApi, useApiPrivate} from "../composables/useApi"
 
 const AuthService = {
   async login(username, password) {
     try {
-      const response = await axios.post('http://localhost:3000/login', {
+      const data= await useApi().post('/api/auth/login', {
         username,
         password,
       });
-      return response.data;
+      return data;
     } catch (error) {
       throw error;
     }
