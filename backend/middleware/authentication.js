@@ -1,6 +1,7 @@
 const jwt = require('jsonwebtoken')
-const {User } = require('../models/User')
+const {User, UserRole, Role } = require('../models/User')
 function authentication(req, res, next) {
+  
   const authHeader = req.headers.authorization || req.headers.Authorization
   if(authHeader?.startsWith('Bearer')) {
     const token = authHeader.split(' ')[1]
@@ -14,6 +15,15 @@ function authentication(req, res, next) {
         const user = await User.findById(decoded.id).select({ password: 0, refresh_token: 0 }).exec()
         if(user){
           req.user = user.toObject({ getters: true })
+          const userRole = await UserRole.findOne({ user_id: user.id }).exec();
+          if (!userRole) {
+            return res.status(403).json({ message: "User does not have a role" });
+          }
+          const role = await Role.findById(userRole.role_id);
+          if (!role) {
+            return res.status(403).json({ message: "Role not found" });
+          }
+          req.user.userRole = role.name
         }else{
           req.user = {}
         }

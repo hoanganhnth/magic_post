@@ -19,16 +19,16 @@ async function registerAdmin(req, res){
   try {
     let adminRole = await Role.findOne({name: leader})
     if (!adminRole) {
-      adminRole = await Role.create({ name: 'leader' })
+      adminRole = await Role.create({ name: leader })
     }
-    let editAllPermission = await Permission.findOne({ name: 'all' })
-    if (!editAllPermission) {
-      editAllPermission = await Permission.create({ name: 'all' })
-    }
-    await RolePermission.create({
-      role_id: adminRole._id,
-      permission_id: editAllPermission._id,
-    });
+    // let editAllPermission = await Permission.findOne({ name: 'all' })
+    // if (!editAllPermission) {
+    //   editAllPermission = await Permission.create({ name: 'all' })
+    // }
+    // await RolePermission.create({
+    //   role_id: adminRole._id,
+    //   permission_id: editAllPermission._id,
+    // });
     hashedPassword = await bcrypt.hash(password, 10)
 
     let user = await User.create({email, username, password: hashedPassword, first_name, last_name})
@@ -46,6 +46,9 @@ async function registerAdmin(req, res){
 
 async function login(req, res){
   const {username, password } = req.body
+  // if (req.user) {
+  //   return  res.status(409).json({message: "You are logged in "})
+  // }
 
   if(!username || !password) return res.status(422).json({'message': 'Invalid fields'})
   
@@ -148,7 +151,6 @@ async function refresh(req, res){
 async function user(req, res){
   
   const user = req.user
-  console.log('user')
   return res.status(200).json(user)
 }
 
