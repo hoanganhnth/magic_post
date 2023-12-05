@@ -6,6 +6,7 @@ const { auth,isAdmin} = require('../../middleware/auth')
 
 router.post('/registerStaff', auth, accountControllers.registerStaff)
 router.get('/allStaff',  isAdmin,  accountControllers.allStaff)
+router.get('/getAllPermission',  isAdmin,  accountControllers.getAllPermission)
 router.get('/allRole', isAdmin, accountControllers.showAllRole)
 router.post('/createRole', isAdmin,  accountControllers.createRole)
 router.post('/deleteStaff', isAdmin,  accountControllers.deleteStaff)

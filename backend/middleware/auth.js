@@ -3,6 +3,7 @@ const {
   leader,
   User,
   Role,
+  RolePermission,
   collection_staff,
   transaction_staff,
   collection_head,
@@ -21,12 +22,12 @@ const checkUserRole = (allowedRole) => async (req, res, next) => {
         
       const id = req.user.id;
       try {
-        const userRole = await UserRole.findOne({ user_id: id }).exec();
-        if (!userRole) {
+        const rolePermission = await RolePermission.findById(req.user.rolePermission_id).exec();
+        if (!rolePermission) {
           return res.status(403).json({ message: "User does not have a role" });
         }
 
-        const role = await Role.findById(userRole.role_id);
+        const role = await Role.findById(rolePermission.role_id);
         if (!role) {
           return res.status(403).json({ message: "Role not found" });
         }

@@ -7,6 +7,8 @@ const roleSchema = new mongoose.Schema({
 
 const permissionSchema = new mongoose.Schema({
   name: String,
+  transactionPoint_id: { type: mongoose.Schema.Types.ObjectId, ref: "TransactionPoint" },
+  collectionPoint_id: { type: mongoose.Schema.Types.ObjectId, ref: "CollectionPoint" },
 });
 
 const rolePermissionSchema = new mongoose.Schema({
@@ -49,12 +51,13 @@ const userSchema = new mongoose.Schema({
     required: true,
     min: 6,
   },
+  rolePermission_id: { type: mongoose.Schema.Types.ObjectId, ref: "RolePermission" },
   refresh_token: String,
 });
-const userRoleSchema = new mongoose.Schema({
-  role_id: { type: mongoose.Schema.Types.ObjectId, ref: "Role" },
-  user_id: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
-});
+// const userRoleSchema = new mongoose.Schema({
+//   role_id: { type: mongoose.Schema.Types.ObjectId, ref: "Role" },
+//   user_id: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
+// });
 
 userSchema.set("toObject", { virtuals: true });
 userSchema.set("toJSON", { virtuals: true });
@@ -68,7 +71,7 @@ const Role = mongoose.model("Role", roleSchema);
 const Permission = mongoose.model("Permission", permissionSchema);
 const RolePermission = mongoose.model("RolePermission", rolePermissionSchema);
 const User = mongoose.model("User", userSchema);
-const UserRole = mongoose.model("UserRole", userRoleSchema);
+// const UserRole = mongoose.model("UserRole", userRoleSchema);
 const leader = "leader";
 const collection_staff = "Collection staff";
 const transaction_staff = "Transaction staff";
@@ -80,7 +83,7 @@ module.exports = {
   Permission,
   RolePermission,
   User,
-  UserRole,
+  // UserRole,
   leader,
   collection_staff,
   transaction_staff,

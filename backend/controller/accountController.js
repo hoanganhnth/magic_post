@@ -13,7 +13,7 @@ const {
 const randomstring = require("randomstring");
 const bcrypt = require("bcrypt");
 async function registerStaff(req, res) {
-  const { email, first_name, last_name, id_role } = req.body;
+  const { email, first_name, last_name, role_id, permission_id } = req.body;
   if (!email || !first_name || !last_name) {
     return res.status(422).json({ message: "Invalid fields" });
   }
@@ -23,56 +23,113 @@ async function registerStaff(req, res) {
   const emailExists = await User.exists({ email }).exec();
 
   if (userExists || emailExists) return res.sendStatus(409);
-
   try {
     hashedPassword = await bcrypt.hash(password, 10);
-
-    let user = await User.create({
-      email,
-      username,
-      password: hashedPassword,
-      first_name,
-      last_name,
-    });
     if (req.user.userRole) {
       switch (req.user.userRole) {
         case leader:
-          if (id_role) {
-            await UserRole.create({
-              role_id: id_role,
-              user_id: user._id,
+          if (role_id && permission_id) {
+            // await UserRole.create({
+            //   role_id: role_id,
+            //   user_id: user._id,
+            // });
+            let role = await Role.findById(role_id)
+            if (!role) {
+              res.status(404).json({ message: 'Role not found' });
+            }
+            let permission = await Permission.findById(permission_id)
+            if (!permission) {
+              res.status(404).json({ message: 'Permission not found' });
+            }
+            let rolePermissionUser = await RolePermission.findOne({role_id: role.id, permission_id: permission.id})
+            if (!rolePermissionUser) {
+              rolePermissionUser = await RolePermission.create({
+                role_id: role.id,
+                permission_id: permission.id,
+              });
+            }
+            let user = await User.create({
+              email,
+              username,
+              password: hashedPassword,
+              first_name,
+              last_name,
+              rolePermission_id: rolePermissionUser.id
             });
+            return res.status(201).json({username: user.username, password: password, id: user.id});
           }
           break;
         case transaction_head:
-          let transactionStaff = await Role.findOne({name: transaction_staff})
+          if (permission_id) {
+            let transactionStaff = await Role.findOne({name: transaction_staff})
           if (!transactionStaff) {
             transactionStaff = await Role.create({ name: transaction_staff })
           }
-          
-          await UserRole.create({
-            role_id: transactionStaff._id,
-            user_id: user._id,
+          let permission = await Permission.findById(permission_id)
+          if (!permission) {
+            res.status(404).json({ message: 'Permission not found' });
+          }
+          let rolePermissionUser = await RolePermission.findOne({role_id: transactionStaff.id, permission_id: permission.id})
+          if (!rolePermissionUser) {
+            rolePermissionUser = await RolePermission.create({
+              role_id: transactionStaff.id,
+              permission_id: permission.id,
+            });
+          }
+          let user = await User.create({
+            email,
+            username,
+            password: hashedPassword,
+            first_name,
+            last_name,
+            rolePermission_id: rolePermissionUser.id
           });
-          console.log(" register: transaction staff")
+          return res.status(201).json({username: user.username, password: password, id: user.id});
+          }
+          
+          // await UserRole.create({
+          //   role_id: transactionStaff._id,
+          //   user_id: user._id,
+          // });
           break;
         case collection_head:
-          let collectionStaff = await Role.findOne({name: collection_staff})
-          if (!collectionStaff) {
-            collectionStaff = await Role.create({ name: collection_staff })
+          if (permission_id) {
+            let collectionStaff = await Role.findOne({name: collectionStaff})
+            if (!collectionStaff) {
+              collectionStaff = await Role.create({ name: collectionStaff })
+            }
+            let permission = await Permission.findById(permission_id)
+            if (!permission) {
+              res.status(404).json({ message: 'Permission not found' });
+            }
+            let rolePermissionUser = await RolePermission.findOne({role_id: collectionStaff.id, permission_id: permission.id})
+            if (!rolePermissionUser) {
+              rolePermissionUser = await RolePermission.create({
+                role_id: collectionStaff.id,
+                permission_id: permission.id,
+              });
+            }
+            let user = await User.create({
+              email,
+              username,
+              password: hashedPassword,
+              first_name,
+              last_name,
+              rolePermission_id: rolePermissionUser.id
+            });
+            return res.status(201).json({username: user.username, password: password, id: user.id});
           }
 
-          await UserRole.create({
-            role_id: collectionStaff._id,
-            user_id: user._id,
-          });
-          console.log(" register: collection staff")
+          // await UserRole.create({
+          //   role_id: collectionStaff._id,
+          //   user_id: user._id,
+          // });
           break;
         default:  
           return res.status(403).json({ message: "User does not have a role" });
       }
     }
-    return res.status(201).json({username: user.username, password: password, id: user.id});
+    
   } catch (error) {
     console.error("registration error:", error);
     return res.status(400).json({ message: "Could not register" });
@@ -132,6 +189,17 @@ async function showAllRole(req, res) {
   } catch (error) {
     console.error("get role error:", error);
     return res.status(400).json({ message: "Could not get role" });
+  }
+}
+
+
+async function getAllPermission(req, res) {
+  try {
+    const permission = await Permission.find();
+    return res.json(permission);
+  } catch (error) {
+    console.error("get permission error:", error);
+    return res.status(400).json({ message: "Could not get permission" });
   }
 }
 
@@ -197,4 +265,5 @@ module.exports = {
   showAllRole,
   createRole,
   registerStaff,
+  getAllPermission,
 };

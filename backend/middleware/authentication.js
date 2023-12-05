@@ -1,5 +1,5 @@
 const jwt = require('jsonwebtoken')
-const {User, UserRole, Role } = require('../models/User')
+const {User, UserRole, Role, RolePermission } = require('../models/User')
 function authentication(req, res, next) {
   
   const authHeader = req.headers.authorization || req.headers.Authorization
@@ -15,11 +15,11 @@ function authentication(req, res, next) {
         const user = await User.findById(decoded.id).select({ password: 0, refresh_token: 0 }).exec()
         if(user){
           req.user = user.toObject({ getters: true })
-          const userRole = await UserRole.findOne({ user_id: user.id }).exec();
-          if (!userRole) {
+          const rolePermission = await RolePermission.findById(req.user.rolePermission_id)
+          if (!rolePermission) {
             return res.status(403).json({ message: "User does not have a role" });
           }
-          const role = await Role.findById(userRole.role_id);
+          const role = await Role.findById(rolePermission.role_id);
           if (!role) {
             return res.status(403).json({ message: "Role not found" });
           }

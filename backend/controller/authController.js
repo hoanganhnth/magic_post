@@ -21,22 +21,28 @@ async function registerAdmin(req, res){
     if (!adminRole) {
       adminRole = await Role.create({ name: leader })
     }
-    // let editAllPermission = await Permission.findOne({ name: 'all' })
-    // if (!editAllPermission) {
-    //   editAllPermission = await Permission.create({ name: 'all' })
-    // }
-    // await RolePermission.create({
-    //   role_id: adminRole._id,
-    //   permission_id: editAllPermission._id,
-    // });
+    let editAllPermission = await Permission.findOne({ name: 'all' })
+    if (!editAllPermission) {
+      editAllPermission = await Permission.create({ name: 'all' })
+    }
+    let rolePermissionUser = await RolePermission.findOne({role_id: adminRole.id})
+    if (!rolePermissionUser) {
+      rolePermissionUser = await RolePermission.create({
+        role_id: adminRole._id,
+        permission_id: editAllPermission._id,
+      });
+    }
     hashedPassword = await bcrypt.hash(password, 10)
 
-    let user = await User.create({email, username, password: hashedPassword, first_name, last_name})
-    await UserRole.create({
-      role_id: adminRole._id,
-      user_id: user._id,
-    });
-    return res.sendStatus(201)
+    let user = await User.create({email, username, password: hashedPassword, first_name, last_name, rolePermission_id: rolePermissionUser.id})
+    // await UserRole.create({
+    //   role_id: adminRole._id,
+    //   user_id: user._id,
+    // });
+    if (!user) {
+      console.log("error create lead")
+    }
+    return res.status(400).json(user)
   } catch (error) {
     console.error('registration error:', error);
     return res.status(400).json({message: "Could not register"})
