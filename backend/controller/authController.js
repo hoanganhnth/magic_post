@@ -19,24 +19,30 @@ async function registerAdmin(req, res){
   try {
     let adminRole = await Role.findOne({name: leader})
     if (!adminRole) {
-      adminRole = await Role.create({ name: 'leader' })
+      adminRole = await Role.create({ name: leader })
     }
     let editAllPermission = await Permission.findOne({ name: 'all' })
     if (!editAllPermission) {
       editAllPermission = await Permission.create({ name: 'all' })
     }
-    await RolePermission.create({
-      role_id: adminRole._id,
-      permission_id: editAllPermission._id,
-    });
+    let rolePermissionUser = await RolePermission.findOne({role_id: adminRole.id})
+    if (!rolePermissionUser) {
+      rolePermissionUser = await RolePermission.create({
+        role_id: adminRole._id,
+        permission_id: editAllPermission._id,
+      });
+    }
     hashedPassword = await bcrypt.hash(password, 10)
 
-    let user = await User.create({email, username, password: hashedPassword, first_name, last_name})
-    await UserRole.create({
-      role_id: adminRole._id,
-      user_id: user._id,
-    });
-    return res.sendStatus(201)
+    let user = await User.create({email, username, password: hashedPassword, first_name, last_name, rolePermission_id: rolePermissionUser.id})
+    // await UserRole.create({
+    //   role_id: adminRole._id,
+    //   user_id: user._id,
+    // });
+    if (!user) {
+      console.log("error create lead")
+    }
+    return res.status(400).json(user)
   } catch (error) {
     console.error('registration error:', error);
     return res.status(400).json({message: "Could not register"})
@@ -46,6 +52,9 @@ async function registerAdmin(req, res){
 
 async function login(req, res){
   const {username, password } = req.body
+  // if (req.user) {
+  //   return  res.status(409).json({message: "You are logged in "})
+  // }
 
   if(!username || !password) return res.status(422).json({'message': 'Invalid fields'})
   
@@ -148,7 +157,6 @@ async function refresh(req, res){
 async function user(req, res){
   
   const user = req.user
-  console.log('user')
   return res.status(200).json(user)
 }
 
