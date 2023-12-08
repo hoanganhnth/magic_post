@@ -28,7 +28,7 @@ async function registerStaff(req, res) {
     if (req.user.userRole && req.user.permission) {
       let permission = await Permission.findOne({name: req.user.permission})
       if (!permission) {
-        res.status(403).json({ message: 'Permission not found' });
+        res.status(404).json({ message: 'Permission not found' });
       }
       switch (req.user.userRole) {
         case leader:
@@ -233,7 +233,7 @@ async function createRole(req, res) {
   try {
     const { name } = req.body;
     if (!name || name.trim() === "") {
-      return res.status(500).json({ message: "Name cannot be empty" });
+      return res.status(400).json({ message: "Name cannot be empty" });
     }
     // Kiểm tra xem role đã tồn tại chưa
     const existingRole = await Role.findOne({ name });
@@ -256,7 +256,7 @@ async function deleteStaff(req, res) {
   try {
     const staffIdToDelete = req.body.userId;
     if (!staffIdToDelete) {
-      return res.status(500).json({ message: "Missing userId parameter" });
+      return res.status(400).json({ message: "Missing userId parameter" });
     }
 
     // Kiểm tra xem userId có tồn tại không

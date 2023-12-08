@@ -23,4 +23,6 @@ router.delete('/deleteCollectionPoint', isAdmin,  locationControllers.deleteColl
 router.get('/getAllStaff',auth,  accountControllers.getAllStaff)
 router.post('/createNewShipment',isTransactionStaff,  shipmentControllers.createNewShipment)
 router.delete('/deleteNewShipment',isTransactionStaff,  shipmentControllers.deleteNewShipment)
+router.post('/createShipmentToCollectionPoint',isTransactionStaff,  shipmentControllers.createShipmentToCollectionPoint)
+router.get('/getAllShipmentTran',isTransactionStaff,  shipmentControllers.getAllShipmentTran)
 module.exports = router

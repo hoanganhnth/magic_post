@@ -32,7 +32,7 @@ const productSchema = new mongoose.Schema({
     state:  { type: String, enum: ['Tranfer', 'Recieve', 'Waiting'], default: 'Tranfer' },
   });
   const collectionShipmentSchema = new mongoose.Schema({
-    transactionPoint_id: {type: mongoose.Schema.Types.ObjectId, ref: 'CollectionPoint'  },
+    collectionPoint_id: {type: mongoose.Schema.Types.ObjectId, ref: 'CollectionPoint'  },
     shipment_id:  {type: mongoose.Schema.Types.ObjectId, ref: 'Shipment'  },
     state:  { type: String, enum: ['Tranfer', 'Recieve', 'Waiting'], default: 'Tranfer' },
   });
