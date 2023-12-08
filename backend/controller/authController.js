@@ -42,10 +42,10 @@ async function registerAdmin(req, res){
     if (!user) {
       console.log("error create lead")
     }
-    return res.status(400).json(user)
+    return res.status(200).json(user)
   } catch (error) {
     console.error('registration error:', error);
-    return res.status(400).json({message: "Could not register"})
+    return res.status(500).json({message: "Could not register"})
   }
 }
 

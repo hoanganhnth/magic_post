@@ -19,8 +19,6 @@ const checkUserRole = (allowedRole) => async (req, res, next) => {
    
   try {
     if (req.user?.id) {
-        
-      const id = req.user.id;
       try {
         const rolePermission = await RolePermission.findById(req.user.rolePermission_id).exec();
         if (!rolePermission) {

@@ -65,19 +65,19 @@ async function createCollectionPoint(req, res) {
       } catch (error) {
         console.error("create role head and staff error:", error);
         return res
-          .status(400)
+          .status(500)
           .json({ message: "Could not create role head and staff" });
       }
     } catch (err) {
       console.error("create permission CollectionPoint error:", err);
       return res
-        .status(400)
+        .status(500)
         .json({ message: "Could not create permission CollectionPoint" });
     }
   } catch (error) {
     console.error("create CollectionPoint error:", error);
     return res
-      .status(400)
+      .status(500)
       .json({ message: "Could not create CollectionPoint" });
   }
 }
@@ -138,19 +138,19 @@ async function createTransactionPoint(req, res) {
       } catch (error) {
         console.error("create rolePermission head and staff error:", error);
         return res
-          .status(400)
+          .status(500)
           .json({ message: "Could not create rolePermission head and staff" });
       }
     } catch (err) {
       console.error("create permission TransactionPoint error:", err);
       return res
-        .status(400)
+        .status(500)
         .json({ message: "Could not create permission TransactionPoint" });
     }
   } catch (error) {
     console.error("create TransactionPoint error:", error);
     return res
-      .status(400)
+      .status(500)
       .json({ message: "Could not create TransactionPoint" });
   }
 }
@@ -158,7 +158,7 @@ async function createTransactionPoint(req, res) {
 async function deleteTransactionPoint(req, res) {
   const id = req.body.transaction_id;
   if (!id) {
-    return res.status(400).json({ message: "Missing id parameter" });
+    return res.status(500).json({ message: "Missing id parameter" });
   }
   try {
     const transactionPointToDelete = await TransactionPoint.findById(id);
@@ -184,7 +184,7 @@ async function deleteTransactionPoint(req, res) {
   } catch (err) {
     console.error("Delete transactionPoint error:", err);
     return res
-      .status(400)
+      .status(500)
       .json({ message: "Could not delete transactionPoint" });
   }
 }
@@ -192,7 +192,7 @@ async function deleteTransactionPoint(req, res) {
 async function deleteCollectionPoint(req, res) {
   const id = req.body.collectionPoint_id;
   if (!id) {
-    return res.status(400).json({ message: "Missing id parameter" });
+    return res.status(500).json({ message: "Missing id parameter" });
   }
   try {
     const collectionPointToDelete = await CollectionPoint.findById(id);
@@ -201,10 +201,8 @@ async function deleteCollectionPoint(req, res) {
         .status(404)
         .json({ message: "CollectionPoint does not found" });
     }
-
-    await collectionPointToDelete.deleteOne();
-
     try {
+      // delete permission and rolepermission relative transaction 
       const transactionPoints = await TransactionPoint.find({collectionPoint_id: id})
       for (const tp of transactionPoints) {
         await TransactionPoint.deleteOne({ _id: tp._id });
@@ -212,9 +210,11 @@ async function deleteCollectionPoint(req, res) {
         await permission.deleteOne()
         await RolePermission.deleteMany({permission_id: permission.id})
       }
+      // delete permission and rolepermission collection 
       const permission = await Permission.findOne({collectionPoint_id: collectionPointToDelete.id})
       permission.deleteOne()
       await RolePermission.deleteMany({permission_id: permission.id})
+      await collectionPointToDelete.deleteOne();
       return res.json({
         message:
           "CollectionPoint and related transactionPoint records deleted successfully",
@@ -226,7 +226,7 @@ async function deleteCollectionPoint(req, res) {
   } catch (err) {
     console.error("Delete CollectionPoint error:", err);
     return res
-      .status(400)
+      .status(500)
       .json({ message: "Could not delete CollectionPoint" });
   }
 }
@@ -237,7 +237,7 @@ async function getAllTransactionPoint(req, res) {
     return res.json(transactionPoint);
   } catch (error) {
     console.error("get transactionPoint error:", error);
-    return res.status(400).json({ message: "Could not get transactionPoint" });
+    return res.status(500).json({ message: "Could not get transactionPoint" });
   }
 }
 
@@ -247,7 +247,7 @@ async function getAllCollectionPoint(req, res) {
     return res.json(collectionPoint);
   } catch (error) {
     console.error("get collectionPoint error:", error);
-    return res.status(400).json({ message: "Could not get collectionPoint" });
+    return res.status(500).json({ message: "Could not get collectionPoint" });
   }
 }
 

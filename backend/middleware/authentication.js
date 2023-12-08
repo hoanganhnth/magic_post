@@ -1,5 +1,5 @@
 const jwt = require('jsonwebtoken')
-const {User, UserRole, Role, RolePermission } = require('../models/User')
+const {User, UserRole, Role, RolePermission, Permission } = require('../models/User')
 function authentication(req, res, next) {
   
   const authHeader = req.headers.authorization || req.headers.Authorization
@@ -17,12 +17,17 @@ function authentication(req, res, next) {
           req.user = user.toObject({ getters: true })
           const rolePermission = await RolePermission.findById(req.user.rolePermission_id)
           if (!rolePermission) {
-            return res.status(403).json({ message: "User does not have a role" });
+            return res.status(403).json({ message: "User does not have a role" })
           }
-          const role = await Role.findById(rolePermission.role_id);
+          const role = await Role.findById(rolePermission.role_id)
           if (!role) {
-            return res.status(403).json({ message: "Role not found" });
+            return res.status(403).json({ message: "Role not found" })
           }
+          const permission = await Permission.findById(rolePermission.permission_id)
+          if (!permission) {
+            return res.status(403).json({ message: "permission not found" })
+          }
+          req.user.permission = permission.name
           req.user.userRole = role.name
         }else{
           req.user = {}
@@ -30,8 +35,8 @@ function authentication(req, res, next) {
   
         return next()
       } catch (error) {
-        console.error('authentication error:', error);
-        return res.status(400).json({message: "Could not authentication"})
+        console.error('authentication error:', error)
+        return res.status(403).json({message: "Could not authentication"})
       }
 
     })
