@@ -17,23 +17,23 @@ const productSchema = new mongoose.Schema({
 
   const shipmentSchema = new mongoose.Schema({
     status: { type: String, enum: ['Preparing', 'Shipped', 'ArrivedDestination', 'Delivering', 'Successed', 'Canceled'], default: 'Preparing' },
-    product_id: { type: mongoose.Schema.Types.ObjectId, ref: 'Product' },
+    product_id: { type: mongoose.Schema.Types.ObjectId, ref: 'Product', required: true },
     now_address: { type: String },
-    user_address_id: { type: mongoose.Schema.Types.ObjectId, ref: 'UserAddress' },
-    fee: { type: String },
+    user_address_id: { type: mongoose.Schema.Types.ObjectId, ref: 'UserAddress', required: true, },
+    fee: { type: String, required: true },
     tax: { type: String },
     paided: { type: String, enum: ['Y', 'N'], default: 'N' },
   });
 
   
   const transactionShipmentSchema = new mongoose.Schema({
-    transactionPoint_id: {type: mongoose.Schema.Types.ObjectId, ref: 'TransactionPoint'  },
-    shipment_id:  {type: mongoose.Schema.Types.ObjectId, ref: 'Shipment'  },
-    state:  { type: String, enum: ['Tranfer', 'Recieve', 'Waiting'], default: 'Tranfer' },
+    transactionPoint_id: {type: mongoose.Schema.Types.ObjectId, ref: 'TransactionPoint', required: true,  },
+    shipment_id:  {type: mongoose.Schema.Types.ObjectId, ref: 'Shipment', required: true  },
+    state:  { type: String, enum: ['Tranfer', 'Recieve', 'Waiting'], default: 'Tranfer'},
   });
   const collectionShipmentSchema = new mongoose.Schema({
-    transactionPoint_id: {type: mongoose.Schema.Types.ObjectId, ref: 'CollectionPoint'  },
-    shipment_id:  {type: mongoose.Schema.Types.ObjectId, ref: 'Shipment'  },
+    collectionPoint_id: {type: mongoose.Schema.Types.ObjectId, ref: 'CollectionPoint', required: true  },
+    shipment_id:  {type: mongoose.Schema.Types.ObjectId, ref: 'Shipment', required: true  },
     state:  { type: String, enum: ['Tranfer', 'Recieve', 'Waiting'], default: 'Tranfer' },
   });
 
