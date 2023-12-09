@@ -12,6 +12,7 @@ const {
 } = require("../models/User");
 const randomstring = require("randomstring");
 const bcrypt = require("bcrypt");
+
 async function registerStaff(req, res) {
   const { email, first_name, last_name, role_id, permission_id } = req.body;
   if (!email || !first_name || !last_name) {
@@ -83,9 +84,9 @@ async function registerStaff(req, res) {
           return res.status(201).json({username: userTran.username, password: password, id: userTran.id});
 
         case collection_head:
-          let collectionStaff = await Role.findOne({name: collectionStaff})
+          let collectionStaff = await Role.findOne({name: collection_staff})
           if (!collectionStaff) {
-            collectionStaff = await Role.create({ name: collectionStaff })
+            collectionStaff = await Role.create({ name: collection_staff })
           }
           let rolePermissionUser = await RolePermission.findOne({role_id: collectionStaff.id, permission_id: permission._id})
           if (!rolePermissionUser) {
@@ -143,23 +144,27 @@ async function getAllHead(req, res) {
       console.error(`Role ${collection_head} not found.`);
       return [];
     }
-    const roleHead = [headColRole._id, headTranRole._id];
+    
 
-    // Tìm tất cả permsion có vai trò "head"
-    const headPermission = await RolePermission.find({ role_id: {$in: roleHead} }).select(
+    // find transaction staff
+    const headTranPermission = await RolePermission.find({ role_id: headTranRole._id }).select(
       "_id"
     );
-
-
-    // Lấy mảng các ID permission có vai trò "head"
-    const headPerIds = headPermission.map((per) => per._id);
-
-    // console.log(adminUsers)
-    // Tìm tất cả người có vai trò "head"
-    const usersheadRole = await User.find({
-      rolePermission_id: headPerIds, 
+    const headTranIds = headTranPermission.map((per) => per._id);
+    const transactionStaff = await User.find({
+      rolePermission_id: headTranIds, 
     });
-    return res.status(200).json(usersheadRole);
+
+    // find collection staff
+    const headColPermission = await RolePermission.find({ role_id: headColRole._id }).select(
+      "_id"
+    );
+    const headColIds = headColPermission.map((per) => per._id);
+    const collectionStaff = await User.find({
+      rolePermission_id: headColIds, 
+    });
+
+    return res.status(200).json({transactionStaff,collectionStaff});
   } catch (error) {
     console.error("get head error:", error);
     return res.status(500).json({ message: "Could not get head" });
@@ -171,37 +176,45 @@ async function getAllStaff(req, res) {
     if (!req.user.userRole) {
       return res.status(403).json({ message: "User does not have a role" });
     }
-    let staffRole;
-    switch(req.user.userRole) {
-      case transaction_head:
-        staffRole = await Role.findOne({ name: transaction_staff });
-        if (!staffRole ) {
-          console.error(`Role ${transaction_staff} not found.`);
-        }
-        break;
-        
-      case collection_head:
-        staffRole = await Role.findOne({ name: collection_staff });
-        if (!staffRole ) {
-          console.error(`Role ${collection_staff} not found.`);
-        }
-        break;
-      default:
-        console.log("User not permission")
-        return res.sendStatus(403);        
-    }
+    let staffTranRole, staffColRole ;
     const permissionRoleHead = await RolePermission.findById(req.user.rolePermission_id);
     if (!permissionRoleHead) {
       return res.status(404).json({ message: "Rolepermission head not found" });
     }
-    const permissionRoleStaff = await RolePermission.findOne({role_id: staffRole._id, permission_id: permissionRoleHead.permission_id})
-    if (!permissionRoleStaff) {
-      return res.status(404).json({ message: "Rolepermission staff not found" });
-    }
-    const userStaff = await User.find({
-      rolePermission_id: permissionRoleStaff
-    })
-    return res.status(200).json(userStaff);
+
+    switch(req.user.userRole) {
+      case transaction_head:
+        staffTranRole = await Role.findOne({ name: transaction_staff });
+        if (!staffTranRole ) {
+          console.error(`Role ${transaction_staff} not found.`);
+        }
+        const permissionRoleTranStaff = await RolePermission.findOne({role_id: staffTranRole._id, permission_id: permissionRoleHead.permission_id})
+        if (!permissionRoleTranStaff) {
+          return res.status(404).json({ message: "Rolepermission staff not found" });
+        }
+        const transacionStaff = await User.find({
+          rolePermission_id: permissionRoleTranStaff
+        })
+        return res.status(200).json(transacionStaff); 
+
+      case collection_head:
+        staffColRole = await Role.findOne({ name: collection_staff });
+        if (!staffColRole ) {
+          console.error(`Role ${collection_staff} not found.`);
+        }
+        const permissionRoleColStaff = await RolePermission.findOne({role_id: staffColRole._id, permission_id: permissionRoleHead.permission_id})
+        if (!permissionRoleColStaff) {
+          return res.status(404).json({ message: "Rolepermission staff not found" });
+        }
+        const collectionStaff = await User.find({
+          rolePermission_id: permissionRoleTranStaff
+        })
+        return res.status(200).json(collectionStaff);
+
+      default:
+        console.log("User not permission")
+        return res.sendStatus(403);        
+    }  
   } catch (error) {
     console.error("get head error:", error);
     return res.status(500).json({ message: "Could not get head" });

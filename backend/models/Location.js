@@ -2,17 +2,30 @@ const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
 const transactionPointSchema = new mongoose.Schema({
-  name: String,
-  address: String,
+  name: {
+    type: String,
+    required: true
+  },
+  address: {
+    type: String,
+    required: true
+  },
   collectionPoint_id: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "CollectionPoint",
+    required: true
   },
 });
 
 const collectionPointSchema = new mongoose.Schema({
-  name: String,
-  address: String,
+  name: {
+    type: String,
+    required: true
+  },
+  address: {
+    type: String,
+    required: true
+  },
 });
 
 transactionPointSchema.set("toObject", { virtuals: true });
