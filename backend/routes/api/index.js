@@ -26,10 +26,13 @@ router.delete('/deleteShipment', isAdmin,  shipmentControllers.deleteShipment)
 router.post('/createNewShipment',isTransactionStaff,  shipmentControllers.createNewShipment)
 router.delete('/deleteNewShipment',isTransactionStaff,  shipmentControllers.deleteNewShipment)
 router.post('/createShipmentFromTPToCP',isTransactionStaff,  shipmentControllers.createShipmentFromTPToCP)
-router.get('/getAllShipmentTran',isTransactionStaff,  shipmentControllers.getAllShipmentTran)
+router.get('/getShipmentTransaction',isTransactionStaff,  shipmentControllers.getShipmentTransaction)
 router.post('/confirmShipmentSuOrCa',isTransactionStaff,  shipmentControllers.confirmShipmentSuOrCa)
 router.post('/createShipmentToUser',isTransactionStaff,  shipmentControllers.createShipmentToUser)
 router.post('/confirmShipmentFromCPToTP',isTransactionStaff,  shipmentControllers.confirmShipmentFromCPToTP)
+router.post('/createShipmentCancel',isTransactionStaff,  shipmentControllers.createShipmentCancel)
+router.post('/confirmPaided',isTransactionStaff,  shipmentControllers.confirmPaided)
+
 
 
 router.post('/createShipmentFromCPToCP',isCollectionStaff,  shipmentControllers.createShipmentFromCPToCP)
@@ -37,6 +40,7 @@ router.post('/confirmShipmentFromCPToCP',isCollectionStaff,  shipmentControllers
 router.post('/confirmShipmentFromTPToCP',isCollectionStaff,  shipmentControllers.confirmShipmentFromTPToCP)
 router.post('/createShipmentFromCPToTP',isCollectionStaff,  shipmentControllers.createShipmentFromCPToTP)
 
+router.post('/getShipmentCollection',isCollectionHead,  shipmentControllers.getShipmentCollection)
 
 
 

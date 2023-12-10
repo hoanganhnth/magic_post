@@ -15,7 +15,7 @@ const {
   Permission,
 } = require("../models/User");
 const { TransactionPoint, CollectionPoint } = require("../models/Location");
-
+const distanceCalculator = require("../utils/distanceCalculator")
 async function createNewShipment(req, res) {
   const {
     product_type,
@@ -55,9 +55,14 @@ async function createNewShipment(req, res) {
     if (!address) {
       return res.status(500).json({ message: "Could not create address" });
     }
+    const distance = await distanceCalculator.calculateDistance(sender_address, receiver_address)
+    const numericDistance = parseFloat(distance.replace(/[^\d.]/g, ''))
+    const numbericWeight = parseFloat(product_weight.replace(/[^\d.]/g, ''))
+    const fee = calculateShippingFee(numericDistance, numbericWeight).toString()
     const shipment = await Shipment.create({
       product_id: product._id,
       user_address_id: address.id,
+      fee: fee
     });
 
     await TransactionShipment.create({
@@ -66,14 +71,57 @@ async function createNewShipment(req, res) {
     });
     return res.status(201).json({ shipment, product, address });
   } catch (error) {
+    await Product.findOneAndDelete({
+      type: product_type,
+      name: product_name,
+      weight: product_weight,})
+    await UserAddress.findOneAndDelete({
+      sender_username,
+      sender_address,
+      sender_phone,
+      receiver_username,
+      receiver_phone,
+      receiver_address,
+    })
     console.error("create shipment error:", error);
     return res.status(500).json({ message: "Could not create shipment" });
   }
 }
+
+function calculateShippingFee(distance, weight) {
+  // Giả sử các giá trị cơ bản và hệ số cân nặng
+  const baseRatePerKm = 1000; // Giá cước cơ bản cho mỗi kilômét
+  const weightRate = 100; // Hệ số cân nặng
+
+  // Tính giá cước
+  const distanceFee = baseRatePerKm * distance;
+  const weightFee = weightRate * weight;
+  const totalFee = distanceFee + weightFee;
+
+  return totalFee;
+}
+
+async function confirmPaided(req, res) {
+  const shipmentId = req.body.shipmentId
+  try {
+    const shipment = await Shipment.findOneAndUpdate({_id: shipmentId, paided: "N"}, {$set: {paided: "Y"}}, { new: true } )
+    if (!shipment) {
+      return res.status(404).json({ error: 'Shipment not found' });
+    }
+    return res.state(200).json(shipment)
+  } catch (error) {
+    console.error("Confirm paided money error:", error);
+    return res
+      .status(500)
+      .json({ message: "Could not confirm paided money " });
+  
+  }
+}
+
 async function createShipmentFromTPToCP(req, res) {
-  const idShipment = req.body.idShipment;
-  if (!idShipment) {
-    return res.status(400).json({ message: "Missing idShipment" });
+  const shipmentId = req.body.shipmentId;
+  if (!shipmentId) {
+    return res.status(400).json({ message: "Missing shipmentId" });
   }
   try {
     const permission = await Permission.findOne({ name: req.user.permission });
@@ -81,16 +129,14 @@ async function createShipmentFromTPToCP(req, res) {
     if (!permission) {
       return res.status(404).json({ message: "Permission not found" });
     }
-    console.log(permission.name)
     const transactionPoint = await TransactionPoint.findById(
       permission.transactionPoint_id
     );
-    console.log(transactionPoint.name)
     if (!transactionPoint) {
       return res.status(404).json({ message: "transactionPoint not found" });
     }
     const updatedShipment = await Shipment.findOneAndUpdate(
-        { _id: idShipment, status: "Preparing" },
+        { _id: shipmentId, status: "Preparing" },
         { $set: { status: "Shipped" } },
         { new: true }
       );
@@ -98,17 +144,16 @@ async function createShipmentFromTPToCP(req, res) {
     return res.status(500).json({ message: "Shipment have been shipped" });
     }
     let collectionShipment = await CollectionShipment.findOne({
-      shipment_id: idShipment,
+      shipment_id: shipmentId,
       collectionPoint_id: transactionPoint.collectionPoint_id
     })
     if (!collectionShipment) {
       collectionShipment = await CollectionShipment.create({
         state: "Waiting",
-        shipment_id: idShipment,
+        shipment_id: shipmentId,
         collectionPoint_id: transactionPoint.collectionPoint_id,
       });
     }
-    console.log(transactionPoint.collectionPoint_id)
     return res.json({ updatedShipment, collectionShipment });
     // update status
   } catch (error) {
@@ -119,15 +164,14 @@ async function createShipmentFromTPToCP(req, res) {
   }
 }
 
-async function getAllShipmentTran(req, res) {
+async function getShipmentTransaction(req, res) {
+  const state = req.body.state
+  if (!state) {
+    return res.status(400).json({ message: "Missing state" });
+  }
   try {
-    const rolePermission = await RolePermission.findById(
-      req.user.rolePermission_id
-    );
-    if (!rolePermission) {
-      return res.status(404).json({ message: "RolePermission not found" });
-    }
-    const permission = await Permission.findById(rolePermission.permission_id);
+    
+    const permission = await Permission.findOne({name: req.user.permission});
     if (!permission) {
       return res.status(404).json({ message: "Permission not found" });
     }
@@ -142,7 +186,7 @@ async function getAllShipmentTran(req, res) {
     const relatedShipments = await Shipment.find({
       _id: { $in: transactionShipmentIds },
     });
-    return res.status(201).json({ relatedShipments });
+    return res.status(200).json({ relatedShipments });
   } catch (error) {
     console.error("get shipment transaction point error:", error);
     return res
@@ -151,9 +195,9 @@ async function getAllShipmentTran(req, res) {
   }
 }
 async function deleteNewShipment(req, res) {
-  const idShipment = req.body.idShipment;
+  const shipmentId = req.body.shipmentId;
   try {
-    const shipment = await Shipment.findById(idShipment);
+    const shipment = await Shipment.findById(shipmentId);
     if (!shipment) {
       return res.status(404).json({ message: "Shipment not found" });
     }
@@ -185,9 +229,9 @@ async function deleteNewShipment(req, res) {
 }
 
 async function deleteShipment(req, res) {
-  const idShipment = req.body.idShipment;
+  const shipmentId = req.body.shipmentId;
   try {
-    const shipment = await Shipment.findById(idShipment);
+    const shipment = await Shipment.findById(shipmentId);
     if (!shipment) {
       return res.status(404).json({ message: "Shipment not found" });
     }
@@ -226,28 +270,28 @@ async function confirmShipmentFromTPToCP(req, res) {
     res.status(500).json({ message: "Missing id parameter" })
   }
   try {
-      const permission = await Permission.findOne({ name: req.user.permission })
-      if (!permission) {
-        return res.status(404).json({ message: "Permission not found" })
-      }
-      // const collectionPoint = await CollectionPoint.findById(
-      //   permission.collectionPoint_id)
-        
-      const updatedShipment = await Shipment.findOneAndUpdate(
+    let foundShipment = await Shipment.findOne({ _id: shipmentId });
+    if (!foundShipment) {
+      return res.status(404).json({message: "Shipment not found"})
+    }
+    if (foundShipment.status === "Shipped") {
+      foundShipment = await Shipment.findOneAndUpdate(
         { _id: shipmentId, status: "Shipped" },
         { $set: { status: "ArrivedDestination" } },
         { new: true }
       )
-      if (!updatedShipment) {
+      if (!foundShipment) {
         return res.status(500).json({ message: "Shipment have not been arrived destination" });
       }
-      await CollectionShipment.findOneAndUpdate(
-        {shipment_id: updatedShipment._id, state: "Waiting"},
-        { $set: {state: "Recieve"}},
-        { new: true }
-      )
-      await TransactionShipment.findOneAndDelete({shipment_id: shipmentId, state: "Tranfer"})
-      return res.json({message: "Confirm shipment to collectionPoint success and delete shipment of transaction"})
+    }
+   
+    await CollectionShipment.findOneAndUpdate(
+      {shipment_id: foundShipment._id, state: "Waiting"},
+      { $set: {state: "Receive"}},
+      { new: true }
+    )
+    // await TransactionShipment.findOneAndDelete({shipment_id: shipmentId, state: "Transfer"})
+    return res.json({message: "Confirm shipment to collectionPoint success "})
 
   } catch(error) {
     console.error("Confirm shipment collection point error:", error);
@@ -261,21 +305,27 @@ async function confirmShipmentFromCPToCP(req, res) {
     res.status(500).json({ message: "Missing id parameter" })
   }
   try {    
-    const updatedShipment = await Shipment.findOneAndUpdate(
-      { _id: shipmentId, status: "Shipped" },
-      { $set: { status: "ArrivedDestination" } },
-      { new: true }
-    )
-    if (!updatedShipment) {
-      return res.status(500).json({ message: "Shipment have not been arrived destination" });
+    let foundShipment = await Shipment.findOne({ _id: shipmentId });
+    if (!foundShipment) {
+      return res.status(404).json({message: "Shipment not found"})
+    }
+    if (foundShipment.status === "Shipped") {
+      foundShipment = await Shipment.findOneAndUpdate(
+        { _id: shipmentId, status: "Shipped" },
+        { $set: { status: "ArrivedDestination" } },
+        { new: true }
+      )
+      if (!foundShipment) {
+        return res.status(500).json({ message: "Shipment have not been arrived destination" });
+      }
     }
     await CollectionShipment.findOneAndUpdate(
-      {shipment_id: updatedShipment._id, state: "Waiting"},
-      { $set: {state: "Recieve"}},
+      {shipment_id: foundShipment._id, state: "Waiting"},
+      { $set: {state: "Receive"}},
       { new: true } 
     )
-    await CollectionShipment.findOneAndDelete({shipment_id: shipmentId, state: "Tranfer"})
-    return res.json({message: "Confirm shipment to collectionPoint success and delete shipment of transaction"})
+    // await CollectionShipment.findOneAndDelete({shipment_id: shipmentId, state: "Transfer"})
+    return res.json({message: "Confirm shipment to collectionPoint success "})
 
   } catch(error) {
     console.error("Confirm shipment collection point error:", error);
@@ -290,21 +340,34 @@ async function confirmShipmentFromCPToTP(req, res) {
     res.status(500).json({ message: "Missing id parameter" })
   }
   try {    
-    const updatedShipment = await Shipment.findOneAndUpdate(
-      { _id: shipmentId, status: "Shipped" },
-      { $set: { status: "ArrivedDestination" } },
-      { new: true }
-    )
-    if (!updatedShipment) {
-      return res.status(500).json({ message: "Shipment have not been arrived destination" });
+    let foundShipment = await Shipment.findOne({ _id: shipmentId });
+    if (!foundShipment) {
+      return res.status(404).json({message: "Shipment not found"})
     }
-    await TransactionShipment.findOneAndUpdate(
-      {shipment_id: updatedShipment._id, state: "Waiting"},
-      { $set: {state: "Recieve"}},
-      { new: true }
-    )
-    await CollectionShipment.findOneAndDelete({shipment_id: shipmentId, state: "Tranfer"})
-    return res.json({message: "Confirm shipment to transaction point and delete shipment of collection success"})
+    if (foundShipment.status === "Shipped") {
+      foundShipment = await Shipment.findOneAndUpdate(
+        { _id: shipmentId, status: "Shipped" },
+        { $set: { status: "ArrivedDestination" } },
+        { new: true }
+      )
+      if (!foundShipment) {
+        return res.status(500).json({ message: "Shipment have not been arrived destination" });
+      }
+      await TransactionShipment.findOneAndUpdate(
+        {shipment_id: foundShipment._id, state: "Waiting"},
+        { $set: {state: "Receive"}},
+        { new: true }
+      )
+    } else if (foundShipment.status === "Canceled") {
+      await TransactionShipment.findOneAndUpdate(
+        {shipment_id: foundShipment._id, state: "Waiting"},
+        { $set: {state: "Return"}},
+        { new: true }
+      )
+    }
+    
+    // await CollectionShipment.findOneAndDelete({shipment_id: shipmentId, state: "Transfer"})
+    return res.json({message: "Confirm shipment to transaction point "})
 
   } catch(error) {
     console.error("Confirm shipment collection point error:", error);
@@ -327,7 +390,7 @@ async function confirmShipmentSuOrCa(req, res) {
       if (!updatedShipment) {
         return res.status(500).json({ message: "State is updated" });
       }
-      await TransactionShipment.findOneAndDelete({shipment_id: shipmentId, state: "Tranfer"})
+      await TransactionShipment.findOneAndDelete({shipment_id: shipmentId, state: "Transfer"})
     return res.json({message: "Confirm shipment to user success"})
     } else {
       const updatedShipment = await Shipment.findOneAndUpdate(
@@ -347,38 +410,44 @@ async function confirmShipmentSuOrCa(req, res) {
 }
 
 async function createShipmentFromCPToCP(req, res) {
-  const {idShipment, idNewCollectionPoint} = req.body;
-  if (!idShipment) {
-    return res.status(400).json({ message: "Missing idShipment" });
+  const {shipmentId, idNewCollectionPoint} = req.body;
+  if (!shipmentId) {
+    return res.status(400).json({ message: "Missing shipmentId" });
   }
   try {
-    const updatedShipment = await Shipment.findOneAndUpdate(
-        { _id: idShipment, status: "ArrivedDestination" },
+    let foundShipment = await Shipment.findOne({ _id: shipmentId });
+    if (!foundShipment) {
+      return res.status(404).json({message: "Shipment not found"})
+    }
+    if (foundShipment.status === "Shipped") {
+      foundShipment = await Shipment.findOneAndUpdate(
+        { _id: shipmentId, status: "ArrivedDestination" },
         { $set: { status: "Shipped" } },
         { new: true }
-      );
-    if (!updatedShipment) {
-      return res.status(500).json({ message: "Shipment have been shipped" })
+      )
+      if (!foundShipment) {
+        return res.status(500).json({ message: "Shipment have not been arrived destination" });
+      }
     }
-
     const oldCollectionShipment = await CollectionShipment.findOneAndUpdate(
-      {state: "Recieve", shipment_id: idShipment},
-      {$set: {state: "Tranfer"}},
+      {state: "Receive", shipment_id: shipmentId},
+      {$set: {state: "Transfer"}},
       {new: true}
     )
     let newCollectionShipment = await CollectionShipment.findOne({
-      shipment_id: idShipment,
+      shipment_id: shipmentId,
       collectionPoint_id: idNewCollectionPoint,
+      state: "Waiting"
     })
     if (!newCollectionShipment) {
       newCollectionShipment = await CollectionShipment.create({
         state: "Waiting",
-        shipment_id: idShipment,
+        shipment_id: shipmentId,
         collectionPoint_id: idNewCollectionPoint,
       });
     }
     
-    return res.json({ updatedShipment, oldCollectionShipment, newCollectionShipment });
+    return res.json({ foundShipment, oldCollectionShipment, newCollectionShipment });
     // update status
   } catch (error) {
     console.error("create shipment to collection point error:", error);
@@ -388,38 +457,43 @@ async function createShipmentFromCPToCP(req, res) {
   }
 }
 async function createShipmentFromCPToTP(req, res) {
-  const {idShipment, idNewTransactionPoint} = req.body;
-  if (!idShipment) {
-    return res.status(400).json({ message: "Missing idShipment" });
+  const {shipmentId, idNewTransactionPoint} = req.body;
+  if (!shipmentId) {
+    return res.status(400).json({ message: "Missing shipmentId" });
   }
   try {
-    const updatedShipment = await Shipment.findOneAndUpdate(
-        { _id: idShipment, status: "ArrivedDestination" },
+    let foundShipment = await Shipment.findOne({ _id: shipmentId });
+    if (!foundShipment) {
+      return res.status(404).json({message: "Shipment not found"})
+    }
+    if (foundShipment.status === "Shipped") {
+      foundShipment = await Shipment.findOneAndUpdate(
+        { _id: shipmentId, status: "ArrivedDestination" },
         { $set: { status: "Shipped" } },
         { new: true }
-      );
-    if (!updatedShipment) {
-      return res.status(500).json({ message: "Shipment have been shipped" })
+      )
+      if (!foundShipment) {
+        return res.status(500).json({ message: "Shipment have not been arrived destination" });
+      }
     }
-
     const oldCollectionShipment = await CollectionShipment.findOneAndUpdate(
-      {state: "Recieve", shipment_id: idShipment},
-      {$set: {state: "Tranfer"}},
+      {state: "Receive", shipment_id: shipmentId},
+      {$set: {state: "Transfer"}},
       {new: true}
     )
     let newTransactionShipment = await TransactionShipment.findOne({
-      shipment_id: idShipment,
+      shipment_id: shipmentId,
       transactionPoint_id: idNewTransactionPoint,
     })
     if (!newTransactionShipment) {
       newTransactionShipment = await TransactionShipment.create({
         state: "Waiting",
-        shipment_id: idShipment,
+        shipment_id: shipmentId,
         transactionPoint_id: idNewTransactionPoint,
       });
     }
    
-    return res.json({ updatedShipment, oldCollectionShipment, newTransactionShipment });
+    return res.json({ foundShipment, oldCollectionShipment, newTransactionShipment });
     // update status
   } catch (error) {
     console.error("create shipment to transaction point error:", error);
@@ -430,13 +504,13 @@ async function createShipmentFromCPToTP(req, res) {
 }
 
 async function createShipmentToUser(req, res) {
-  const {idShipment} = req.body;
-  if (!idShipment) {
-    return res.status(400).json({ message: "Missing idShipment" });
+  const {shipmentId} = req.body;
+  if (!shipmentId) {
+    return res.status(400).json({ message: "Missing shipmentId" });
   }
   try {
     const updatedShipment = await Shipment.findOneAndUpdate(
-        { _id: idShipment, status: "ArrivedDestination" },
+        { _id: shipmentId, status: "ArrivedDestination" },
         { $set: { status: "Delivering" } },
         { new: true }
       );
@@ -445,8 +519,8 @@ async function createShipmentToUser(req, res) {
     }
 
     const oldTransactionShipment = await TransactionShipment.findOneAndUpdate(
-      {state: "Recieve", shipment_id: idShipment},
-      {$set: {state: "Tranfer"}},
+      {state: "Receive", shipmentId: shipmentId},
+      {$set: {state: "Transfer"}},
       {new: true}
     )
     return res.json({ updatedShipment, oldTransactionShipment});
@@ -459,11 +533,92 @@ async function createShipmentToUser(req, res) {
   }
 }
 
+
+async function createShipmentCancel(req, res) {
+  const {shipmentId} = req.body;
+  if (!shipmentId) {
+    return res.status(400).json({ message: "Missing shipmentId" });
+  }
+  const shipment = await Shipment.findOne({_id: shipmentId, status: "Canceled"})
+  if (!shipment) {
+    return res.status(500).json({message: "Shipment is not canceled"})
+  }
+  try {
+    const transactionShipment = await TransactionShipment.findOneAndUpdate(
+      {state: "Transfer", shipment_id: shipmentId},
+      {$set: {state: "Cancel"}},
+      {new: true}
+    )
+    const permission = await Permission.findOne({ name: req.user.permission });
+    
+    if (!permission) {
+      return res.status(404).json({ message: "Permission not found" });
+    }
+    const transactionPoint = await TransactionPoint.findById(
+      permission.transactionPoint_id
+    );
+    if (!transactionPoint) {
+      return res.status(404).json({ message: "transactionPoint not found" });
+    }
+    let collectionShipment = await CollectionShipment.findOne({
+      shipment_id: shipmentId,
+      collectionPoint_id: transactionPoint.collectionPoint_id,
+      state: "Waiting"
+    })
+    if (!collectionShipment) {
+      collectionShipment = await CollectionShipment.create({
+        state: "Waiting",
+        shipment_id: shipmentId,
+        collectionPoint_id: transactionPoint.collectionPoint_id,
+      });
+    }
+    return res.json({transactionShipment, collectionShipment});
+    // update status
+  } catch (error) {
+    console.error("create shipment to transaction point error:", error);
+    return res
+      .status(500)
+      .json({ message: "Could not create shipment to transaction point" });
+  }
+}
+
+async function getShipmentCollection(req, res) {
+  const {state} = req.body.state
+  if (!state) {
+    return res.status(400).json({ message: "Missing state" });
+  }
+  try {
+    const permission = await Permission.findOne({name: req.user.permission})
+    if (!permission) {
+      return res.status(404).json({ message: "Permission not found" });
+    }
+    const collectionShipment = await CollectionShipment.find({
+      collectionPoint_id: permission.collectionPoint_id,
+      state: arrived,
+    });
+
+    const shipmentIds = collectionShipment.map(
+      (cs) => cs.shipment_id
+    );
+
+    // Tìm các shipment có _id giống với shipment_id trong danh sách đã lấy
+    const shipments = await Shipment.find({
+      _id: { $in: shipmentIds },
+    });
+    return req.status(200).json({shipments})
+  } catch (error) {
+    console.error("Get shipment collection point error:", error);
+    return res.status(500)
+      .json({ message: "Could not get shipment collection point" });
+  }
+}
+
+
 module.exports = {
   createNewShipment,
   deleteNewShipment,
   createShipmentFromTPToCP,
-  getAllShipmentTran,
+  getShipmentTransaction,
   confirmShipmentFromTPToCP,
   createShipmentFromCPToCP,
   confirmShipmentFromCPToCP,
@@ -471,6 +626,9 @@ module.exports = {
   confirmShipmentFromCPToTP,
   createShipmentToUser,
   confirmShipmentSuOrCa,
-  deleteShipment
+  deleteShipment,
+  createShipmentCancel,
+  getShipmentCollection,
+  confirmPaided
 };
 
