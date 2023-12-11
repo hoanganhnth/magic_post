@@ -207,8 +207,9 @@ async function getAllStaff(req, res) {
           return res.status(404).json({ message: "Rolepermission staff not found" });
         }
         const collectionStaff = await User.find({
-          rolePermission_id: permissionRoleTranStaff
+          rolePermission_id: permissionRoleColStaff
         })
+        
         return res.status(200).json(collectionStaff);
 
       default:
@@ -286,11 +287,6 @@ async function deleteStaff(req, res) {
   }
 }
 
-
-async function getPassword(req, res) {
-  const idUser = req.body.idUser
-  
-}
 
 module.exports = {
   getAllHead,
