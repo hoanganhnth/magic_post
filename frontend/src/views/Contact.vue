@@ -1,6 +1,7 @@
 <!-- App.vue -->
 
 <template>
+    <div>
     <page-header></page-header>
     <div class="image-container">
         <h1>Liên hệ</h1>
@@ -89,6 +90,7 @@
         </div>
     </div>
     <page-footer></page-footer>
+</div>
 </template>
   
 <script>

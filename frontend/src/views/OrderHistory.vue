@@ -1,4 +1,5 @@
 <template>
+  <div>
   <page-header></page-header>
   
     <div>
@@ -7,6 +8,7 @@
       <li v-for="history in historys" :key="history.id">{{"Ten:"+ history.name +"-Tuoi: "+ history.age  }}</li>
     </ul>
     </div>
+  </div>
   </template>
   
   <script>

@@ -1,56 +1,180 @@
 <template>
-<nap-bar-boss></nap-bar-boss>
-  <div class="transaction-list">
-    <h1>Danh sách điểm giao dịch</h1>
-    <h3 class="api-title">TestAPI</h3>
-    <div v-if="transactions_point.length === 0" class="loading-indicator">Đang tải...</div>
-    <ul v-else>
-      <li v-for="transaction in transactions_point" :key="transaction.id">
-        {{ `${transaction.name} - Địa chỉ: ${transaction.address}` }}
-      </li>
-    </ul>
+  <div class='dashboard'>
+   <nap-bar-boss></nap-bar-boss>
+    <div class='dashboard-app'>
+      <div class='dashboard-content'>
+        <div class="container">
+    <h1>Danh sách tài khoản trưởng điểm giao dịch</h1>
+
+    <table class="table table-striped table-bordered">
+      <thead>
+        <tr>
+          <th>Điểm giao dịch</th>
+          <th>Tên trưởng điểm</th>
+          <th>Địa chỉ email</th>
+          <th>Vai trò</th>
+          <th>Trạng thái</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr  v-for="item in items" :key="item.id"> 
+          
+          <td>{{ item.transaction }}</td>
+          <td>{{ item.name }}</td>
+          <td>{{ item.email }}</td>
+          <td>{{ item.userRole }}</td>
+          <td>{{ item.status }}</td>
+        </tr>
+      </tbody>
+    </table>
+    <button id="add" @click="showForm = !showForm">
+  <i class="fas fa-plus"></i> Thêm nhân viên
+</button>
+<div v-if="showForm" class="container-form">
+    <form @submit.prevent="onSubmit">
+      <input type="text" v-model="username" placeholder="Tên đăng nhập">
+      <input type="text" v-model="first_name" placeholder="Họ">
+      <input type="text" v-model="last_name" placeholder="Tên">
+      <input type="email" v-model="email" placeholder="Địa chỉ email">
+      <input type="password" v-model="password" placeholder="Mật khẩu">
+      <input type="password" v-model="password_confirm" placeholder="Nhập lại mật khẩu">
+      <button type="submit">Tạo tài khoản</button> 
+    </form>
+  </div>
+  </div>
+      </div>
+    </div>
   </div>
 </template>
-
+    
 <script>
-import axios from 'axios';
-import NapBarBoss from '@/components/NapBarBoss.vue';
-
-
-
+import NapBarBoss from '../../components/NapBarBoss.vue'
 export default {
-  components: {NapBarBoss },
+  components: { NapBarBoss },
+
+  name: 'TransactionPoints',
   data() {
+
     return {
-      transactions_point: [],
+      showForm: false,
+      items : [
+  {
+    id:1,
+    transaction:"Hà Nội",
+    name: "John Doe",
+    email: "johndoe@example.com",
+    userRole: "admin",
+    status: "active",
+  },
+  {
+    id:2,
+    transaction:"Đà Nẵng",
+    name: "Jane Doe",
+    email: "janedoe@example.com",
+    userRole: "user",
+    status: "inactive",
+  },
+],
+      username : "",
+      email:"",
+      first_name:"",
+      last_name :"",
+      password:"",
+      password_confirm:"",
+     
+
     };
   },
-  async created() {
-    try {
-      // Sử dụng async/await để xử lý request API
-      const response = await axios.get('https://65361260c620ba9358ecf36a.mockapi.io/data/api/v1/user');
-      this.transactions_point = response.data;
-      console.log(this.transactions_point);
-    } catch (error) {
-      console.error('Error fetching data from API:', error);
-    }
-  },
-  methods: {
-    // Các phương thức khác
-  }
+   
+  
 };
 </script>
+
+   
 <style scoped>
-.loading-indicator {
-  font-style: italic;
-  color: #888;
+#add {
+  background-color: #3498db;
+  color: #fff;
+  padding: 10px 15px;
+  font-size: 16px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  display: flex;
+  align-items: center;
 }
-.transaction-list {
-  max-width: 600px;
+
+#add i {
+  margin-right: 8px;
+}
+
+#add:hover {
+  background-color: #2980b9;
+}
+
+ .container {
+  width: 1200px;
   margin: 0 auto;
 }
 
-.api-title {
-  color: red;
+h1 {
+  font-size: 30px;
+  font-weight: bold;
 }
-</style>
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th,
+td {
+  border: 1px solid #ccc;
+  padding: 10px;
+}
+
+th {
+  background-color: #337ab7;
+  color: #fff;
+}
+
+.container-form {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+}
+
+input {
+  margin-bottom: 10px;
+  padding: 8px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+button {
+  padding: 10px;
+  font-size: 18px;
+  background-color: #4caf50;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #45a049;
+}
+
+
+/* Add component-specific styles here */</style>
+    

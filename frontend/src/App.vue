@@ -3,8 +3,9 @@
 <template>
   <div id="app">
     <!-- <page-header></page-header> -->
+    <router-view></router-view>
 </div>
-<router-view></router-view>
+
 </template>
 
 <script>

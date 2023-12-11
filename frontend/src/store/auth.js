@@ -49,7 +49,14 @@ export const useAuthStore = defineStore("auth", {
   
       async getUser() {
         try {
-          const { data } = await useApiPrivate().get(`/api/auth/user`);
+          const { data } = await useApiPrivate().get(`/api/auth/user`,
+          {
+            headers: {
+          Authorization: "Bearer " + this.accessToken,
+        },
+       }
+          );
+      
           this.user = data;
           return data;
         } catch (error) {

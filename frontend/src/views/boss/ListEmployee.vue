@@ -1,4 +1,5 @@
 <template>
+  <div>
     <nap-bar-boss></nap-bar-boss>
     <div class="container">
       <h1>Danh sách nhân viên</h1>
@@ -27,24 +28,37 @@
         </tbody>
       </table>
     </div>
+  </div>
   </template>
   
   <script>
   import NapBarBoss from '@/components/NapBarBoss.vue';
+  import { useAuthStore } from '@/store/auth.js';
   export default {
     components: { NapBarBoss },
     name:'ListEmployee',
+   
     data() {
       return {
         users: [
-          // Dữ liệu người dùng sẽ được lấy từ API hoặc backend
-          // Đây chỉ là một ví dụ tạm thời
-          { id: '1', name: 'User 1', email: 'user1@example.com' ,role:'Trường điểm tập kết'},
-          { id: '2', name: 'User 2', email: 'user2@example.com', role:'Trưởng điểm giao dịch' },
-          // ...
+        
         ],
       };
     },
+    async setup() {
+      try {
+       
+       
+        // const response = await AuthService.login(this.username, this.password);
+        const data = await useAuthStore().getUser();
+        console.log(data);
+       
+      } catch (error) {
+        console.error(error);
+        // Nếu có lỗi, hiển thị thông báo lỗi
+        
+      }
+  },
     methods: {
       deleteUser(userId) {
         // Gọi API hoặc backend để xóa người dùng

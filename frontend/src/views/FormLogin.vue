@@ -57,7 +57,6 @@
 </template>
 
 <script>
-import AuthService from '@/service/AuthService';
 import { useAuthStore } from '../store/auth';
   export default {
     name: 'FormLogin',

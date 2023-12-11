@@ -1,4 +1,5 @@
 <template>
+  <div>
   <page-header></page-header>
 
   <div class="employee-manager">
@@ -12,6 +13,7 @@
     </div>
     </div>
   </div>
+</div>
 </template>
 
 <script>

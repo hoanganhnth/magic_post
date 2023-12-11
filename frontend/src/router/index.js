@@ -11,6 +11,8 @@ import ListEmployee from '@/views/boss/ListEmployee'
 import TransactionPoints from '@/views/boss/TransactionPoints'
 import CollectionPoints from'@/views/boss/CollectionPoints'
 import BossDashboard from '@/views/boss/BossDashboard';
+import CreateAccount from '@/views/leader_transaction/CreateAccount'
+import OrderStatistics from '@/views/leader_transaction/OrderStatistics'
 
 
 
@@ -31,7 +33,8 @@ const routes = [
   { path: '/users', component: ListEmployee  },
 { path: '/collection', component: CollectionPoints  },
 { path: '/transaction', component: TransactionPoints  },
-
+{ path: '/leader/account', component: CreateAccount  },
+{ path: '/leader/order', component: OrderStatistics  },
 
 
 

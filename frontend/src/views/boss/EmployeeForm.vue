@@ -1,4 +1,5 @@
 <template>
+  <div>
     <nap-bar-boss></nap-bar-boss>
     <div>
       <h1>{{ formTitle }}</h1>
@@ -17,6 +18,7 @@
         <button type="submit">Save</button>
       </form>
     </div>
+  </div>
   </template>
   
   <script>

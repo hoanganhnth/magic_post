@@ -1,5 +1,6 @@
 <!-- Introduction.vue -->
 <template>
+  <div>
     <page-header></page-header>
     <div class="container-lg"><div><div class="custom-block-introduce" style="border:1px solid gray; margin-bottom:40px">
 <ul>
@@ -172,6 +173,7 @@
 </div>
 </div></div>
     <page-footer></page-footer>
+  </div>
   </template>
   
   <script>
