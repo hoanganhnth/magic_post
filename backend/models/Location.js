@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-const Schema = mongoose.Schema;
+const moment = require('moment');
 
 const transactionPointSchema = new mongoose.Schema({
   name: {
@@ -28,18 +28,35 @@ const collectionPointSchema = new mongoose.Schema({
   },
 });
 
-transactionPointSchema.set("toObject", { virtuals: true });
-transactionPointSchema.set("toJSON", { virtuals: true });
 transactionPointSchema.set("timestamps", {
   createdAt: "created_at",
   updatedAt: "updated_at",
 });
 
-collectionPointSchema.set("toObject", { virtuals: true });
-collectionPointSchema.set("toJSON", { virtuals: true });
+transactionPointSchema.set("toObject", { virtuals: true });
+transactionPointSchema.set("toJSON", { 
+  virtuals: true,
+  transform: function (doc, ret) {
+    ret.created_at = moment(ret.created_at).format("HH:mm:ss, DD-MM-YYYY");
+    ret.updated_at = moment(ret.updated_at).format("HH:mm:ss, DD-MM-YYYY");
+    delete ret._id;
+    delete ret.__v;
+  }
+});
 collectionPointSchema.set("timestamps", {
   createdAt: "created_at",
   updatedAt: "updated_at",
+});
+
+collectionPointSchema.set("toObject", { virtuals: true });
+collectionPointSchema.set("toJSON", { 
+  virtuals: true,
+  transform: function (doc, ret) {
+    ret.created_at = moment(ret.created_at).format("HH:mm:ss, DD-MM-YYYY");
+    ret.updated_at = moment(ret.updated_at).format("HH:mm:ss, DD-MM-YYYY");
+    delete ret._id;
+    delete ret.__v;
+  }
 });
 
 const TransactionPoint = mongoose.model(

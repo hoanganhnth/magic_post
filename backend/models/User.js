@@ -1,19 +1,65 @@
 const mongoose = require("mongoose");
-const Schema = mongoose.Schema;
+const moment = require('moment');
+
 
 const roleSchema = new mongoose.Schema({
   name: String,
 });
+roleSchema.set("timestamps", {
+  createdAt: "created_at",
+  updatedAt: "updated_at",
+});
 
+roleSchema.set("toObject", { virtuals: true });
+roleSchema.set("toJSON", { 
+  virtuals: true,
+  transform: function (doc, ret) {
+    ret.created_at = moment(ret.created_at).format("HH:mm:ss, DD-MM-YYYY");
+    ret.updated_at = moment(ret.updated_at).format("HH:mm:ss, DD-MM-YYYY");
+    delete ret._id;
+    delete ret.__v;
+  }
+});
 const permissionSchema = new mongoose.Schema({
   name: String,
   transactionPoint_id: { type: mongoose.Schema.Types.ObjectId, ref: "TransactionPoint" },
   collectionPoint_id: { type: mongoose.Schema.Types.ObjectId, ref: "CollectionPoint" },
 });
 
+permissionSchema.set("timestamps", {
+  createdAt: "created_at",
+  updatedAt: "updated_at",
+});
+
+permissionSchema.set("toObject", { virtuals: true });
+permissionSchema.set("toJSON", { 
+  virtuals: true,
+  transform: function (doc, ret) {
+    ret.created_at = moment(ret.created_at).format("HH:mm:ss, DD-MM-YYYY");
+    ret.updated_at = moment(ret.updated_at).format("HH:mm:ss, DD-MM-YYYY");
+    delete ret._id;
+    delete ret.__v;
+  }
+});
 const rolePermissionSchema = new mongoose.Schema({
   role_id: { type: mongoose.Schema.Types.ObjectId, ref: "Role" },
   permission_id: { type: mongoose.Schema.Types.ObjectId, ref: "Permission" },
+});
+
+rolePermissionSchema.set("timestamps", {
+  createdAt: "created_at",
+  updatedAt: "updated_at",
+});
+
+rolePermissionSchema.set("toObject", { virtuals: true });
+rolePermissionSchema.set("toJSON", { 
+  virtuals: true,
+  transform: function (doc, ret) {
+    ret.created_at = moment(ret.created_at).format("HH:mm:ss, DD-MM-YYYY");
+    ret.updated_at = moment(ret.updated_at).format("HH:mm:ss, DD-MM-YYYY");
+    delete ret._id;
+    delete ret.__v;
+  }
 });
 
 const userSchema = new mongoose.Schema({
@@ -59,11 +105,20 @@ const userSchema = new mongoose.Schema({
 //   user_id: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
 // });
 
-userSchema.set("toObject", { virtuals: true });
-userSchema.set("toJSON", { virtuals: true });
 userSchema.set("timestamps", {
   createdAt: "created_at",
   updatedAt: "updated_at",
+});
+
+userSchema.set("toObject", { virtuals: true });
+userSchema.set("toJSON", { 
+  virtuals: true,
+  transform: function (doc, ret) {
+    ret.created_at = moment(ret.created_at).format("HH:mm:ss, DD-MM-YYYY");
+    ret.updated_at = moment(ret.updated_at).format("HH:mm:ss, DD-MM-YYYY");
+    delete ret._id;
+    delete ret.__v;
+  }
 });
 
 // Models

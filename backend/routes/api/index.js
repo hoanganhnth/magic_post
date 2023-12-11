@@ -42,7 +42,4 @@ router.post('/createShipmentFromCPToTP',isCollectionStaff,  shipmentControllers.
 
 router.post('/getShipmentCollection',isCollectionHead,  shipmentControllers.getShipmentCollection)
 
-
-
-
 module.exports = router

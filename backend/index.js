@@ -47,6 +47,8 @@ app.use(errorHandlerMiddleware);
 
 app.use('/api/auth', require('./routes/api/auth'));
 app.use('/api/index', require('./routes/api/index'));
+app.use('/api/user', require('./routes/api/user'));
+
 
 
 

@@ -4,6 +4,7 @@ const {
   UserAddress,
   TransactionShipment,
   CollectionShipment,
+  Route
 } = require("../models/Shipment");
 const {
   leader,
@@ -35,6 +36,10 @@ async function createNewShipment(req, res) {
   if (!permission) {
     return res.status(403).json({ message: "Permission not found" });
   }
+  
+  const startTransactionPoint = await TransactionPoint.findById(
+    permission.transactionPoint_id
+  );
   try {
     const product = await Product.create({
       type: product_type,
@@ -55,21 +60,45 @@ async function createNewShipment(req, res) {
     if (!address) {
       return res.status(500).json({ message: "Could not create address" });
     }
+    // find road for shipment
+    const transactionPoints = [];
+    const allTransactionPoint = await TransactionPoint.find()
+    allTransactionPoint.forEach(async (transaction) => {
+      transactionPoints.push(transaction.address)
+    })
+    const nearPoint = await distanceCalculator.calculateMinDistance(receiver_address, transactionPoints)
+    const endTransactionPoint = await TransactionPoint.findOne({address: nearPoint})
+    
+
+    // caculator fee
     const distance = await distanceCalculator.calculateDistance(sender_address, receiver_address)
-    const numericDistance = parseFloat(distance.replace(/[^\d.]/g, ''))
     const numbericWeight = parseFloat(product_weight.replace(/[^\d.]/g, ''))
-    const fee = calculateShippingFee(numericDistance, numbericWeight).toString()
+    const fee = calculateShippingFee(distance, numbericWeight).toString()
+
     const shipment = await Shipment.create({
       product_id: product._id,
       user_address_id: address.id,
-      fee: fee
+      fee: fee,
+      now_address: startTransactionPoint.name
     });
+    const route = await Route.create({
+      shipment_id: shipment._id,
+      transactionPoint1: startTransactionPoint._id,
+      collectionPoint1: startTransactionPoint.collectionPoint_id,
+      collectionPoint2: endTransactionPoint.collectionPoint_id,
+      transactionPoint2: endTransactionPoint._id
+    })
 
     await TransactionShipment.create({
       shipment_id: shipment.id,
       transactionPoint_id: permission.transactionPoint_id,
     });
-    return res.status(201).json({ shipment, product, address });
+    return res.status(201).json({ shipment, product, address, route: {
+      transactionPoint1: startTransactionPoint.name,
+      collectionPoint1: (await CollectionPoint.findById(startTransactionPoint.collectionPoint_id)).name,
+      collectionPoint2: (await CollectionPoint.findById(endTransactionPoint.collectionPoint_id)).name,
+      transactionPoint2: endTransactionPoint.name,
+    } });
   } catch (error) {
     await Product.findOneAndDelete({
       type: product_type,
@@ -124,17 +153,7 @@ async function createShipmentFromTPToCP(req, res) {
     return res.status(400).json({ message: "Missing shipmentId" });
   }
   try {
-    const permission = await Permission.findOne({ name: req.user.permission });
-    
-    if (!permission) {
-      return res.status(404).json({ message: "Permission not found" });
-    }
-    const transactionPoint = await TransactionPoint.findById(
-      permission.transactionPoint_id
-    );
-    if (!transactionPoint) {
-      return res.status(404).json({ message: "transactionPoint not found" });
-    }
+    const route = await Route.findOne({shipment_id: shipmentId})
     const updatedShipment = await Shipment.findOneAndUpdate(
         { _id: shipmentId, status: "Preparing" },
         { $set: { status: "Shipped" } },
@@ -145,13 +164,13 @@ async function createShipmentFromTPToCP(req, res) {
     }
     let collectionShipment = await CollectionShipment.findOne({
       shipment_id: shipmentId,
-      collectionPoint_id: transactionPoint.collectionPoint_id
+      collectionPoint_id: route.collectionPoint1
     })
     if (!collectionShipment) {
       collectionShipment = await CollectionShipment.create({
         state: "Waiting",
         shipment_id: shipmentId,
-        collectionPoint_id: transactionPoint.collectionPoint_id,
+        collectionPoint_id: route.collectionPoint1,
       });
     }
     return res.json({ updatedShipment, collectionShipment });
@@ -165,10 +184,10 @@ async function createShipmentFromTPToCP(req, res) {
 }
 
 async function getShipmentTransaction(req, res) {
-  const state = req.body.state
-  if (!state) {
-    return res.status(400).json({ message: "Missing state" });
-  }
+  // const state = req.body.state
+  // if (!state) {
+  //   return res.status(400).json({ message: "Missing state" });
+  // }
   try {
     
     const permission = await Permission.findOne({name: req.user.permission});
@@ -274,10 +293,15 @@ async function confirmShipmentFromTPToCP(req, res) {
     if (!foundShipment) {
       return res.status(404).json({message: "Shipment not found"})
     }
+    const permission = await Permission.findOne({name: req.user.permission})
+    if (!permission) {
+      return res.status(404).json({ message: "Permission not found" });
+    }
+    const collectionPoint = await CollectionPoint.findById(permission.collectionPoint_id)
     if (foundShipment.status === "Shipped") {
       foundShipment = await Shipment.findOneAndUpdate(
         { _id: shipmentId, status: "Shipped" },
-        { $set: { status: "ArrivedDestination" } },
+        { $set: { status: "ArrivedDestination", now_address: collectionPoint.name} },
         { new: true }
       )
       if (!foundShipment) {
@@ -309,10 +333,15 @@ async function confirmShipmentFromCPToCP(req, res) {
     if (!foundShipment) {
       return res.status(404).json({message: "Shipment not found"})
     }
+    const permission = await Permission.findOne({name: req.user.permission})
+    if (!permission) {
+      return res.status(404).json({ message: "Permission not found" });
+    }
+    const collectionPoint = await CollectionPoint.findById(permission.collectionPoint_id)
     if (foundShipment.status === "Shipped") {
       foundShipment = await Shipment.findOneAndUpdate(
         { _id: shipmentId, status: "Shipped" },
-        { $set: { status: "ArrivedDestination" } },
+        { $set: { status: "ArrivedDestination", now_address: collectionPoint.name } },
         { new: true }
       )
       if (!foundShipment) {
@@ -344,10 +373,15 @@ async function confirmShipmentFromCPToTP(req, res) {
     if (!foundShipment) {
       return res.status(404).json({message: "Shipment not found"})
     }
+    const permission = await Permission.findOne({name: req.user.permission})
+    if (!permission) {
+      return res.status(404).json({ message: "Permission not found" });
+    }
+    const transactionPoint = await TransactionPoint.findById(permission.transactionPoint_id)
     if (foundShipment.status === "Shipped") {
       foundShipment = await Shipment.findOneAndUpdate(
         { _id: shipmentId, status: "Shipped" },
-        { $set: { status: "ArrivedDestination" } },
+        { $set: { status: "ArrivedDestination", now_address: transactionPoint.name } },
         { new: true }
       )
       if (!foundShipment) {
@@ -410,11 +444,12 @@ async function confirmShipmentSuOrCa(req, res) {
 }
 
 async function createShipmentFromCPToCP(req, res) {
-  const {shipmentId, idNewCollectionPoint} = req.body;
+  const shipmentId = req.body.shipmentId;
   if (!shipmentId) {
     return res.status(400).json({ message: "Missing shipmentId" });
   }
   try {
+    const route = await Route.findOne({shipment_id: shipmentId})
     let foundShipment = await Shipment.findOne({ _id: shipmentId });
     if (!foundShipment) {
       return res.status(404).json({message: "Shipment not found"})
@@ -434,20 +469,35 @@ async function createShipmentFromCPToCP(req, res) {
       {$set: {state: "Transfer"}},
       {new: true}
     )
-    let newCollectionShipment = await CollectionShipment.findOne({
-      shipment_id: shipmentId,
-      collectionPoint_id: idNewCollectionPoint,
-      state: "Waiting"
-    })
-    if (!newCollectionShipment) {
-      newCollectionShipment = await CollectionShipment.create({
-        state: "Waiting",
+    if (route.collectionPoint2 === route.collectionPoint1) {
+      let newTransactionShipment = await TransactionShipment.findOne({
         shipment_id: shipmentId,
-        collectionPoint_id: idNewCollectionPoint,
-      });
+        transactionPoint_id: route.transactionPoint2,
+      })
+      if (!newTransactionShipment) {
+        newTransactionShipment = await TransactionShipment.create({
+          state: "Waiting",
+          shipment_id: shipmentId,
+          transactionPoint_id: route.transactionPoint2,
+        });
+      }
+      return res.json({ foundShipment, oldCollectionShipment, newTransactionShipment });
+    } else {
+      let newCollectionShipment = await CollectionShipment.findOne({
+        shipment_id: shipmentId,
+        collectionPoint_id: route.collectionPoint2,
+        state: "Waiting"
+      })
+      if (!newCollectionShipment) {
+        newCollectionShipment = await CollectionShipment.create({
+          state: "Waiting",
+          shipment_id: shipmentId,
+          collectionPoint_id: route.collectionPoint2,
+        });
+      }
+      return res.json({ foundShipment, oldCollectionShipment, newCollectionShipment });
     }
     
-    return res.json({ foundShipment, oldCollectionShipment, newCollectionShipment });
     // update status
   } catch (error) {
     console.error("create shipment to collection point error:", error);
@@ -457,11 +507,12 @@ async function createShipmentFromCPToCP(req, res) {
   }
 }
 async function createShipmentFromCPToTP(req, res) {
-  const {shipmentId, idNewTransactionPoint} = req.body;
+  const shipmentId = req.body.shipmentId;
   if (!shipmentId) {
     return res.status(400).json({ message: "Missing shipmentId" });
   }
   try {
+    const route = await Route.findOne({shipment_id: shipmentId})
     let foundShipment = await Shipment.findOne({ _id: shipmentId });
     if (!foundShipment) {
       return res.status(404).json({message: "Shipment not found"})
@@ -483,13 +534,13 @@ async function createShipmentFromCPToTP(req, res) {
     )
     let newTransactionShipment = await TransactionShipment.findOne({
       shipment_id: shipmentId,
-      transactionPoint_id: idNewTransactionPoint,
+      transactionPoint_id: route.transactionPoint2,
     })
     if (!newTransactionShipment) {
       newTransactionShipment = await TransactionShipment.create({
         state: "Waiting",
         shipment_id: shipmentId,
-        transactionPoint_id: idNewTransactionPoint,
+        transactionPoint_id: route.transactionPoint2,
       });
     }
    
@@ -613,6 +664,41 @@ async function getShipmentCollection(req, res) {
   }
 }
 
+async function searchShipment(req, res) {
+  const shipmentId = req.body.shipmentId
+  if (!shipmentId) { 
+    return res.status(400).json({ message: "Missing shipmentId" });
+  }
+  try {
+    const shipment = await Shipment.findById(shipmentId)
+    if (!shipment) {
+      return res.status(200).json({message: "Shipment not found"})
+    }
+    switch (shipment.status) {
+      case "Canceled":
+        return res.status(200).json({message: `Shipment has been cancelled }` })
+      case "Successed":
+        return res.status(200).json({message: `Shipment has been delivered successfully at ${shipment.updatedAt}` })
+      case "Shipped":
+        return res.status(200).json({message: "Shipment is being shipped to next location"})
+      case "Preparing":
+        return res.status(200).json({message: "Shipment is ready to ship"})
+      case "Delivering":
+        return res.status(200).json({message: "Shipment is being shipped to location"})
+      case "ArrivedDestination":
+        return res.status(200).json({message: `Shipment is in ${shipment.now_address}`})
+      default:
+        return res.status(500).json({ message: "Error when update state shipment" });
+
+    } 
+  } catch (error) {
+    console.error("Get shipment error:", error);
+    return res.status(500)
+      .json({ message: "Could not get shipment " });
+  }
+  
+}
+
 
 module.exports = {
   createNewShipment,
@@ -629,6 +715,7 @@ module.exports = {
   deleteShipment,
   createShipmentCancel,
   getShipmentCollection,
-  confirmPaided
+  confirmPaided,
+  searchShipment
 };
 
