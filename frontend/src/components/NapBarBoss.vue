@@ -5,16 +5,16 @@
     </header>
 		<nav class="dashboard-nav-list">
 			<router-link to="/boss"> <a href="#" class="dashboard-nav-item"><i class="fas fa-home"></i> Trang chủ </a> </router-link>
-			<a href="#" class="dashboard-nav-item"><i class="fas fa-file-upload"></i> Quản lý đơn hàng </a>
+			<router-link to="/boss/statistical"><a href="#" class="dashboard-nav-item"><i class="fas fa-file-upload"></i> Quản lý đơn hàng </a></router-link>
  
-        <a href="#" class="dashboard-nav-item"><i class="fas fa-tachometer-alt"></i> Quản lý hệ thống</a>
+       <router-link to="/boss/manage_collection"><a href="#" class="dashboard-nav-item"><i class="fas fa-tachometer-alt"></i> Quản lý hệ thống</a> </router-link> 
      
       
 			<div class="dashboard-nav-item">
 			<a href="#" class="dashboard-nav-item"><i class="fas fa-users"></i> Quản lý tài khoản </a>
 			<div class="chill-item2">
-				<router-link to="/transaction"><a href="#" class="dashboard-nav-item"><i class="fas fa-users"></i>Điểm giao dịch </a> </router-link>
-				<router-link to="/collection"><a href="#" class="dashboard-nav-item"><i class="fas fa-users"></i>Điểm tập kết </a> </router-link>
+				<router-link to="/boss/transaction"><a href="#" class="dashboard-nav-item"><i class="fas fa-users"></i>Điểm giao dịch </a> </router-link>
+				<router-link to="/boss/collection"><a href="#" class="dashboard-nav-item"><i class="fas fa-users"></i>Điểm tập kết </a> </router-link>
 			</div>
 		</div>
 			<div class="nav-item-divider"></div>

@@ -6,13 +6,14 @@ import FormLogin from '@/views/FormLogin';
 import FormRegister from '@/views/FormRegister';
 import Contact from '@/views/Contact.vue';
 import Introduction from '@/views/Introduction';
-import EmployeeForm from '@/views/boss/EmployeeForm'
-import ListEmployee from '@/views/boss/ListEmployee'
+
 import TransactionPoints from '@/views/boss/TransactionPoints'
 import CollectionPoints from'@/views/boss/CollectionPoints'
 import BossDashboard from '@/views/boss/BossDashboard';
 import CreateAccount from '@/views/leader_transaction/CreateAccount'
 import OrderStatistics from '@/views/leader_transaction/OrderStatistics'
+import ManageSystem from '@/views/boss/ManageSystem'
+import Statistical from '@/views/boss/Statistical'
 
 
 
@@ -28,11 +29,10 @@ const routes = [
 
   { path: '/boss', component: BossDashboard },
 
-  { path: '/user/:id', component: EmployeeForm },
-  { path: '/user/add', component: EmployeeForm },
-  { path: '/users', component: ListEmployee  },
-{ path: '/collection', component: CollectionPoints  },
-{ path: '/transaction', component: TransactionPoints  },
+{ path: '/boss/collection', component: CollectionPoints  },
+{ path: '/boss/manage_collection', component: ManageSystem  },
+{ path: '/boss/transaction', component: TransactionPoints  },
+{ path: '/boss/statistical', component: Statistical },
 { path: '/leader/account', component: CreateAccount  },
 { path: '/leader/order', component: OrderStatistics  },
 
