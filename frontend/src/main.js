@@ -8,7 +8,7 @@ import { createPinia } from 'pinia';
 import '@fortawesome/fontawesome-free/css/all.min.css';
 import { createVuetify } from 'vuetify'
 import 'vuetify/dist/vuetify.min.css'
-import { VApp, VContainer, VCard, VBtn, VList, VListItemSubtitle, VDialog, VCardActions, VForm, VTextField, VRow, VCol, VCardText, VListItem, VListItemTitle, VCardTitle, VSelect, VDataTable } from 'vuetify/lib/components';
+import { VApp, VContainer, VCard, VBtn, VList, VListItemSubtitle, VDialog, VCardActions, VForm, VTextField, VRow, VCol, VCardText, VListItem, VListItemTitle, VCardTitle, VSelect, VDataTable, VMain, VAppBar, VAppBarTitle } from 'vuetify/lib/components';
 
 const vuetify = createVuetify({
   components: {
@@ -30,6 +30,9 @@ const vuetify = createVuetify({
     VCardTitle,
     VSelect,
     VDataTable,
+    VMain,
+    VAppBar,
+    VAppBarTitle,
     // thêm các component khác mà bạn muốn sử dụng
   },
 });

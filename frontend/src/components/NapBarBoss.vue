@@ -1,7 +1,7 @@
 <template>
 	<div class="dashboard-nav" id="napbar">
 		<header>
-      <p class="brand-logo"><i class="fas fa-anchor"></i> <span>ADMIN</span></p>
+      <p class="brand-logo"><i class="fas fa-anchor"></i> <span id = 'admin'>ADMIN</span></p>
     </header>
 		<nav class="dashboard-nav-list">
 			<router-link to="/boss"> <a href="#" class="dashboard-nav-item"><i class="fas fa-home"></i> Trang chủ </a> </router-link>
@@ -54,7 +54,7 @@ nav {
   display: block;
 }
 
-span {
+#admin {
   color: white;
 }
 

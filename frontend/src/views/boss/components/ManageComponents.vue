@@ -52,7 +52,7 @@
         <!-- Các trường thông tin khác nếu cần -->
 
         <v-btn type="submit" color="primary">Lưu</v-btn>
-        <v-btn @click="showTransactionDialog = false" color="secondary">Hủy</v-btn>
+       
       </v-form>
     </v-card-text>
     <v-card-actions>
@@ -72,7 +72,7 @@
               <!-- Các trường thông tin khác nếu cần -->
   
               <v-btn type="submit" color="primary">Lưu</v-btn>
-              <v-btn @click="showCollectionDialog = false" color="secondary">Hủy</v-btn>
+              
             </v-form>
           </v-card-text>
           <v-card-actions>
@@ -123,34 +123,6 @@
   };
   </script>
   <style scoped>
-  .v-card {
-    margin: 20px 0;
-    padding: 20px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.26);
-  }
-  
-  .v-card-title {
-    font-size: 1.25rem;
-    font-weight: bold;
-    margin-bottom: 10px;
-  }
-  
-  .v-list-item {
-    margin: 10px 0;
-  }
-  
-  .v-list-item-title {
-    font-weight: bold;
-  }
-  
-  .v-list-item-subtitle {
-    color: #666;
-  }
-  
-  .v-btn {
-    margin-top: 20px;
-    margin-right: 20px;
-    
-  }
+ 
   </style>
   
