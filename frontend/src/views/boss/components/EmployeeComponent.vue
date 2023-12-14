@@ -1,111 +1,268 @@
 <template>
-    <v-container>
-      <v-data-table
-        :headers="headers"
-        :items="employees"
-        :items-per-page="5"
-        class="elevation-1"
-      >
-        <template v-slot:top>
-          <v-toolbar flat>
-            <v-toolbar-title>Quản lý Nhân viên</v-toolbar-title>
-            <v-spacer></v-spacer>
-            <v-dialog v-model="dialog" max-width="500px">
-              <template v-slot:activator="{ on }">
-                <v-btn color="primary" dark v-on="on">Thêm Nhân viên</v-btn>
-              </template>
-              <v-card>
-                <v-card-title>
-                  <span class="headline">{{ formTitle }}</span>
-                </v-card-title>
-                <v-card-text>
-                  <v-container>
-                    <v-row>
-                      <v-col>
-                        <v-text-field v-model="editedItem.name" label="Họ và tên"></v-text-field>
-                      </v-col>
-                    </v-row>
-                    <v-row>
-                      <v-col>
-                        <v-text-field v-model="editedItem.position" label="Chức vụ"></v-text-field>
-                      </v-col>
-                    </v-row>
-                  </v-container>
-                </v-card-text>
-                <v-card-actions>
-                  <v-btn @click="closeDialog">Hủy</v-btn>
-                  <v-btn @click="save">Lưu</v-btn>
-                </v-card-actions>
-              </v-card>
-            </v-dialog>
-          </v-toolbar>
-        </template>
-        <!-- Sử dụng v-slot với tên slot được xác định trong headers -->
-        <template v-slot:[`header.actions`]="{ item }">
-          <v-icon small class="mr-2" @click="editItem(item)">mdi-pencil</v-icon>
-          <v-icon small @click="deleteItem(item)">mdi-delete</v-icon>
-        </template>
-      </v-data-table>
-    </v-container>
-  </template>
+  <v-app>
+    <v-main>
+      <v-card>
+        <v-card-title>Quản lý tài khoản trưởng điểm</v-card-title>
+
+        <v-card-text>
+          <v-row>
+            <v-col cols="12">
+              <v-select v-model="type" :items="['Điểm giao dịch', 'Điểm tập kết']" label="Loại điểm" ></v-select>
+            </v-col>
+          </v-row>
+
+          <v-row>
+            <v-col cols="12">
+              <v-data-table :headers="headers" :items="list_employee" >
+                <template v-slot:top>
+                  <v-toolbar flat>
+                    <v-toolbar-title>Thông tin nhân viên</v-toolbar-title>
+                    <v-divider class="mx-4" inset vertical></v-divider>
+                    <v-spacer></v-spacer>
+                    <v-dialog v-model="dialog" max-width="500px">
+                      <template v-slot:activator="{ props }">
+                        <v-btn color="primary" dark class="mb-2" v-bind="props">
+                          Tạo tài khoản
+                        </v-btn>
+                      </template>
+                      <v-card>
+                        <v-card-title>
+                          <span class="text-h5">{{ formTitle }}</span>
+                        </v-card-title>
+
+                        <v-card-text>
+                          <v-container>
+                            <v-row>
+                              <v-col cols="12" sm="6" md="4">
+                                <v-text-field v-model="editedItem.id" label="ID"></v-text-field>
+                              </v-col>
+                              <v-col cols="12" sm="6" md="4">
+                                <v-text-field v-model="editedItem.name" label="Tên trưởng điểm"></v-text-field>
+                              </v-col>
+                              <v-col cols="12" sm="6" md="4">
+                                <v-text-field v-model="editedItem.email" label="Email"></v-text-field>
+                              </v-col>
+                              <v-col cols="12" sm="6" md="4">
+                                <v-text-field v-model="editedItem.collection" label="Điểm quản lý"></v-text-field>
+                              </v-col>
+                              <v-col cols="12" sm="6" md="4">
+                                <v-text-field v-model="editedItem.phone" label="Số điện thoại"></v-text-field>
+                              </v-col>
+                            </v-row>
+                          </v-container>
+                        </v-card-text>
+
+                        <v-card-actions>
+                          <v-spacer></v-spacer>
+                          <v-btn color="blue-darken-1" variant="text" @click="close">
+                            Thoát
+                          </v-btn>
+                          <v-btn color="blue-darken-1" variant="text" @click="save">
+                            Lưu
+                          </v-btn>
+                        </v-card-actions>
+                      </v-card>
+                    </v-dialog>
+                    <v-dialog v-model="dialogDelete" max-width="500px">
+                      <v-card>
+                        <v-card-title class="text-h6">Bạn có muốn xóa tài khoản này</v-card-title>
+                        <v-card-actions>
+                          <v-spacer></v-spacer>
+                          <v-btn color="blue-darken-1" variant="text" @click="closeDelete">Thoát</v-btn>
+                          <v-btn color="blue-darken-1" variant="text" @click="deleteItemConfirm">OK</v-btn>
+                          <v-spacer></v-spacer>
+                        </v-card-actions>
+                      </v-card>
+                    </v-dialog>
+                  </v-toolbar>
+                </template>
+                <template v-slot:[`item.actions`]="{ item }">
+        
+
+
+                  <v-icon size="small" class="me-2" @click="editItem(item)" >
+                    <i class="far fa-edit"></i></v-icon>
+                  <v-icon size="small" @click="deleteItem(item)" >
+                    <i class="far fa-trash-alt"></i></v-icon>
+                </template>
+                <template v-slot:no-data>
+                  <v-btn color="primary" @click="initialize">
+                    Reset
+                  </v-btn>
+                </template>
+              </v-data-table>
+            </v-col>
+          </v-row>
+
+        </v-card-text>
+      </v-card>
+    </v-main>
+  </v-app>
+</template>
+
   
-  <script>
-  export default {
-    data() {
-      return {
-        employees: [
-          { id: 1, name: 'Nguyen Van A', position: 'Developer' },
-          { id: 2, name: 'Tran Thi B', position: 'Designer' },
-          // Thêm dữ liệu nhân viên khác nếu cần
-        ],
-        headers: [
-          { text: 'ID', value: 'id' },
-          { text: 'Họ và tên', value: 'name' },
-          { text: 'Chức vụ', value: 'position' },
-          { text: 'Thao tác', value: 'actions', sortable: false },
-        ],
-        editedIndex: -1,
-        editedItem: {
-          name: '',
-          position: '',
+<script>
+
+export default {
+  watch: {
+  type: function (newType) {
+      // Lưu ý: Bạn có thể cần thay đổi logic dưới đây để phản ánh các yêu cầu của bạn
+      this.initialize(newType);
+      console.log(this.type)
+    },
+  },
+  name: "EmployeeComponent",
+  data: () => ({
+    type : null,
+    dialog: false,
+    dialogDelete: false,
+    headers: [
+      {
+        title: 'ID',
+        align: 'start',
+        sortable: false,
+        key: 'id',
+      },
+      { title: 'Tên trưởng điểm', key: 'name' },
+      { title: 'Email', key: 'email' },
+      { title: 'Điểm quản lý', key: 'collection' },
+      { title: 'Số điện thoại', key: 'phone' },
+      { title: 'Actions', key: 'actions', sortable: false },
+    ],
+    list_employee: [],
+    editedIndex: -1,
+    editedItem: {
+      id: 0,
+      name: "",
+      email: "",
+      collection: "",
+      phone: "",
+    },
+    defaultItem: {
+      id: 0,
+      name: "",
+      email: "",
+      collection: "",
+      phone: "",
+    },
+  }),
+
+  computed: {
+    formTitle() {
+      return this.editedIndex === -1 ? 'New Item' : 'Edit Item'
+    },
+  },
+
+  watch: {
+    dialog(val) {
+      val || this.close()
+    },
+    dialogDelete(val) {
+      val || this.closeDelete()
+    },
+  },
+
+  created() {
+    this.initialize()
+  },
+
+  methods: {
+    initialize(type) {
+     
+      if(type=="Điểm giao dịch") {
+      this.list_employee = [
+        {
+          id: 1,
+      name: "doan",
+      email: "test@gmail.com",
+      collection: "Hà Nội",
+      phone: "0912231223",
         },
-        dialog: false,
-      };
+        {
+          id: 2,
+      name: "duong",
+      email: "test1@gmail.com",
+      collection: "Đà Nẵng",
+      phone: "0912231223",
+        },
+        {
+          id: 3,
+      name: "H.anh",
+      email: "test3@gmail.com",
+      collection: "TP. HCM",
+      phone: "0912231223",
+        },
+      ]
+      }
+      else {
+        this.list_employee = [
+        {
+          id: 1,
+      name: "hua",
+      email: "test@gmail.com",
+      collection: "Hà Nội",
+      phone: "0912231223",
+        },
+        {
+          id: 2,
+      name: "pham",
+      email: "test1@gmail.com",
+      collection: "Đà Nẵng",
+      phone: "0912231223",
+        },
+        {
+          id: 3,
+      name: "hoang",
+      email: "test3@gmail.com",
+      collection: "TP. HCM",
+      phone: "0912231223",
+        },
+      ]
+        
+      }
     },
-    computed: {
-      formTitle() {
-        return this.editedIndex === -1 ? 'Thêm Nhân viên' : 'Sửa Nhân viên';
-      },
+
+    editItem(item) {
+      this.editedIndex = this.list_employee.indexOf(item)
+      this.editedItem = Object.assign({}, item)
+      this.dialog = true
     },
-    methods: {
-      editItem(item) {
-        this.editedIndex = this.employees.indexOf(item);
-        this.editedItem = Object.assign({}, item);
-        this.dialog = true;
-      },
-      deleteItem(item) {
-        const index = this.employees.indexOf(item);
-        if (confirm('Bạn có chắc chắn muốn xóa Nhân viên này không?')) {
-          this.employees.splice(index, 1);
-        }
-      },
-      save() {
-        if (this.editedIndex > -1) {
-          Object.assign(this.employees[this.editedIndex], this.editedItem);
-        } else {
-          this.employees.push(Object.assign({}, this.editedItem));
-        }
-        this.closeDialog();
-      },
-      closeDialog() {
-        this.dialog = false;
-        this.editedItem = {
-          name: '',
-          position: '',
-        };
-        this.editedIndex = -1;
-      },
+
+    deleteItem(item) {
+      this.editedIndex = this.list_employee.indexOf(item)
+      this.editedItem = Object.assign({}, item)
+      this.dialogDelete = true
     },
-  };
-  </script>
-  
+
+    deleteItemConfirm() {
+      this.list_employee.splice(this.editedIndex, 1)
+      this.closeDelete()
+    },
+
+    close() {
+      this.dialog = false
+      this.$nextTick(() => {
+        this.editedItem = Object.assign({}, this.defaultItem)
+        this.editedIndex = -1
+      })
+    },
+
+    closeDelete() {
+      this.dialogDelete = false
+      this.$nextTick(() => {
+        this.editedItem = Object.assign({}, this.defaultItem)
+        this.editedIndex = -1
+      })
+    },
+
+    save() {
+      if (this.editedIndex > -1) {
+        Object.assign(this.list_employee[this.editedIndex], this.editedItem)
+      } else {
+        this.list_employee.push(this.editedItem)
+      }
+      this.close()
+    },
+  },
+}
+</script>

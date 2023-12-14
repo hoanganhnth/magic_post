@@ -3,45 +3,8 @@
    <nap-bar-boss></nap-bar-boss>
     <div class='dashboard-app'>
       <div class='dashboard-content'>
-        <div class="container">
-    <h1>Danh sách tài khoản trưởng điểm giao dịch</h1>
+        <employee-component></employee-component>
 
-    <table class="table table-striped table-bordered">
-      <thead>
-        <tr>
-          <th>Điểm giao dịch</th>
-          <th>Tên trưởng điểm</th>
-          <th>Địa chỉ email</th>
-          <th>Vai trò</th>
-          <th>Trạng thái</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr  v-for="item in items" :key="item.id"> 
-          
-          <td>{{ item.transaction }}</td>
-          <td>{{ item.name }}</td>
-          <td>{{ item.email }}</td>
-          <td>{{ item.userRole }}</td>
-          <td>{{ item.status }}</td>
-        </tr>
-      </tbody>
-    </table>
-    <button id="add" @click="showForm = !showForm">
-  <i class="fas fa-plus"></i> Thêm nhân viên
-</button>
-<div v-if="showForm" class="container-form">
-    <form @submit.prevent="onSubmit">
-      <input type="text" v-model="username" placeholder="Tên đăng nhập">
-      <input type="text" v-model="first_name" placeholder="Họ">
-      <input type="text" v-model="last_name" placeholder="Tên">
-      <input type="email" v-model="email" placeholder="Địa chỉ email">
-      <input type="password" v-model="password" placeholder="Mật khẩu">
-      <input type="password" v-model="password_confirm" placeholder="Nhập lại mật khẩu">
-      <button type="submit">Tạo tài khoản</button> 
-    </form>
-  </div>
-  </div>
       </div>
     </div>
   </div>
@@ -49,10 +12,11 @@
     
 <script>
 import NapBarBoss from '../../components/NapBarBoss.vue'
+import EmployeeComponent from './components/EmployeeComponent.vue';
 export default {
-  components: { NapBarBoss },
+  components: { NapBarBoss, EmployeeComponent },
 
-  name: 'TransactionPoints',
+  name: 'ManageEmployee',
   data() {
 
     return {

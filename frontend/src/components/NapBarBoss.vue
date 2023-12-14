@@ -10,13 +10,8 @@
        <router-link to="/boss/manage_collection"><a href="#" class="dashboard-nav-item"><i class="fas fa-tachometer-alt"></i> Quản lý hệ thống</a> </router-link> 
      
       
-			<div class="dashboard-nav-item">
-			<a href="#" class="dashboard-nav-item"><i class="fas fa-users"></i> Quản lý tài khoản </a>
-			<div class="chill-item2">
-				<router-link to="/boss/transaction"><a href="#" class="dashboard-nav-item"><i class="fas fa-users"></i>Điểm giao dịch </a> </router-link>
-				<router-link to="/boss/collection"><a href="#" class="dashboard-nav-item"><i class="fas fa-users"></i>Điểm tập kết </a> </router-link>
-			</div>
-		</div>
+			
+			<router-link to="/boss/employee"><a href="#" class="dashboard-nav-item"><i class="fas fa-users"></i> Quản lý tài khoản </a></router-link>
 			<div class="nav-item-divider"></div>
       <router-link to="/home">	<a  href="#" class="dashboard-nav-item"><i class="fas fa-sign-out-alt"></i> Đăng xuất</a></router-link> 
 		</nav>

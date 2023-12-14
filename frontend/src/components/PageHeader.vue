@@ -37,7 +37,7 @@
 
 
     <div class="logo">
-            <img src="require('@/assets/images/magic_post.png')" alt="Logo">
+            <img src="../images/magic_post.png" alt="Logo">
             <p>Macgic Post</p>
         </div>
         <div class="search-container">

@@ -7,8 +7,7 @@ import FormRegister from '@/views/FormRegister';
 import Contact from '@/views/Contact.vue';
 import Introduction from '@/views/Introduction';
 
-import TransactionPoints from '@/views/boss/TransactionPoints'
-import CollectionPoints from'@/views/boss/CollectionPoints'
+import ManageEmployee from '@/views/boss/ManageEmployee';
 import BossDashboard from '@/views/boss/BossDashboard';
 import CreateAccount from '@/views/leader_transaction/CreateAccount'
 import OrderStatistics from '@/views/leader_transaction/OrderStatistics'
@@ -29,9 +28,8 @@ const routes = [
 
   { path: '/boss', component: BossDashboard },
 
-{ path: '/boss/collection', component: CollectionPoints  },
+{ path: '/boss/employee', component: ManageEmployee  },
 { path: '/boss/manage_collection', component: ManageSystem  },
-{ path: '/boss/transaction', component: TransactionPoints  },
 { path: '/boss/statistical', component: Statistical },
 { path: '/leader/account', component: CreateAccount  },
 { path: '/leader/order', component: OrderStatistics  },

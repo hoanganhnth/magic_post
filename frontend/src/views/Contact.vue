@@ -63,8 +63,8 @@
     </div>
     <div class="row">
         <div class="col-lg-6 col-12">
-            <div class="contact__left-form"><img class="contact__left-form-img"
-                    src="../images/img-contact1-effb3eda225cc89caec0a1281d616ddd.png" alt="img contact">
+            <div class="contact__left-form"><v-img class="contact__left-form-img"
+                    src="../images/img-contact1-effb3eda225cc89caec0a1281d616ddd.png" alt="img contact"></v-img>
                 <div class="contact__left-form-title">Hỗ trợ trực tuyến 24/7 thông tin giá cước và dịch vụ</div>
                
             </div>
