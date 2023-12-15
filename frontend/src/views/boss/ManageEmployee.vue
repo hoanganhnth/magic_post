@@ -3,7 +3,13 @@
    <nap-bar-boss></nap-bar-boss>
     <div class='dashboard-app'>
       <div class='dashboard-content'>
-        <employee-component></employee-component>
+        <v-app>
+      <v-main>
+        <employee-collection>
+        </employee-collection>
+      <employee-transaction></employee-transaction>
+    </v-main>
+    </v-app>
 
       </div>
     </div>
@@ -12,40 +18,18 @@
     
 <script>
 import NapBarBoss from '../../components/NapBarBoss.vue'
-import EmployeeComponent from './components/EmployeeComponent.vue';
+import EmployeeCollection from './components/EmployeeCollection.vue';
+import EmployeeTransaction from './components/EmployeeTransaction.vue';
+
 export default {
-  components: { NapBarBoss, EmployeeComponent },
+  components: { NapBarBoss, EmployeeCollection, EmployeeTransaction },
 
   name: 'ManageEmployee',
   data() {
 
     return {
-      showForm: false,
-      items : [
-  {
-    id:1,
-    transaction:"Hà Nội",
-    name: "John Doe",
-    email: "johndoe@example.com",
-    userRole: "admin",
-    status: "active",
-  },
-  {
-    id:2,
-    transaction:"Đà Nẵng",
-    name: "Jane Doe",
-    email: "janedoe@example.com",
-    userRole: "user",
-    status: "inactive",
-  },
-],
-      username : "",
-      email:"",
-      first_name:"",
-      last_name :"",
-      password:"",
-      password_confirm:"",
-     
+      
+   
 
     };
   },
