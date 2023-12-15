@@ -1,22 +1,28 @@
-import { createApp } from 'vue'
-import App from './App.vue'
-import router from './router'
-import store from './store'
-import VueAxios from 'vue-axios'
-import axios from 'axios'
-import { createPinia } from 'pinia';
-import '@fortawesome/fontawesome-free/css/all.min.css';
-import { createVuetify } from 'vuetify'
-import 'vuetify/dist/vuetify.min.css'
-import * as VuetifyComponents from 'vuetify/lib/components';
+import { createApp } from "vue";
+import App from "./App.vue";
 
-const vuetify = createVuetify({
-  components: VuetifyComponents,
+// router
+import router from "./router";
+
+// bootstrap bundle
+import bootstrap from "bootstrap/dist/js/bootstrap.bundle";
+
+import { createMetaManager, defaultConfig } from "vue-meta";
+const metaManager = createMetaManager(false, {
+  ...defaultConfig,
+  meta: { tag: "meta", nameless: true },
 });
 
-const pinia = createPinia();
+// font aswesome
+import { library } from "@fortawesome/fontawesome-svg-core";
+import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
+import { faFileLines } from "@fortawesome/free-regular-svg-icons";
+import { faLinkedinIn, faGithub } from "@fortawesome/free-brands-svg-icons";
+library.add(faLinkedinIn, faGithub, faFileLines);
 
-const app = createApp(App).use(store).use(router).use(pinia).use(vuetify)
-app.use(VueAxios,{$request: axios})
-
-app.mount('#app')
+createApp(App)
+  .use(bootstrap)
+  .component("font-awesome-icon", FontAwesomeIcon)
+  .use(router)
+  .use(metaManager)
+  .mount("#app");
