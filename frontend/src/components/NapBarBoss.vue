@@ -28,23 +28,6 @@ export default {
 <style >
 
 
-.chill-item2 {
-	display: none;
-  position: absolute;
-  right: 0;
-  top: 50%;
-  transform: translateY(-40%);
-	background-color: #081c3d;
-;
-  padding: 10px;
-  border-radius: 5px;
-}
-.dashboard-nav-item:hover .chill-item2 {
-    display: flex;
-    flex-direction: column;
-}
-
-
 nav {
   display: block;
 }
@@ -90,7 +73,8 @@ nav {
   -webkit-flex-grow: 2;
   -ms-flex-positive: 2;
   flex-grow: 2;
-  padding: 25px;
+  padding-left: 25px;
+  padding-right: 25px;
 }
 
 .dashboard-nav {
@@ -207,12 +191,6 @@ nav {
   margin-left: -40px;
 }
 
-
-
-
-
-
-
 .nav-item-divider {
   height: 1px;
   margin: 1rem 0;
@@ -253,22 +231,4 @@ nav {
   }
 }
 
-@media (max-width: 992px) {
-  .dashboard-nav header .menu-toggle {
-    display: -webkit-box;
-    display: -webkit-flex;
-    display: -ms-flexbox;
-    display: flex;
-  }
-}
-
-@media (min-width: 992px) {
-  .dashboard-toolbar {
-    left: 238px;
-  }
-
-  .dashboard-compact .dashboard-toolbar {
-    left: 0;
-  }
-}
 </style>

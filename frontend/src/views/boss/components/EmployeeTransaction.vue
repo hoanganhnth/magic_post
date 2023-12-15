@@ -1,15 +1,9 @@
 <template>
-  <v-app>
-    <v-main>
+ 
       <v-card>
-        <v-card-title>Quản lý tài khoản trưởng điểm</v-card-title>
+        <v-card-title>Quản lý tài khoản trưởng điểm Giao dịch</v-card-title>
 
         <v-card-text>
-          <v-row>
-            <v-col cols="12">
-              <v-select v-model="type" :items="['Điểm giao dịch', 'Điểm tập kết']" label="Loại điểm" ></v-select>
-            </v-col>
-          </v-row>
 
           <v-row>
             <v-col cols="12">
@@ -96,22 +90,15 @@
 
         </v-card-text>
       </v-card>
-    </v-main>
-  </v-app>
+    
 </template>
 
   
 <script>
 
 export default {
-  watch: {
-  type: function (newType) {
-      // Lưu ý: Bạn có thể cần thay đổi logic dưới đây để phản ánh các yêu cầu của bạn
-      this.initialize(newType);
-      console.log(this.type)
-    },
-  },
-  name: "EmployeeComponent",
+
+  name: "EmployeeTransaction",
   data: () => ({
     type : null,
     dialog: false,
@@ -167,34 +154,9 @@ export default {
   },
 
   methods: {
-    initialize(type) {
+    initialize() {
      
-      if(type=="Điểm giao dịch") {
-      this.list_employee = [
-        {
-          id: 1,
-      name: "doan",
-      email: "test@gmail.com",
-      collection: "Hà Nội",
-      phone: "0912231223",
-        },
-        {
-          id: 2,
-      name: "duong",
-      email: "test1@gmail.com",
-      collection: "Đà Nẵng",
-      phone: "0912231223",
-        },
-        {
-          id: 3,
-      name: "H.anh",
-      email: "test3@gmail.com",
-      collection: "TP. HCM",
-      phone: "0912231223",
-        },
-      ]
-      }
-      else {
+      
         this.list_employee = [
         {
           id: 1,
@@ -219,7 +181,7 @@ export default {
         },
       ]
         
-      }
+      
     },
 
     editItem(item) {
