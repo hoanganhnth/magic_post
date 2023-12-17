@@ -3,7 +3,7 @@
     <nap-bar-boss></nap-bar-boss>
     <div class="dashboard-app">
       <div class="dashboard-content">
-        <manage-components></manage-components>
+        <statistical-component></statistical-component>
       </div>
     </div>
   </div>
@@ -11,10 +11,11 @@
 
 <script>
 import NapBarBoss from "../../components/boss/NapBarBoss.vue";
-import ManageComponents from "./components/ManageComponents.vue";
+
+import StatisticalComponent from "./components/StatisticalComponent.vue";
 export default {
-  components: { NapBarBoss, ManageComponents },
-  name: "ManageSystem",
+  components: { NapBarBoss, StatisticalComponent },
+  name: "ManageStatistical",
   data() {
     return {};
   },

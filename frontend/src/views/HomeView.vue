@@ -1,3 +1,4 @@
+/* eslint-disable */
 <template>
   <!-- Menu -->
   <MenuVue :links="links">Magic<span class="prim">Post</span></MenuVue>
@@ -13,7 +14,11 @@
       <form class="form-inline">
         <div class="form-group">
           <label for="inputDelivety" class="sr-only">address</label>
-          <input type="text" class="form-control" placeholder="Enter delivery address" />
+          <input
+            type="text"
+            class="form-control"
+            placeholder="Enter delivery address"
+          />
         </div>
       </form>
       <button type="submit" class="btn btn-primary mb-2">Confirm</button>
@@ -25,6 +30,7 @@
   <ProjectsGrid id="projects" :projects="projects" />
   <FooterVue :links="socials" :copyright="copyright" />
 </template>
+
 <script>
 import MenuVue from "@/components/shared/AppMenu.vue";
 import FooterVue from "@/components/shared/AppFooter.vue";
@@ -39,9 +45,6 @@ import skills from "@/data/skills";
 import experience from "@/data/experience";
 import awards from "@/data/awards";
 import projects from "@/data/projects";
-
-import SimpleButton from "@/components/reusable/SimpleButton.vue";
-import HiWord from "@/components/reusable/HighlightIt.vue";
 
 export default {
   name: "HomeView",
@@ -92,8 +95,6 @@ export default {
     ExperienceTable,
     AwardsGrid,
     ProjectsGrid,
-    SimpleButton,
-    HiWord,
   },
 };
 </script>
@@ -102,3 +103,4 @@ export default {
   color: $primary;
 }
 </style>
+/* eslint-enable */

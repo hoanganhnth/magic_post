@@ -1,44 +1,34 @@
 <template>
-  <div class='dashboard'>
-   <nap-bar-boss></nap-bar-boss>
-    <div class='dashboard-app'>
-      <div class='dashboard-content'>
+  <div class="dashboard">
+    <nap-bar-boss></nap-bar-boss>
+    <div class="dashboard-app">
+      <div class="dashboard-content">
         <v-app>
-      <v-main>
-        <employee-collection>
-        </employee-collection>
-      <employee-transaction></employee-transaction>
-    </v-main>
-    </v-app>
-
+          <v-main>
+            <employee-collection> </employee-collection>
+            <employee-transaction></employee-transaction>
+          </v-main>
+        </v-app>
       </div>
     </div>
   </div>
 </template>
-    
+
 <script>
-import NapBarBoss from '../../components/NapBarBoss.vue'
-import EmployeeCollection from './components/EmployeeCollection.vue';
-import EmployeeTransaction from './components/EmployeeTransaction.vue';
+import NapBarBoss from "../../components/boss/NapBarBoss.vue";
+import EmployeeCollection from "./components/EmployeeCollection.vue";
+import EmployeeTransaction from "./components/EmployeeTransaction.vue";
 
 export default {
   components: { NapBarBoss, EmployeeCollection, EmployeeTransaction },
 
-  name: 'ManageEmployee',
+  name: "ManageEmployee",
   data() {
-
-    return {
-      
-   
-
-    };
+    return {};
   },
-   
-  
 };
 </script>
 
-   
 <style scoped>
 #add {
   background-color: #3498db;
@@ -61,7 +51,7 @@ export default {
   background-color: #2980b9;
 }
 
- .container {
+.container {
   width: 1200px;
   margin: 0 auto;
 }
@@ -123,6 +113,5 @@ button:hover {
   background-color: #45a049;
 }
 
-
-/* Add component-specific styles here */</style>
-    
+/* Add component-specific styles here */
+</style>

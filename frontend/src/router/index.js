@@ -1,12 +1,20 @@
 import { createRouter, createWebHistory } from "vue-router";
 import HomeView from "../views/HomeView.vue";
-
+import ManageEmployee from "@/views/boss/ManageEmployee";
+import BossDashboard from "@/views/boss/BossDashboard";
+import ManageSystem from "@/views/boss/ManageSystem";
+import ManageStatistical from "@/views/boss/ManageStatistical";
 const routes = [
   {
     path: "/",
     name: "Home",
     component: HomeView,
   },
+  { path: "/boss", component: BossDashboard },
+
+  { path: "/boss/employee", component: ManageEmployee },
+  { path: "/boss/manage_collection", component: ManageSystem },
+  { path: "/boss/statistical", component: ManageStatistical },
 ];
 
 const router = createRouter({

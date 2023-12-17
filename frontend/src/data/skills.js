@@ -30,8 +30,7 @@ const skills = [
         css: "docker",
       },
     ],
-    description:
-      "Dịch vụ phủ sóng khắp 63 tỉnh thành",
+    description: "Dịch vụ phủ sóng khắp 63 tỉnh thành",
   },
   {
     id: 2,
@@ -54,8 +53,7 @@ const skills = [
         css: "opencv",
       },
     ],
-    description:
-      "Nhân sự được đào tạo bài bản & chuyên nghiệp",
+    description: "Nhân sự được đào tạo bài bản & chuyên nghiệp",
   },
   {
     id: 3,
@@ -78,8 +76,7 @@ const skills = [
         css: "opencv",
       },
     ],
-    description:
-      "Mạng lưới bưu cục rộng khắp hoạt động trên toàn quốc",
+    description: "Mạng lưới bưu cục rộng khắp hoạt động trên toàn quốc",
   },
 ];
 

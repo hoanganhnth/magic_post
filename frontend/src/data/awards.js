@@ -1,7 +1,8 @@
 const awards = [
   {
     id: 1,
-    title: "Magic Post đã thành công mở rộng độ phủ ra 63 tỉnh thành khắp cả nước.",
+    title:
+      "Magic Post đã thành công mở rộng độ phủ ra 63 tỉnh thành khắp cả nước.",
     date: "21 - 23 of May, 2021",
     image: "394c4e209a62733c2a73.png",
     description:
@@ -13,7 +14,7 @@ const awards = [
     date: "12th of December, 2022",
     image: "8315ff792b3bc2659b2a.png",
     description:
-      "Mới đây, J&T Express cũng vừa được vinh danh trong Top 10 Thương hiệu xuất sắc Châu Á năm 2022 nhờ những nỗ lực cải tiến toàn diện: chất lượng dịch vụ, đội ngũ nhân sự, uy tín thương hiệu, trách nhiệm cộng đồng,…"
+      "Mới đây, J&T Express cũng vừa được vinh danh trong Top 10 Thương hiệu xuất sắc Châu Á năm 2022 nhờ những nỗ lực cải tiến toàn diện: chất lượng dịch vụ, đội ngũ nhân sự, uy tín thương hiệu, trách nhiệm cộng đồng,…",
   },
   {
     id: 3,

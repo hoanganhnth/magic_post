@@ -1,32 +1,53 @@
 <template>
-	<div class="dashboard-nav" id="napbar">
-		<header>
-      <p class="brand-logo"><i class="fas fa-anchor"></i> <span id = 'admin'>ADMIN</span></p>
+  <div class="dashboard-nav" id="napbar">
+    <header>
+      <p class="brand-logo">
+        <i class="fas fa-anchor"></i> <span id="admin">ADMIN</span>
+      </p>
     </header>
-		<nav class="dashboard-nav-list">
-			<router-link to="/boss"> <a href="#" class="dashboard-nav-item"><i class="fas fa-home"></i> Trang chủ </a> </router-link>
-			<router-link to="/boss/statistical"><a href="#" class="dashboard-nav-item"><i class="fas fa-file-upload"></i> Quản lý đơn hàng </a></router-link>
- 
-       <router-link to="/boss/manage_collection"><a href="#" class="dashboard-nav-item"><i class="fas fa-tachometer-alt"></i> Quản lý hệ thống</a> </router-link> 
-     
-      
-			
-			<router-link to="/boss/employee"><a href="#" class="dashboard-nav-item"><i class="fas fa-users"></i> Quản lý tài khoản </a></router-link>
-			<div class="nav-item-divider"></div>
-      <router-link to="/home">	<a  href="#" class="dashboard-nav-item"><i class="fas fa-sign-out-alt"></i> Đăng xuất</a></router-link> 
-		</nav>
-	</div>
+    <nav class="dashboard-nav-list">
+      <router-link to="/boss">
+        <a href="#" class="dashboard-nav-item"
+          ><i class="fas fa-home"></i> Trang chủ
+        </a>
+      </router-link>
+      <router-link to="/boss/statistical"
+        ><a href="#" class="dashboard-nav-item"
+          ><i class="fas fa-file-upload"></i> Quản lý đơn hàng
+        </a></router-link
+      >
+
+      <router-link to="/boss/manage_collection"
+        ><a href="#" class="dashboard-nav-item"
+          ><i class="fas fa-tachometer-alt"></i> Quản lý hệ thống</a
+        >
+      </router-link>
+
+      <router-link to="/boss/employee"
+        ><a href="#" class="dashboard-nav-item"
+          ><i class="fas fa-users"></i> Quản lý tài khoản
+        </a></router-link
+      >
+      <div class="nav-item-divider"></div>
+      <router-link to="/home">
+        <a href="#" class="dashboard-nav-item"
+          ><i class="fas fa-sign-out-alt"></i> Đăng xuất</a
+        ></router-link
+      >
+    </nav>
+  </div>
 </template>
 
 <script>
 export default {
-	name: 'NavBar',
-
+  name: "NavBar",
 };
 </script>
 
-<style >
-
+<style>
+a {
+  text-decoration: none;
+}
 
 nav {
   display: block;
@@ -36,11 +57,8 @@ nav {
   color: white;
 }
 
-
-
-
 #napbar {
-	background-color: #081c3d;
+  background-color: #081c3d;
 }
 
 .dashboard {
@@ -87,8 +105,6 @@ nav {
   background-color: #0b0836;
 }
 
-
-
 .dashboard-nav header {
   min-height: 84px;
   padding: 8px 27px;
@@ -105,7 +121,6 @@ nav {
   -ms-flex-align: center;
   align-items: center;
 }
-
 
 .dashboard-nav a {
   color: #515151;
@@ -125,8 +140,6 @@ nav {
   background-color: #dbdbdb;
   text-decoration: none;
 }
-
-
 
 .dashboard-nav a {
   color: #fff;
@@ -149,8 +162,6 @@ nav {
 
 .brand-logo:focus,
 .brand-logo:active,
-
-
 .brand-logo i {
   color: #d2d1d1;
   font-size: 27px;
@@ -171,7 +182,7 @@ nav {
 
 .dashboard-nav-item {
   min-height: 56px;
- 
+
   padding: 8px 20px 8px 70px;
   display: -webkit-box;
   display: -webkit-flex;
@@ -208,7 +219,6 @@ nav {
   }
 }
 
-
 @media (max-width: 768px) {
   .dashboard-content {
     padding: 15px 0px;
@@ -230,5 +240,4 @@ nav {
     display: block;
   }
 }
-
 </style>

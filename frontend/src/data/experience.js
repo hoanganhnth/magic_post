@@ -8,44 +8,39 @@ const experience = [
     description: [
       {
         id: 1,
-        description:
-          "Uy tín",
+        description: "Uy tín",
       },
       {
         id: 2,
-        description:
-          "Bền vững",
+        description: "Bền vững",
       },
       {
         id: 3,
-        description:
-          "Hàng đầu Việt Nam",
+        description: "Hàng đầu Việt Nam",
       },
     ],
   },
   {
     id: 2,
     date: "GIÁ TRỊ CỐT LÕI",
-    position: "ba giá trị cơ bản của Magic Post nhằm mang đến chất lượng dịch vụ giao hàng tốt nhất cho khách hàng:",
+    position:
+      "ba giá trị cơ bản của Magic Post nhằm mang đến chất lượng dịch vụ giao hàng tốt nhất cho khách hàng:",
     company: "",
     url: "",
     description: [
       {
         id: 1,
-        description:
-          "Bổn phận",
+        description: "Bổn phận",
       },
       {
         id: 2,
-        description:
-          "Chia sẻ",
+        description: "Chia sẻ",
       },
       {
         id: 3,
-        description:
-          "Trách nhiệm",
+        description: "Trách nhiệm",
       },
-    ], 
+    ],
   },
 ];
 
