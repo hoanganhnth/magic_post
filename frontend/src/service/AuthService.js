@@ -1,11 +1,11 @@
 // AuthService.js
 
-import {useApi, useApiPrivate} from "../composables/useApi"
+import { useApi, useApiPrivate } from "../composables/useApi";
 
 const AuthService = {
   async login(username, password) {
     try {
-      const data= await useApi().post('/api/auth/login', {
+      const data = await useApi().post("/api/auth/login", {
         username,
         password,
       });

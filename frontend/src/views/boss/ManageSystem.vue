@@ -1,31 +1,23 @@
-
 <template>
-    <div class='dashboard'>
-     <nap-bar-boss></nap-bar-boss>
-      <div class='dashboard-app'>
-        <div class='dashboard-content'>
-            <manage-components></manage-components>
-          
-    
-        </div>
+  <div class="dashboard">
+    <nap-bar-boss></nap-bar-boss>
+    <div class="dashboard-app">
+      <div class="dashboard-content">
+        <manage-components></manage-components>
       </div>
     </div>
-  </template>
- 
-  
-  <script>
-import NapBarBoss from '../../components/NapBarBoss.vue';
-import ManageComponents from './components/ManageComponents.vue';
-  export default {
+  </div>
+</template>
+
+<script>
+import NapBarBoss from "../../components/boss/NapBarBoss.vue";
+import ManageComponents from "./components/ManageComponents.vue";
+export default {
   components: { NapBarBoss, ManageComponents },
-    name: "ManageSystem",
-    data() {
-    return {
-      
-    };
+  name: "ManageSystem",
+  data() {
+    return {};
   },
-  methods: {
-    
-  },
+  methods: {},
 };
 </script>

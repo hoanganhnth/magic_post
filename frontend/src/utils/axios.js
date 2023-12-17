@@ -1,19 +1,19 @@
-import axios from "axios"
+import axios from "axios";
 
 axios.defaults.withCredentials = true;
 
 export const axiosInstance = axios.create({
-baseURL: "http://localhost:8081",
+  baseURL: "http://localhost:8081",
   withCredentials: true,
   headers: {
-    'Content-Type': 'application/json',
-  }
-})
+    "Content-Type": "application/json",
+  },
+});
 
 export const axiosPrivateInstance = axios.create({
-    baseURL: "http://localhost:8081",
+  baseURL: "http://localhost:8081",
   withCredentials: true,
   headers: {
-    'Content-Type': 'application/json',
-  }
-})
+    "Content-Type": "application/json",
+  },
+});
