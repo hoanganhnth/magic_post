@@ -31,7 +31,7 @@ export const useAuthStore = defineStore("auth", {
         try {
           const { data } = await useApi().post(`/api/auth/login`, payload);
           this.accessToken = data.access_token;
-          // await this.getUser();
+          await this.getUser();
           return data;
         } catch (error) {
           throw error.message;
