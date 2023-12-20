@@ -9,6 +9,7 @@ router.post('/registerStaff', auth, accountControllers.registerStaff)
 router.get('/getAllStaff',auth,  accountControllers.getAllStaff)
 
 router.get('/getAllHead',  isAdmin,  accountControllers.getAllHead)
+router.post('/updateUser',  isAdmin,  accountControllers.updateUser)
 router.get('/getAllPermission',  isAdmin,  accountControllers.getAllPermission)
 router.get('/allRole', isAdmin, accountControllers.showAllRole)
 router.post('/createRole', isAdmin,  accountControllers.createRole)

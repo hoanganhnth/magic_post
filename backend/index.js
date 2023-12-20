@@ -1,6 +1,6 @@
 
 require('dotenv').config();
-
+const morgan = require('morgan');
 const express = require('express');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
@@ -21,6 +21,8 @@ connectDB();
 
 // Allow Credentials
 app.use(credentials)
+
+app.use(morgan('dev'));
 
 // CORS
 

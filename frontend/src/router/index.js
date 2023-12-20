@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory } from "vue-router";
 import HomeView from "../views/HomeView.vue";
+import FormLogin from "../views/FormLogin.vue";
 import ManageEmployee from "@/views/boss/ManageEmployee";
 import BossDashboard from "@/views/boss/BossDashboard";
 import ManageSystem from "@/views/boss/ManageSystem";
@@ -10,11 +11,19 @@ const routes = [
     name: "Home",
     component: HomeView,
   },
-  { path: "/boss", component: BossDashboard },
-
-  { path: "/boss/employee", component: ManageEmployee },
-  { path: "/boss/manage_collection", component: ManageSystem },
-  { path: "/boss/statistical", component: ManageStatistical },
+  { path: "/boss",name:"Boss", component: BossDashboard, meta: {
+    requiresAuth: true,
+  }, },
+  { path: "/login", name: "Login", component: FormLogin },
+  { path: "/boss/employee",name: "Boss Employee", component: ManageEmployee,meta: {
+    requiresAuth: true,
+  }, },
+  { path: "/boss/manage_collection",name: "Boss Collection", component: ManageSystem ,meta: {
+    requiresAuth: true,
+  },},
+  { path: "/boss/statistical",name: "Boss Statistical", component: ManageStatistical ,meta: {
+    requiresAuth: true,
+  },},
 ];
 
 const router = createRouter({
@@ -34,6 +43,45 @@ export default router;
 
 // This callback runs before every route change, including on page load.
 router.beforeEach((to, from, next) => {
+
+  const storedToken = localStorage.getItem('token');
+  const storedRole = localStorage.getItem('userrole');
+  if (to.meta.requiresAuth && !storedToken) {
+      // Nếu route yêu cầu xác thực và không có token, chuyển hướng đến trang đăng nhập
+    next('/login');
+  } else {
+    // if (to.name === 'Login' && storedRole === "leader") {
+    //   next('/boss');
+    // } 
+    if (storedToken && to.meta.requiresAuth) {
+      switch(storedRole) {
+        case "leader":
+          if (to.name === 'Boss' || to.name === 'Boss Employee' ||to.name === 'Boss Collection' || to.name === 'Boss Statistical') {
+              next();
+          } else {
+            // ko cho phep 
+          }
+          break;
+        case "Collection staff":
+          next('/');
+          break;   
+        case "Transaction staff":
+          next('/');
+          break;  
+        case "Head of collection point":
+          next('/');
+          break;  
+        case "Head of transaction point":
+          next();
+          break;  
+      }
+    } else {
+      next();
+    }
+    // Nếu có token và trạng thái xác thực không sẵn sàng, thực hiện attempt
+    // Các trường hợp khác, tiếp tục
+  }
+
   // This goes through the matched routes from last to first, finding the closest route with a title.
   // e.g., if we have `/some/deep/nested/route` and `/some`, `/deep`, and `/nested` have titles,
   // `/nested`'s will be chosen.

@@ -4,9 +4,9 @@ const bcrypt = require('bcrypt')
 
 
 async function registerAdmin(req, res){
-  const {username, email, first_name, last_name, password, password_confirm} = req.body
+  const {username, email, first_name, last_name, password, password_confirm,numberPhone} = req.body
 
-  if(!username || !email || !password || !password_confirm || !first_name || !last_name) {
+  if(!username || !email || !password || !password_confirm || !first_name || !last_name, !numberPhone) {
     return res.status(422).json({'message': 'Invalid fields'})
   }
 
@@ -34,7 +34,9 @@ async function registerAdmin(req, res){
     }
     hashedPassword = await bcrypt.hash(password, 10)
 
-    let user = await User.create({email, username, password: hashedPassword, first_name, last_name, rolePermission_id: rolePermissionUser.id})
+    let user = await User.create({email, username, password: hashedPassword, first_name, last_name, rolePermission_id: rolePermissionUser.id,
+      numberPhone, userRole:adminRole.name, permission: editAllPermission.name
+    })
     // await UserRole.create({
     //   role_id: adminRole._id,
     //   user_id: user._id,
@@ -105,7 +107,7 @@ async function logout(req, res){
     res.clearCookie('refresh_token', {httpOnly: true, sameSite: 'None', secure: true})
   }
 
-  user.refresh_token = null
+  user.refresh_token = ""
   await user.save()
 
   try{

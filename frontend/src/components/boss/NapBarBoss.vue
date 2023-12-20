@@ -29,7 +29,7 @@
         </a></router-link
       >
       <div class="nav-item-divider"></div>
-      <router-link to="/home">
+      <router-link to="" @click="logout">
         <a href="#" class="dashboard-nav-item"
           ><i class="fas fa-sign-out-alt"></i> Đăng xuất</a
         ></router-link
@@ -39,8 +39,19 @@
 </template>
 
 <script>
+import { useAuthStore } from "../../store/auth";
 export default {
   name: "NavBar",
+  methods: {
+    async logout() {
+      try {
+      await useAuthStore().logout();
+        this.$router.push("/login");
+      } catch (error) {
+        console.error(error);
+      }
+    },
+  },
 };
 </script>
 

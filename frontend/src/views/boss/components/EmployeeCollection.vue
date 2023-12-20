@@ -33,7 +33,7 @@
                           </v-col>
                           <v-col cols="12" sm="6" md="4">
                             <v-text-field
-                              v-model="editedItem.name"
+                              v-model="editedItem.username"
                               label="Tên trưởng điểm"
                             ></v-text-field>
                           </v-col>
@@ -45,13 +45,13 @@
                           </v-col>
                           <v-col cols="12" sm="6" md="4">
                             <v-text-field
-                              v-model="editedItem.collection"
+                              v-model="editedItem.permission"
                               label="Điểm quản lý"
                             ></v-text-field>
                           </v-col>
                           <v-col cols="12" sm="6" md="4">
                             <v-text-field
-                              v-model="editedItem.phone"
+                              v-model="editedItem.numberPhone"
                               label="Số điện thoại"
                             ></v-text-field>
                           </v-col>
@@ -118,6 +118,7 @@
 </template>
 
 <script>
+import { LeadService } from "../../../service/LeadService";
 export default {
   name: "EmployeeCollection",
   data: () => ({
@@ -130,9 +131,9 @@ export default {
         sortable: false,
         key: "id",
       },
-      { title: "Tên trưởng điểm", key: "name" },
+      { title: "Tên trưởng điểm", key: "username" },
       { title: "Email", key: "email" },
-      { title: "Điểm quản lý", key: "collection" },
+      { title: "Điểm quản lý", key: "permission" },
       { title: "Số điện thoại", key: "phone" },
       { title: "Actions", key: "actions", sortable: false },
     ],
@@ -140,16 +141,16 @@ export default {
     editedIndex: -1,
     editedItem: {
       id: 0,
-      name: "",
+      username: "",
       email: "",
-      collection: "",
+      permission: "",
       phone: "",
     },
     defaultItem: {
       id: 0,
-      name: "",
+      username: "",
       email: "",
-      collection: "",
+      permission: "",
       phone: "",
     },
   }),
@@ -174,30 +175,38 @@ export default {
   },
 
   methods: {
-    initialize() {
-      this.list_employee = [
-        {
-          id: 1,
-          name: "doan",
-          email: "test@gmail.com",
-          collection: "Hà Nội",
-          phone: "0912231223",
-        },
-        {
-          id: 2,
-          name: "duong",
-          email: "test1@gmail.com",
-          collection: "Đà Nẵng",
-          phone: "0912231223",
-        },
-        {
-          id: 3,
-          name: "H.anh",
-          email: "test3@gmail.com",
-          collection: "TP. HCM",
-          phone: "0912231223",
-        },
-      ];
+    async initialize() {
+      try {
+        const data = await LeadService.getAllHead();
+        console.log(data.collectionHead);
+        this.list_employee = data.collectionHead
+      } catch (error) {
+        console.error(error);
+      }
+      console.log(this.list_employee)
+      // this.list_employee = [
+      //   {
+      //     id: 1,
+      //     name: "doan",
+      //     email: "test@gmail.com",
+      //     collection: "Hà Nội",
+      //     phone: "0912231223",
+      //   },
+      //   {
+      //     id: 2,
+      //     name: "duong",
+      //     email: "test1@gmail.com",
+      //     collection: "Đà Nẵng",
+      //     phone: "0912231223",
+      //   },
+      //   {
+      //     id: 3,
+      //     name: "H.anh",
+      //     email: "test3@gmail.com",
+      //     collection: "TP. HCM",
+      //     phone: "0912231223",
+      //   },
+      // ];
     },
 
     editItem(item) {

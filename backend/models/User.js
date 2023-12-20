@@ -97,6 +97,15 @@ const userSchema = new mongoose.Schema({
     required: true,
     min: 6,
   },
+  userRole: {
+    type: String,
+  },
+  permission: {
+    type: String,
+  },
+  numberPhone: {
+    type: String,
+  },
   rolePermission_id: { type: mongoose.Schema.Types.ObjectId, ref: "RolePermission" },
   refresh_token: String,
 });

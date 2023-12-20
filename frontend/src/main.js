@@ -22,6 +22,8 @@ import "@fortawesome/fontawesome-free/css/all.min.css";
 import { createVuetify } from "vuetify";
 import "vuetify/dist/vuetify.min.css";
 import * as VuetifyComponents from "vuetify/lib/components";
+import { createPinia } from "pinia";
+const pinia = createPinia();
 const vuetify = createVuetify({
   components: VuetifyComponents,
 });
@@ -33,4 +35,5 @@ createApp(App)
   .use(router)
   .use(metaManager)
   .use(vuetify)
+  .use(pinia)
   .mount("#app");

@@ -5,11 +5,12 @@ import { watchEffect } from "vue";
 
 export function useApiPrivate() {
   const authStore = useAuthStore();
+
   watchEffect(() => {
     axiosPrivateInstance.interceptors.request.use(
       (config) => {
-        if (!config.headers["Authorization"]) {
-          config.headers["Authorization"] = `Bearer ${authStore.accessToken}`;
+        if (!config.headers['Authorization']) {
+          config.headers['Authorization'] = `Bearer ${authStore.accessToken}`;
         }
         return config;
       },
@@ -20,15 +21,16 @@ export function useApiPrivate() {
       (response) => response,
       async (error) => {
         const prevRequest = error?.config;
+
         if (
-          (error?.response?.status === 403 ||
-            error?.response?.status === 401) &&
+          (error?.response?.status === 403 || error?.response?.status === 401) &&
           !prevRequest.sent
         ) {
           prevRequest.sent = true;
+
           try {
             await authStore.refresh();
-            prevRequest.headers["Authorization"] = authStore.accessToken;
+            prevRequest.headers['Authorization'] =  `Bearer ${authStore.accessToken}`;
             return axiosPrivateInstance(prevRequest);
           } catch (error) {
             return Promise.reject(error);

@@ -14,7 +14,7 @@ const randomstring = require("randomstring");
 const bcrypt = require("bcrypt");
 
 async function registerStaff(req, res) {
-  const { email, first_name, last_name, role_id, permission_id } = req.body;
+  const { email, first_name, last_name, role_id, permission_id, numberPhone } = req.body;
   if (!email || !first_name || !last_name) {
     return res.status(422).json({ message: "Invalid fields" });
   }
@@ -56,6 +56,9 @@ async function registerStaff(req, res) {
               password: hashedPassword,
               first_name,
               last_name,
+              userRole: role.name,
+              permission: permissionHead.name,
+              numberPhone,
               rolePermission_id: rolePermissionUser.id
             });
             return res.status(201).json({username: user.username, password: password, id: user.id});
@@ -79,6 +82,9 @@ async function registerStaff(req, res) {
             password: hashedPassword,
             first_name,
             last_name,
+            userRole: transactionStaff.name,
+            permission: permission.name,
+            numberPhone,
             rolePermission_id: rolePermissionTracUser.id
           });
           return res.status(201).json({username: userTran.username, password: password, id: userTran.id});
@@ -101,6 +107,9 @@ async function registerStaff(req, res) {
             password: hashedPassword,
             first_name,
             last_name,
+            userRole: transactionStaff.name,
+            permission: permission.name,
+            numberPhone,
             rolePermission_id: rolePermissionUser.id
           });
           return res.status(201).json({username: user.username, password: password, id: user.id});
@@ -151,7 +160,7 @@ async function getAllHead(req, res) {
       "_id"
     );
     const headTranIds = headTranPermission.map((per) => per._id);
-    const transactionStaff = await User.find({
+    const transactionHead = await User.find({
       rolePermission_id: headTranIds, 
     });
 
@@ -160,11 +169,13 @@ async function getAllHead(req, res) {
       "_id"
     );
     const headColIds = headColPermission.map((per) => per._id);
-    const collectionStaff = await User.find({
+    const collectionHead = await User.find({
       rolePermission_id: headColIds, 
     });
+    
+    
 
-    return res.status(200).json({transactionStaff,collectionStaff});
+    return res.status(200).json({transactionHead,collectionHead});
   } catch (error) {
     console.error("get head error:", error);
     return res.status(500).json({ message: "Could not get head" });
@@ -280,13 +291,35 @@ async function deleteStaff(req, res) {
     }
     // Thực hiện xóa người dùng
     await userToDelete.deleteOne();
-    return req.json({message: "Delete success"})
+    return res.json({message: "Delete success"})
   } catch (err) {
     console.error("delete user error:", err);
     return res.status(500).json({ message: "Could not delete user" });
   }
 }
 
+async function updateUser(req, res) {
+  try {
+    const userUpdate = await User.find();
+    userUpdate.forEach(async (user) => {
+      // Cập nhật trường userRole cho mỗi người dùng
+
+      const permissionRole = await RolePermission.findById(user.rolePermission_id);
+      let permission;
+      if (permissionRole.permission_id) {
+        permission = await Permission.findById(permissionRole.permission_id)
+      }
+     
+
+      await User.updateOne({ _id: user._id }, { $set: { permission: permission.name } });
+    });
+    const newUser = await User.find();
+    return res.status(201).json(newUser)
+  } catch(error) {
+    console.error("update user error:", err);
+    return res.status(500).json({ message: "Could not update user" });
+  }
+}
 
 module.exports = {
   getAllHead,
@@ -296,4 +329,5 @@ module.exports = {
   createRole,
   registerStaff,
   getAllPermission,
+  updateUser
 };

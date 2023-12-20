@@ -1,7 +1,6 @@
 const jwt = require('jsonwebtoken')
 const {User, UserRole, Role, RolePermission, Permission } = require('../models/User')
 function authentication(req, res, next) {
-  
   const authHeader = req.headers.authorization || req.headers.Authorization
   if(authHeader?.startsWith('Bearer')) {
     const token = authHeader.split(' ')[1]
@@ -27,8 +26,8 @@ function authentication(req, res, next) {
           if (!permission) {
             return res.status(403).json({ message: "permission not found" })
           }
-          req.user.permission = permission.name
-          req.user.userRole = role.name
+          // req.user.permission = permission.name
+          // req.user.userRole = role.name
         }else{
           req.user = {}
         }
