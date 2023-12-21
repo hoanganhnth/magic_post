@@ -16,9 +16,9 @@ export const useAuthStore = defineStore("auth", {
   },
   mutations: {
     setAccessToken(state, token) {
-      state.accessToken  = token;
+      state.accessToken = token;
       // Lưu token vào localStorage để giữ lại giữa các phiên làm việc
-      localStorage.setItem('token', token);
+      localStorage.setItem("token", token);
     },
     setUser(state, user) {
       state.user = user;
@@ -37,14 +37,14 @@ export const useAuthStore = defineStore("auth", {
       }
     },
 
-    async login( payload) {
+    async login(payload) {
       try {
         // console.log(state.accessToken);
         const { data } = await useApi().post(`/api/auth/login`, payload);
         this.accessToken = data.access_token;
         // await this.getUser();
         console.log(data.access_token);
-        localStorage.setItem('token', data.access_token);
+        localStorage.setItem("token", data.access_token);
         return data;
       } catch (error) {
         throw error.message;
@@ -67,7 +67,7 @@ export const useAuthStore = defineStore("auth", {
             Authorization: "Bearer " + this.accessToken,
           },
         });
-        localStorage.setItem('userrole', data.userRole);
+        localStorage.setItem("userrole", data.userRole);
         return data;
       } catch (error) {
         throw error.message;
@@ -79,8 +79,8 @@ export const useAuthStore = defineStore("auth", {
         await useApiPrivate().post(`/api/auth/logout`);
         this.accessToken = "";
         this.user = {};
-        localStorage.removeItem('token');
-        localStorage.removeItem('userrole');
+        localStorage.removeItem("token");
+        localStorage.removeItem("userrole");
       } catch (error) {
         throw error.message;
       }
@@ -97,5 +97,4 @@ export const useAuthStore = defineStore("auth", {
       }
     },
   },
-  
 });

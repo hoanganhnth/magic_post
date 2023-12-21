@@ -5,25 +5,55 @@ import ManageEmployee from "@/views/boss/ManageEmployee";
 import BossDashboard from "@/views/boss/BossDashboard";
 import ManageSystem from "@/views/boss/ManageSystem";
 import ManageStatistical from "@/views/boss/ManageStatistical";
+
+import StatisticalCollection from "@/views/leader_collectionPoint/StatisticalCollection";
+import CreatAccountCollection from "@/views/leader_collectionPoint/CreatAccountCollection";
+import StatisticalTransaction from "@/views/learder_transactionPoint/StatisticalTransaction";
+import CreatAccountTransaction from "@/views/learder_transactionPoint/CreatAccountTransaction";
 const routes = [
   {
     path: "/",
     name: "Home",
     component: HomeView,
   },
-  { path: "/boss",name:"Boss", component: BossDashboard, meta: {
-    requiresAuth: true,
-  }, },
+  { path: "/leader_transaction", component: StatisticalTransaction },
+  { path: "/leader_transaction/creat", component: CreatAccountTransaction },
+
+  { path: "/leader_collection", component: StatisticalCollection },
+  { path: "/leader_collection/creat", component: CreatAccountCollection },
+  {
+    path: "/boss",
+    name: "Boss",
+    component: BossDashboard,
+    meta: {
+      requiresAuth: true,
+    },
+  },
   { path: "/login", name: "Login", component: FormLogin },
-  { path: "/boss/employee",name: "Boss Employee", component: ManageEmployee,meta: {
-    requiresAuth: true,
-  }, },
-  { path: "/boss/manage_collection",name: "Boss Collection", component: ManageSystem ,meta: {
-    requiresAuth: true,
-  },},
-  { path: "/boss/statistical",name: "Boss Statistical", component: ManageStatistical ,meta: {
-    requiresAuth: true,
-  },},
+  {
+    path: "/boss/employee",
+    name: "Boss Employee",
+    component: ManageEmployee,
+    meta: {
+      requiresAuth: true,
+    },
+  },
+  {
+    path: "/boss/manage_collection",
+    name: "Boss Collection",
+    component: ManageSystem,
+    meta: {
+      requiresAuth: true,
+    },
+  },
+  {
+    path: "/boss/statistical",
+    name: "Boss Statistical",
+    component: ManageStatistical,
+    meta: {
+      requiresAuth: true,
+    },
+  },
 ];
 
 const router = createRouter({
@@ -43,37 +73,41 @@ export default router;
 
 // This callback runs before every route change, including on page load.
 router.beforeEach((to, from, next) => {
-
-  const storedToken = localStorage.getItem('token');
-  const storedRole = localStorage.getItem('userrole');
+  const storedToken = localStorage.getItem("token");
+  const storedRole = localStorage.getItem("userrole");
   if (to.meta.requiresAuth && !storedToken) {
-      // Nếu route yêu cầu xác thực và không có token, chuyển hướng đến trang đăng nhập
-    next('/login');
+    // Nếu route yêu cầu xác thực và không có token, chuyển hướng đến trang đăng nhập
+    next("/login");
   } else {
     // if (to.name === 'Login' && storedRole === "leader") {
     //   next('/boss');
-    // } 
+    // }
     if (storedToken && to.meta.requiresAuth) {
-      switch(storedRole) {
+      switch (storedRole) {
         case "leader":
-          if (to.name === 'Boss' || to.name === 'Boss Employee' ||to.name === 'Boss Collection' || to.name === 'Boss Statistical') {
-              next();
+          if (
+            to.name === "Boss" ||
+            to.name === "Boss Employee" ||
+            to.name === "Boss Collection" ||
+            to.name === "Boss Statistical"
+          ) {
+            next();
           } else {
-            // ko cho phep 
+            // ko cho phep
           }
           break;
         case "Collection staff":
-          next('/');
-          break;   
+          next("/");
+          break;
         case "Transaction staff":
-          next('/');
-          break;  
+          next("/");
+          break;
         case "Head of collection point":
-          next('/');
-          break;  
+          next("/");
+          break;
         case "Head of transaction point":
           next();
-          break;  
+          break;
       }
     } else {
       next();

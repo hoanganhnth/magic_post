@@ -1,6 +1,6 @@
 <template>
   <v-card>
-    <v-card-title>Quản lý tài khoản trưởng điểm Tập kết</v-card-title>
+    <v-card-title>Danh sách tài khoản nhân viên</v-card-title>
 
     <v-card-text>
       <v-row>
@@ -33,8 +33,8 @@
                           </v-col>
                           <v-col cols="12" sm="6" md="4">
                             <v-text-field
-                              v-model="editedItem.username"
-                              label="Tên trưởng điểm"
+                              v-model="editedItem.name"
+                              label="Tên nhân viên"
                             ></v-text-field>
                           </v-col>
                           <v-col cols="12" sm="6" md="4">
@@ -45,13 +45,13 @@
                           </v-col>
                           <v-col cols="12" sm="6" md="4">
                             <v-text-field
-                              v-model="editedItem.permission"
+                              v-model="editedItem.collection"
                               label="Điểm quản lý"
                             ></v-text-field>
                           </v-col>
                           <v-col cols="12" sm="6" md="4">
                             <v-text-field
-                              v-model="editedItem.numberPhone"
+                              v-model="editedItem.phone"
                               label="Số điện thoại"
                             ></v-text-field>
                           </v-col>
@@ -99,14 +99,6 @@
                 </v-dialog>
               </v-toolbar>
             </template>
-            <template v-slot:[`item.actions`]="{ item }">
-              <v-icon size="small" class="me-2" @click="editItem(item)">
-                <i class="far fa-edit"></i
-              ></v-icon>
-              <v-icon size="small" @click="deleteItem(item)">
-                <i class="far fa-trash-alt"></i
-              ></v-icon>
-            </template>
             <template v-slot:no-data>
               <v-btn color="primary" @click="initialize"> Reset </v-btn>
             </template>
@@ -118,10 +110,10 @@
 </template>
 
 <script>
-import { LeadService } from "../../../service/LeadService";
 export default {
-  name: "EmployeeCollection",
+  name: "CreatAccount",
   data: () => ({
+    type: null,
     dialog: false,
     dialogDelete: false,
     headers: [
@@ -131,26 +123,25 @@ export default {
         sortable: false,
         key: "id",
       },
-      { title: "Tên trưởng điểm", key: "username" },
+      { title: "Tên nhân viên", key: "name" },
       { title: "Email", key: "email" },
-      { title: "Điểm quản lý", key: "permission" },
+      { title: "Điểm quản lý", key: "collection" },
       { title: "Số điện thoại", key: "phone" },
-      { title: "Actions", key: "actions", sortable: false },
     ],
     list_employee: [],
     editedIndex: -1,
     editedItem: {
       id: 0,
-      username: "",
+      name: "",
       email: "",
-      permission: "",
+      collection: "",
       phone: "",
     },
     defaultItem: {
       id: 0,
-      username: "",
+      name: "",
       email: "",
-      permission: "",
+      collection: "",
       phone: "",
     },
   }),
@@ -175,55 +166,30 @@ export default {
   },
 
   methods: {
-    async initialize() {
-      try {
-        const data = await LeadService.getAllHead();
-        console.log(data.collectionHead);
-        this.list_employee = data.collectionHead;
-      } catch (error) {
-        console.error(error);
-      }
-      console.log(this.list_employee);
-      // this.list_employee = [
-      //   {
-      //     id: 1,
-      //     name: "doan",
-      //     email: "test@gmail.com",
-      //     collection: "Hà Nội",
-      //     phone: "0912231223",
-      //   },
-      //   {
-      //     id: 2,
-      //     name: "duong",
-      //     email: "test1@gmail.com",
-      //     collection: "Đà Nẵng",
-      //     phone: "0912231223",
-      //   },
-      //   {
-      //     id: 3,
-      //     name: "H.anh",
-      //     email: "test3@gmail.com",
-      //     collection: "TP. HCM",
-      //     phone: "0912231223",
-      //   },
-      // ];
-    },
-
-    editItem(item) {
-      this.editedIndex = this.list_employee.indexOf(item);
-      this.editedItem = Object.assign({}, item);
-      this.dialog = true;
-    },
-
-    deleteItem(item) {
-      this.editedIndex = this.list_employee.indexOf(item);
-      this.editedItem = Object.assign({}, item);
-      this.dialogDelete = true;
-    },
-
-    deleteItemConfirm() {
-      this.list_employee.splice(this.editedIndex, 1);
-      this.closeDelete();
+    initialize() {
+      this.list_employee = [
+        {
+          id: 1,
+          name: "hua",
+          email: "test@gmail.com",
+          collection: "Hà Nội",
+          phone: "0912231223",
+        },
+        {
+          id: 2,
+          name: "pham",
+          email: "test1@gmail.com",
+          collection: "Đà Nẵng",
+          phone: "0912231223",
+        },
+        {
+          id: 3,
+          name: "hoang",
+          email: "test3@gmail.com",
+          collection: "TP. HCM",
+          phone: "0912231223",
+        },
+      ];
     },
 
     close() {

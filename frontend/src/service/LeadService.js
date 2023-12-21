@@ -1,4 +1,4 @@
-import { useApiPrivate} from "../composables/useApi";
+import { useApiPrivate } from "../composables/useApi";
 
 export const LeadService = {
   async createAccountHead(payload) {
@@ -126,5 +126,4 @@ export const LeadService = {
       throw error.message;
     }
   },
-  };
-  
+};

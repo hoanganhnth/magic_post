@@ -2,7 +2,7 @@
   <div class="dashboard-nav" id="napbar">
     <header>
       <p class="brand-logo">
-        <i class="fas fa-anchor"></i> <span id="admin">ADMIN</span>
+        <i class="fas fa-shipping-fast"></i> <span id="admin">ADMIN</span>
       </p>
     </header>
     <nav class="dashboard-nav-list">
@@ -13,7 +13,7 @@
       </router-link>
       <router-link to="/boss/statistical"
         ><a href="#" class="dashboard-nav-item"
-          ><i class="fas fa-file-upload"></i> Quản lý đơn hàng
+          ><i class="fas fa-box-open"></i> Quản lý đơn hàng
         </a></router-link
       >
 
@@ -45,7 +45,7 @@ export default {
   methods: {
     async logout() {
       try {
-      await useAuthStore().logout();
+        await useAuthStore().logout();
         this.$router.push("/login");
       } catch (error) {
         console.error(error);
@@ -94,7 +94,7 @@ nav {
   -webkit-flex-grow: 2;
   -ms-flex-positive: 2;
   flex-grow: 2;
-  margin-top: 84px;
+  margin-top: 40px;
 }
 
 .dashboard-content {

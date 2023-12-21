@@ -19,14 +19,11 @@ import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import { faFileLines } from "@fortawesome/free-regular-svg-icons";
 import { faLinkedinIn, faGithub } from "@fortawesome/free-brands-svg-icons";
 import "@fortawesome/fontawesome-free/css/all.min.css";
-import { createVuetify } from "vuetify";
 import "vuetify/dist/vuetify.min.css";
-import * as VuetifyComponents from "vuetify/lib/components";
+import vuetify from "./plugins/vuetify";
 import { createPinia } from "pinia";
 const pinia = createPinia();
-const vuetify = createVuetify({
-  components: VuetifyComponents,
-});
+
 library.add(faLinkedinIn, faGithub, faFileLines);
 
 createApp(App)
