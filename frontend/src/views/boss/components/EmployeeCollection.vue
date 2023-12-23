@@ -5,7 +5,7 @@
     <v-card-text>
       <v-row>
         <v-col cols="12">
-          <v-data-table :headers="headers" :items="list_employee">
+          <v-data-table :headers="headers" :items="employeeCollection">
             <template v-slot:top>
               <v-toolbar flat>
                 <v-toolbar-title>Thông tin nhân viên</v-toolbar-title>
@@ -134,24 +134,24 @@ export default {
       { title: "Tên trưởng điểm", key: "username" },
       { title: "Email", key: "email" },
       { title: "Điểm quản lý", key: "permission" },
-      { title: "Số điện thoại", key: "phone" },
+      { title: "Số điện thoại", key: "numberPhone" },
       { title: "Actions", key: "actions", sortable: false },
     ],
-    list_employee: [],
+    // list_employee: [],
     editedIndex: -1,
     editedItem: {
       id: 0,
       username: "",
       email: "",
       permission: "",
-      phone: "",
+      numberPhone: "",
     },
     defaultItem: {
       id: 0,
       username: "",
       email: "",
       permission: "",
-      phone: "",
+      numberPhone: "",
     },
   }),
 
@@ -160,7 +160,12 @@ export default {
       return this.editedIndex === -1 ? "New Item" : "Edit Item";
     },
   },
-
+  props: {
+    employeeCollection: {
+      type: Array,
+      required: true,
+    },
+  },
   watch: {
     dialog(val) {
       val || this.close();
@@ -176,54 +181,35 @@ export default {
 
   methods: {
     async initialize() {
-      try {
-        const data = await LeadService.getAllHead();
-        console.log(data.collectionHead);
-        this.list_employee = data.collectionHead;
-      } catch (error) {
-        console.error(error);
-      }
-      console.log(this.list_employee);
-      // this.list_employee = [
-      //   {
-      //     id: 1,
-      //     name: "doan",
-      //     email: "test@gmail.com",
-      //     collection: "Hà Nội",
-      //     phone: "0912231223",
-      //   },
-      //   {
-      //     id: 2,
-      //     name: "duong",
-      //     email: "test1@gmail.com",
-      //     collection: "Đà Nẵng",
-      //     phone: "0912231223",
-      //   },
-      //   {
-      //     id: 3,
-      //     name: "H.anh",
-      //     email: "test3@gmail.com",
-      //     collection: "TP. HCM",
-      //     phone: "0912231223",
-      //   },
-      // ];
     },
 
     editItem(item) {
-      this.editedIndex = this.list_employee.indexOf(item);
+      this.editedIndex = this.employeeCollection.indexOf(item);
       this.editedItem = Object.assign({}, item);
       this.dialog = true;
     },
 
     deleteItem(item) {
-      this.editedIndex = this.list_employee.indexOf(item);
+      this.editedIndex = this.employeeCollection.indexOf(item);
+      console.log(this.employeeCollection[this.editedIndex])
       this.editedItem = Object.assign({}, item);
       this.dialogDelete = true;
     },
 
-    deleteItemConfirm() {
-      this.list_employee.splice(this.editedIndex, 1);
-      this.closeDelete();
+    async deleteItemConfirm() {
+      try {
+        const userId = this.employeeCollection[this.editedIndex].id;
+      
+        const data = await LeadService.deleteStaff(userId);
+        if (data.error_code === 0) {
+          this.employeeCollection.splice(this.editedIndex, 1);
+          this.closeDelete();
+          console.log(data.message);
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    
     },
 
     close() {
@@ -244,9 +230,9 @@ export default {
 
     save() {
       if (this.editedIndex > -1) {
-        Object.assign(this.list_employee[this.editedIndex], this.editedItem);
+        Object.assign(this.employeeCollection[this.editedIndex], this.editedItem);
       } else {
-        this.list_employee.push(this.editedItem);
+        this.employeeCollection.push(this.editedItem);
       }
       this.close();
     },

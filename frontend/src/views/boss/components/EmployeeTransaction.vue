@@ -5,7 +5,7 @@
     <v-card-text>
       <v-row>
         <v-col cols="12">
-          <v-data-table :headers="headers" :items="list_employee">
+          <v-data-table :headers="headers" :items="employeeTransaction">
             <template v-slot:top>
               <v-toolbar flat>
                 <v-toolbar-title>Thông tin nhân viên</v-toolbar-title>
@@ -131,27 +131,27 @@ export default {
         sortable: false,
         key: "id",
       },
-      { title: "Tên trưởng điểm", key: "name" },
+      { title: "Tên trưởng điểm", key: "username" },
       { title: "Email", key: "email" },
-      { title: "Điểm quản lý", key: "collection" },
-      { title: "Số điện thoại", key: "phone" },
+      { title: "Điểm quản lý", key: "permission" },
+      { title: "Số điện thoại", key: "numberPhone" },
       { title: "Actions", key: "actions", sortable: false },
     ],
-    list_employee: [],
+    // list_employee: [],
     editedIndex: -1,
     editedItem: {
       id: 0,
-      name: "",
+      username: "",
       email: "",
-      collection: "",
-      phone: "",
+      permission: "",
+      numberPhone: "",
     },
     defaultItem: {
       id: 0,
-      name: "",
+      username: "",
       email: "",
-      collection: "",
-      phone: "",
+      permission: "",
+      numberPhone: "",
     },
   }),
 
@@ -169,52 +169,35 @@ export default {
       val || this.closeDelete();
     },
   },
-
+  props: {
+    employeeTransaction: {
+      type: Array,
+      required: true,
+    },
+  },
   created() {
     this.initialize();
   },
+  
 
   methods: {
     initialize() {
-      this.list_employee = [
-        {
-          id: 1,
-          name: "hua",
-          email: "test@gmail.com",
-          collection: "Hà Nội",
-          phone: "0912231223",
-        },
-        {
-          id: 2,
-          name: "pham",
-          email: "test1@gmail.com",
-          collection: "Đà Nẵng",
-          phone: "0912231223",
-        },
-        {
-          id: 3,
-          name: "hoang",
-          email: "test3@gmail.com",
-          collection: "TP. HCM",
-          phone: "0912231223",
-        },
-      ];
     },
 
     editItem(item) {
-      this.editedIndex = this.list_employee.indexOf(item);
+      this.editedIndex = this.employeeTransaction.indexOf(item);
       this.editedItem = Object.assign({}, item);
       this.dialog = true;
     },
 
     deleteItem(item) {
-      this.editedIndex = this.list_employee.indexOf(item);
+      this.editedIndex = this.employeeTransaction.indexOf(item);
       this.editedItem = Object.assign({}, item);
       this.dialogDelete = true;
     },
 
     deleteItemConfirm() {
-      this.list_employee.splice(this.editedIndex, 1);
+      this.employeeTransaction.splice(this.editedIndex, 1);
       this.closeDelete();
     },
 
@@ -236,9 +219,9 @@ export default {
 
     save() {
       if (this.editedIndex > -1) {
-        Object.assign(this.list_employee[this.editedIndex], this.editedItem);
+        Object.assign(this.employeeTransaction[this.editedIndex], this.editedItem);
       } else {
-        this.list_employee.push(this.editedItem);
+        this.employeeTransaction.push(this.editedItem);
       }
       this.close();
     },

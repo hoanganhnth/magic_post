@@ -5,8 +5,8 @@
       <div class="dashboard-content">
         <v-app>
           <v-main>
-            <employee-collection> </employee-collection>
-            <employee-transaction></employee-transaction>
+            <employee-collection :employeeCollection = "employeeCollection"> </employee-collection>
+            <employee-transaction :employeeTransaction = "employeeTransaction"></employee-transaction>
           </v-main>
         </v-app>
       </div>
@@ -15,6 +15,7 @@
 </template>
 
 <script>
+import { LeadService } from "../../service/LeadService";
 import NapBarBoss from "../../components/boss/NapBarBoss.vue";
 import EmployeeCollection from "./components/EmployeeCollection.vue";
 import EmployeeTransaction from "./components/EmployeeTransaction.vue";
@@ -24,8 +25,26 @@ export default {
 
   name: "ManageEmployee",
   data() {
-    return {};
+    return {
+      employeeCollection: [],
+      employeeTransaction: []
+    };
   },
+  created() {
+    this.initialize();
+  },
+  methods: {
+    async initialize() {
+      try {
+        const data = await LeadService.getAllHead();
+        this.employeeCollection = data.collectionHead;
+        this.employeeTransaction = data.transactionHead;
+        console.log(data)
+      } catch (error) {
+        console.error(error);
+      }
+    },
+  }
 };
 </script>
 

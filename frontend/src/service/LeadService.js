@@ -22,6 +22,16 @@ export const LeadService = {
     }
   },
 
+  async deleteStaff(payload) {
+    try {
+      const userId = payload;
+      const { data } = await useApiPrivate().delete(`/api/index/deleteStaff`, { params: { userId } });
+      return data;
+    } catch (error) {
+      throw error.message;
+    }
+  },
+
   async getAllPermission(payload) {
     try {
       const { data } = await useApiPrivate().get(
