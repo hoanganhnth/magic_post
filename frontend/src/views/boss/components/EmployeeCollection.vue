@@ -44,10 +44,12 @@
                             ></v-text-field>
                           </v-col>
                           <v-col cols="12" sm="6" md="4">
-                            <v-text-field
-                              v-model="editedItem.permission"
-                              label="Điểm quản lý"
-                            ></v-text-field>
+                            <v-select
+                              v-model="selectedCollectionPoint"
+                              :items="colletions"
+                              label="Điểm tập kết"
+                              item-title="state"
+                            ></v-select>
                           </v-col>
                           <v-col cols="12" sm="6" md="4">
                             <v-text-field
@@ -122,6 +124,13 @@ import { LeadService } from "../../../service/LeadService";
 export default {
   name: "EmployeeCollection",
   data: () => ({
+    colletions: [
+      { id: 1, state: "Hà Nội" },
+      { id: 2, state: "Hải Phòng" },
+      { id: 3, state: "Đà Nẵng" },
+      { id: 4, state: "TP HCM" },
+    ],
+    selectedCollectionPoint: null,
     dialog: false,
     dialogDelete: false,
     headers: [
