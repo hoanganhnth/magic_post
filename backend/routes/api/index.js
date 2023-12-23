@@ -10,6 +10,7 @@ router.get('/getAllStaff',auth,  accountControllers.getAllStaff)
 
 router.get('/getAllHead',  isAdmin,  accountControllers.getAllHead)
 router.post('/updateUser',  isAdmin,  accountControllers.updateUser)
+router.post('/updateHead',  isAdmin,  accountControllers.updateHead)
 router.get('/getAllPermission',  isAdmin,  accountControllers.getAllPermission)
 router.get('/allRole', isAdmin, accountControllers.showAllRole)
 router.post('/createRole', isAdmin,  accountControllers.createRole)

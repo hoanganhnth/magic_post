@@ -5,8 +5,8 @@
       <div class="dashboard-content">
         <v-app>
           <v-main>
-            <employee-collection :employeeCollection = "employeeCollection"> </employee-collection>
-            <employee-transaction :employeeTransaction = "employeeTransaction"></employee-transaction>
+            <employee-collection :employeeCollection = "employeeCollection" :collectionPoint = "collectionPoint"> </employee-collection>
+            <employee-transaction :employeeTransaction = "employeeTransaction" :transactionPoint = "transactionPoint"></employee-transaction>
           </v-main>
         </v-app>
       </div>
@@ -27,7 +27,9 @@ export default {
   data() {
     return {
       employeeCollection: [],
-      employeeTransaction: []
+      employeeTransaction: [],
+      collectionPoint: [],
+      transactionPoint: [],
     };
   },
   created() {
@@ -36,13 +38,26 @@ export default {
   methods: {
     async initialize() {
       try {
-        const data = await LeadService.getAllHead();
-        this.employeeCollection = data.collectionHead;
-        this.employeeTransaction = data.transactionHead;
-        console.log(data)
+        const res = await LeadService.getAllHead();
+        if (res.error_code === 0) {
+          this.employeeCollection = res.data.collectionHead;
+          this.employeeTransaction = res.data.transactionHead;
+        }
       } catch (error) {
         console.error(error);
       }
+      try {
+        const res = await LeadService.getAllPermission();
+        if (res.error_code === 0) {
+          this.collectionPoint = res.data.collectionPermission;
+          this.transactionPoint = res.data.transactionPermission;
+        } else {
+          console.error(res.message);
+        }
+      } catch (error) {
+        console.error(error);
+      }
+      
     },
   }
 };

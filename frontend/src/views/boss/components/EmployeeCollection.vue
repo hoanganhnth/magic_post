@@ -25,18 +25,21 @@
                     <v-card-text>
                       <v-container>
                         <v-row>
+                          
                           <v-col cols="12" sm="6" md="4">
                             <v-text-field
-                              v-model="editedItem.id"
-                              label="ID"
+                              v-model="editedItem.first_name"
+                              label="First name"
                             ></v-text-field>
                           </v-col>
+
                           <v-col cols="12" sm="6" md="4">
                             <v-text-field
-                              v-model="editedItem.username"
-                              label="Tên trưởng điểm"
+                              v-model="editedItem.last_name"
+                              label="Last name"
                             ></v-text-field>
                           </v-col>
+                      
                           <v-col cols="12" sm="6" md="4">
                             <v-text-field
                               v-model="editedItem.email"
@@ -46,9 +49,9 @@
                           <v-col cols="12" sm="6" md="4">
                             <v-select
                               v-model="selectedCollectionPoint"
-                              :items="colletions"
+                              :items="collectionPoint"
                               label="Điểm tập kết"
-                              item-title="state"
+                              item-title="name"
                             ></v-select>
                           </v-col>
                           <v-col cols="12" sm="6" md="4">
@@ -124,12 +127,6 @@ import { LeadService } from "../../../service/LeadService";
 export default {
   name: "EmployeeCollection",
   data: () => ({
-    colletions: [
-      { id: 1, state: "Hà Nội" },
-      { id: 2, state: "Hải Phòng" },
-      { id: 3, state: "Đà Nẵng" },
-      { id: 4, state: "TP HCM" },
-    ],
     selectedCollectionPoint: null,
     dialog: false,
     dialogDelete: false,
@@ -140,7 +137,7 @@ export default {
         sortable: false,
         key: "id",
       },
-      { title: "Tên trưởng điểm", key: "username" },
+      { title: "Tên tài khoản", key: "username" },
       { title: "Email", key: "email" },
       { title: "Điểm quản lý", key: "permission" },
       { title: "Số điện thoại", key: "numberPhone" },
@@ -149,15 +146,19 @@ export default {
     // list_employee: [],
     editedIndex: -1,
     editedItem: {
-      id: 0,
+      id: "",
+      first_name: "",
+      last_name: "",
       username: "",
       email: "",
       permission: "",
       numberPhone: "",
     },
     defaultItem: {
-      id: 0,
+      id: "",
       username: "",
+      first_name: "",
+      last_name: "",
       email: "",
       permission: "",
       numberPhone: "",
@@ -171,6 +172,10 @@ export default {
   },
   props: {
     employeeCollection: {
+      type: Array,
+      required: true,
+    },
+    collectionPoint: {
       type: Array,
       required: true,
     },
@@ -196,6 +201,7 @@ export default {
       this.editedIndex = this.employeeCollection.indexOf(item);
       this.editedItem = Object.assign({}, item);
       this.dialog = true;
+      this.selectedCollectionPoint = this.editedItem.permission
     },
 
     deleteItem(item) {
@@ -237,11 +243,44 @@ export default {
       });
     },
 
-    save() {
+    async save() {
+
+      const selectedCollectionPoint = this.collectionPoint.find(item => item.name === this.selectedCollectionPoint);
+          const payload = {
+            email: this.editedItem.email,
+            first_name: this.editedItem.first_name,
+            last_name: this.editedItem.last_name,
+            role_id: "6575e37f857fbaebbe06c92d",
+            permission_id: selectedCollectionPoint.id,
+            numberPhone: this.editedItem.numberPhone
+          }
+
       if (this.editedIndex > -1) {
-        Object.assign(this.employeeCollection[this.editedIndex], this.editedItem);
+        try {
+          payload.userId = this.editedItem.id
+          const res = await LeadService.updateHead(payload);
+          if (res.error_code === 0) {
+            // console.log(res.data);
+            this.editedItem.permission = this.selectedCollectionPoint
+            Object.assign(this.employeeCollection[this.editedIndex], this.editedItem);
+          }
+        } catch (error) {
+          console.error(error);
+        }
       } else {
-        this.employeeCollection.push(this.editedItem);
+        try {
+         
+          const res = await LeadService.createAccountHead(payload);
+          if (res.error_code === 0) {
+            console.log(res.data.username, res.data.password);
+            this.editedItem.id = res.data.id
+            this.editedItem.username = res.data.username
+            this.editedItem.permission = this.selectedCollectionPoint
+            this.employeeCollection.push(this.editedItem);
+          }
+        } catch (error) {
+          console.error(error);
+        }
       }
       this.close();
     },

@@ -27,14 +27,14 @@
                         <v-row>
                           <v-col cols="12" sm="6" md="4">
                             <v-text-field
-                              v-model="editedItem.id"
-                              label="ID"
+                              v-model="editedItem.first_name"
+                              label="First name"
                             ></v-text-field>
                           </v-col>
                           <v-col cols="12" sm="6" md="4">
                             <v-text-field
-                              v-model="editedItem.name"
-                              label="Tên trưởng điểm"
+                              v-model="editedItem.last_name"
+                              label="Last name"
                             ></v-text-field>
                           </v-col>
                           <v-col cols="12" sm="6" md="4">
@@ -46,14 +46,14 @@
                           <v-col cols="12" sm="6" md="4">
                             <v-select
                               v-model="selectedTransaction"
-                              :items="transactions"
+                              :items="transactionPoint"
                               label="Điểm quản lý"
-                              item-title="state"
+                              item-title="name"
                             ></v-select>
                           </v-col>
                           <v-col cols="12" sm="6" md="4">
                             <v-text-field
-                              v-model="editedItem.phone"
+                              v-model="editedItem.numberPhone"
                               label="Số điện thoại"
                             ></v-text-field>
                           </v-col>
@@ -120,15 +120,10 @@
 </template>
 
 <script>
+import { LeadService } from "../../../service/LeadService";
 export default {
   name: "EmployeeTransaction",
   data: () => ({
-    transactions: [
-      { id: 1, state: "Hà Nội" },
-      { id: 2, state: "Hải Phòng" },
-      { id: 3, state: "Đà Nẵng" },
-      { id: 4, state: "TP HCM" },
-    ],
     selectedTransaction: null,
     type: null,
     dialog: false,
@@ -140,7 +135,7 @@ export default {
         sortable: false,
         key: "id",
       },
-      { title: "Tên trưởng điểm", key: "username" },
+      { title: "Tên tài khoản", key: "username" },
       { title: "Email", key: "email" },
       { title: "Điểm quản lý", key: "permission" },
       { title: "Số điện thoại", key: "numberPhone" },
@@ -149,14 +144,18 @@ export default {
     // list_employee: [],
     editedIndex: -1,
     editedItem: {
-      id: 0,
+      id: "",
+      first_name: "",
+      last_name: "",
       username: "",
       email: "",
       permission: "",
       numberPhone: "",
     },
     defaultItem: {
-      id: 0,
+      id: "",
+      first_name: "",
+      last_name: "",
       username: "",
       email: "",
       permission: "",
@@ -183,6 +182,10 @@ export default {
       type: Array,
       required: true,
     },
+    transactionPoint: {
+      type: Array,
+      required: true,
+    },
   },
   created() {
     this.initialize();
@@ -197,6 +200,7 @@ export default {
       this.editedIndex = this.employeeTransaction.indexOf(item);
       this.editedItem = Object.assign({}, item);
       this.dialog = true;
+      this.selectedTransaction = this.editedItem.permission
     },
 
     deleteItem(item) {
@@ -205,9 +209,20 @@ export default {
       this.dialogDelete = true;
     },
 
-    deleteItemConfirm() {
-      this.employeeTransaction.splice(this.editedIndex, 1);
-      this.closeDelete();
+    async deleteItemConfirm() {
+      try {
+        const userId = this.employeeTransaction[this.editedIndex].id;
+      
+        const data = await LeadService.deleteStaff(userId);
+        if (data.error_code === 0) {
+          this.employeeTransaction.splice(this.editedIndex, 1);
+          this.closeDelete();
+          console.log(data.message);
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    
     },
 
     close() {
@@ -226,11 +241,42 @@ export default {
       });
     },
 
-    save() {
+    async save() {
+      const selectedTransaction = this.transactionPoint.find(item => item.name === this.selectedTransaction);
+          const payload = {
+            email: this.editedItem.email,
+            first_name: this.editedItem.first_name,
+            last_name: this.editedItem.last_name,
+            role_id: "6575e40d857fbaebbe06c957",
+            permission_id: selectedTransaction.id,
+            numberPhone: this.editedItem.numberPhone
+          }
       if (this.editedIndex > -1) {
-        Object.assign(this.employeeTransaction[this.editedIndex], this.editedItem);
+        try {
+          payload.userId = this.editedItem.id
+          const res = await LeadService.updateHead(payload);
+          if (res.error_code === 0) {
+            // console.log(res.data);
+            this.editedItem.permission = this.selectedTransaction
+            Object.assign(this.employeeTransaction[this.editedIndex], this.editedItem);
+          }
+        } catch (error) {
+          console.error(error);
+        }
       } else {
-        this.employeeTransaction.push(this.editedItem);
+        try {
+          const res = await LeadService.createAccountHead(payload);
+          if (res.error_code === 0) {
+            console.log(res.data.username, res.data.password);
+            this.editedItem.id = res.data.id
+            this.editedItem.username = res.data.username
+            this.editedItem.permission = this.selectedTransaction
+            this.employeeTransaction.push(this.editedItem);
+          }
+        } catch (error) {
+          console.error(error);
+        }
+     
       }
       this.close();
     },

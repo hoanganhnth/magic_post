@@ -32,11 +32,22 @@ export const LeadService = {
     }
   },
 
-  async getAllPermission(payload) {
+  async updateHead(payload) {
+    try {
+      const { data } = await useApiPrivate().post(
+        `/api/index/updateHead`,
+        payload
+      );
+      return data;
+    } catch (error) {
+      throw error.message;
+    }
+  },
+
+  async getAllPermission() {
     try {
       const { data } = await useApiPrivate().get(
         `/api/index/getAllPermission`,
-        payload
       );
       return data;
     } catch (error) {

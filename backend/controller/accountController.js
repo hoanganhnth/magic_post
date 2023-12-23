@@ -3,7 +3,6 @@ const {
   Permission,
   RolePermission,
   User,
-  UserRole,
   leader,
   collection_staff,
   transaction_staff,
@@ -12,6 +11,7 @@ const {
 } = require("../models/User");
 const randomstring = require("randomstring");
 const bcrypt = require("bcrypt");
+const {  user } = require("./authController");
 
 async function registerStaff(req, res) {
   const { email, first_name, last_name, role_id, permission_id, numberPhone } = req.body;
@@ -29,7 +29,7 @@ async function registerStaff(req, res) {
     if (req.user.userRole && req.user.permission) {
       let permission = await Permission.findOne({name: req.user.permission})
       if (!permission) {
-        res.status(404).json({ message: 'Permission not found' });
+        res.status(404).json({error_code: 1, message: 'Permission not found' });
       }
       switch (req.user.userRole) {
         case leader:
@@ -37,11 +37,11 @@ async function registerStaff(req, res) {
          
             let role = await Role.findById(role_id)
             if (!role) {
-              res.status(404).json({ message: 'Role not found' });
+              res.status(404).json({error_code: 1, message: 'Role not found' });
             }
             let permissionHead = await Permission.findById(permission_id)
             if (!permissionHead) {
-              res.status(404).json({ message: 'permission Head not found' });
+              res.status(404).json({error_code: 1, message: 'permission Head not found' });
             }
             let rolePermissionUser = await RolePermission.findOne({role_id: role.id, permission_id: permission_id})
             if (!rolePermissionUser) {
@@ -61,7 +61,11 @@ async function registerStaff(req, res) {
               numberPhone,
               rolePermission_id: rolePermissionUser.id
             });
-            return res.status(201).json({username: user.username, password: password, id: user.id});
+            return res.status(201).json({error_code: 0, data: {
+              username: user.username,
+              password: password,
+              id: user.id
+            }});
           }
           break;
         case transaction_head:
@@ -87,7 +91,9 @@ async function registerStaff(req, res) {
             numberPhone,
             rolePermission_id: rolePermissionTracUser.id
           });
-          return res.status(201).json({username: userTran.username, password: password, id: userTran.id});
+          return res.status(201).json({error_code: 0, data: {
+            username: userTran.username, password: password, id: userTran.id
+          }});
 
         case collection_head:
           let collectionStaff = await Role.findOne({name: collection_staff})
@@ -112,15 +118,17 @@ async function registerStaff(req, res) {
             numberPhone,
             rolePermission_id: rolePermissionUser.id
           });
-          return res.status(201).json({username: user.username, password: password, id: user.id});
+          return res.status(201).json({error_code: 0, data: {
+            username: user.username, password: password, id: user.id
+          }});
         default:  
-          return res.status(403).json({ message: "User does not have a role" });
+          return res.status(403).json({error_code: 1, message: "User does not have a role" });
       }
     }
     
   } catch (error) {
     console.error("registration error:", error);
-    return res.status(500).json({ message: "Could not register" });
+    return res.status(500).json({error_code: 1, message: "Could not register" });
   }
 }
 function generateUsername(firstName, lastName, email) {
@@ -175,10 +183,12 @@ async function getAllHead(req, res) {
     
     
 
-    return res.status(200).json({transactionHead,collectionHead});
+    return res.status(200).json({error_code: 0, data: {
+      transactionHead,collectionHead
+    }});
   } catch (error) {
     console.error("get head error:", error);
-    return res.status(500).json({ message: "Could not get head" });
+    return res.status(500).json({error_code: 1, message: "Could not get head" });
   }
 }
 
@@ -247,10 +257,19 @@ async function showAllRole(req, res) {
 async function getAllPermission(req, res) {
   try {
     const permission = await Permission.find();
-    return res.json(permission);
+    const transactionPermission = permission.filter(
+      per => per.transactionPoint_id
+    );
+    const collectionPermission = permission.filter(
+      per => per.collectionPoint_id
+    );
+    return res.json({error_code: 0, data: {
+      collectionPermission,
+      transactionPermission,
+    } });
   } catch (error) {
     console.error("get permission error:", error);
-    return res.status(500).json({ message: "Could not get permission" });
+    return res.status(500).json({error_code: 1, message: "Could not get permission" });
   }
 }
 
@@ -279,19 +298,19 @@ async function createRole(req, res) {
 
 async function deleteStaff(req, res) {
   try {
-    const staffIdToDelete = req.body.userId;
+    const staffIdToDelete = req.query.userId;
     if (!staffIdToDelete) {
-      return res.status(400).json({ message: "Missing userId parameter" });
+      return res.status(400).json({error_code: 1, message: "Missing userId parameter" });
     }
 
     // Kiểm tra xem userId có tồn tại không
     const userToDelete = await User.findById(staffIdToDelete);
     if (!userToDelete) {
-      return res.status(404).json({ message: "User not found" });
+      return res.status(404).json({error_code: 1, message: "User not found" });
     }
     // Thực hiện xóa người dùng
     await userToDelete.deleteOne();
-    return res.json({message: "Delete success"})
+    return res.json({error_code: 0, message: "Delete success"})
   } catch (err) {
     console.error("delete user error:", err);
     return res.status(500).json({ message: "Could not delete user" });
@@ -321,6 +340,36 @@ async function updateUser(req, res) {
   }
 }
 
+async function updateHead(req, res) {
+  try {
+    const {userId, first_name, last_name, email, permission_id, numberPhone, role_id} = req.body;
+    if (!userId) {
+      return res.status(422).json({error_code: 1, message: "Invalid fields"});
+    }
+    const user = await User.findById(userId)
+    let permission = await Permission.findById(permission_id)
+    if (!permission || !permission_id) {
+      permission = await Permission.findOne({name: user.permission})
+    }
+    const rolePer = await RolePermission.findOne({role_id: role_id, permission_id: permission._id})
+    const newUser = await User.findByIdAndUpdate(userId, 
+      {
+        first_name: first_name,
+        last_name: last_name,
+        email: email,
+        permission: permission.name,
+        numberPhone: numberPhone,
+        rolePermission_id:rolePer.id
+      },
+      { new: true }
+    )
+    return res.status(201).json({error_code:0, data:{newUser}})
+  } catch(error) {
+    console.error("update user error:", error);
+    return res.status(500).json({error_code: 1, message: "Could not update user" });
+  }
+}
+
 module.exports = {
   getAllHead,
   getAllStaff,
@@ -329,5 +378,6 @@ module.exports = {
   createRole,
   registerStaff,
   getAllPermission,
-  updateUser
+  updateUser,
+  updateHead
 };
