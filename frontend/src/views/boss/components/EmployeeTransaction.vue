@@ -44,10 +44,12 @@
                             ></v-text-field>
                           </v-col>
                           <v-col cols="12" sm="6" md="4">
-                            <v-text-field
-                              v-model="editedItem.collection"
+                            <v-select
+                              v-model="selectedTransaction"
+                              :items="transactions"
                               label="Điểm quản lý"
-                            ></v-text-field>
+                              item-title="state"
+                            ></v-select>
                           </v-col>
                           <v-col cols="12" sm="6" md="4">
                             <v-text-field
@@ -121,6 +123,13 @@
 export default {
   name: "EmployeeTransaction",
   data: () => ({
+    transactions: [
+      { id: 1, state: "Hà Nội" },
+      { id: 2, state: "Hải Phòng" },
+      { id: 3, state: "Đà Nẵng" },
+      { id: 4, state: "TP HCM" },
+    ],
+    selectedTransaction: null,
     type: null,
     dialog: false,
     dialogDelete: false,

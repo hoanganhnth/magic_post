@@ -10,6 +10,9 @@ import StatisticalCollection from "@/views/leader_collectionPoint/StatisticalCol
 import CreatAccountCollection from "@/views/leader_collectionPoint/CreatAccountCollection";
 import StatisticalTransaction from "@/views/learder_transactionPoint/StatisticalTransaction";
 import CreatAccountTransaction from "@/views/learder_transactionPoint/CreatAccountTransaction";
+
+import OrderManage from "@/views/employee_transaction/OrderManage";
+import ConfirmOrders from "@/views/employee_transaction/ConfirmOrders";
 const routes = [
   {
     path: "/",
@@ -21,6 +24,9 @@ const routes = [
 
   { path: "/leader_collection", component: StatisticalCollection },
   { path: "/leader_collection/creat", component: CreatAccountCollection },
+
+  { path: "/employee_transaction", component: OrderManage },
+  { path: "/employee_transaction/confirm", component: ConfirmOrders },
   {
     path: "/boss",
     name: "Boss",
