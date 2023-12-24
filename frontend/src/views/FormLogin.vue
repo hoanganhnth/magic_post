@@ -108,7 +108,6 @@ export default {
         // const response = await AuthService.login(this.username, this.password);
         const data = await useAuthStore().login(payload);
         await useAuthStore().getUser();
-        console.log(data);
         // Nếu đăng nhập thành công, chuyển hướng đến trang chính
         this.$router.push("/boss");
       } catch (error) {

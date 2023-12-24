@@ -20,6 +20,7 @@ router.post('/createCollectionPoint', isAdmin,  locationControllers.createCollec
 router.post('/createTransactionPoint', isAdmin,  locationControllers.createTransactionPoint)
 router.get('/getCollectionPoint', isAdmin,  locationControllers.getAllCollectionPoint)
 router.get('/getTransactionPoint', isAdmin,  locationControllers.getAllTransactionPoint)
+router.get('/getAllPoint', isAdmin,  locationControllers.getAllPoint)
 router.delete('/deleteTransactionPoint', isAdmin,  locationControllers.deleteTransactionPoint)
 router.delete('/deleteCollectionPoint', isAdmin,  locationControllers.deleteCollectionPoint)
 router.delete('/deleteShipment', isAdmin,  shipmentControllers.deleteShipment)

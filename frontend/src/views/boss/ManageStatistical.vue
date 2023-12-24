@@ -3,7 +3,7 @@
     <nap-bar-boss></nap-bar-boss>
     <div class="dashboard-app">
       <div class="dashboard-content">
-        <statistical-component></statistical-component>
+        <statistical-component :collectionPoints = "collectionPoints"></statistical-component>
       </div>
     </div>
   </div>
@@ -11,14 +11,30 @@
 
 <script>
 import NapBarBoss from "../../components/boss/NapBarBoss.vue";
-
+import { LeadService } from "../../service/LeadService";
 import StatisticalComponent from "./components/StatisticalComponent.vue";
 export default {
   components: { NapBarBoss, StatisticalComponent },
   name: "ManageStatistical",
   data() {
-    return {};
+    return {
+      collectionPoints: [],
+    };
   },
-  methods: {},
+  created() {
+    this.initialize();
+  },
+  methods: {
+    async  initialize() {
+      try {
+        const res1 = await LeadService.getAllPoint();
+        if (res1.error_code === 0) {
+          this.collectionPoints = res1.data.collectionPoints;
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    }
+  },
 };
 </script>

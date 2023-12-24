@@ -43,7 +43,6 @@ export const useAuthStore = defineStore("auth", {
         const { data } = await useApi().post(`/api/auth/login`, payload);
         this.accessToken = data.access_token;
         // await this.getUser();
-        console.log(data.access_token);
         localStorage.setItem("token", data.access_token);
         return data;
       } catch (error) {

@@ -190,17 +190,15 @@ export default {
   created() {
     this.initialize();
   },
-  
 
   methods: {
-    initialize() {
-    },
+    initialize() {},
 
     editItem(item) {
       this.editedIndex = this.employeeTransaction.indexOf(item);
       this.editedItem = Object.assign({}, item);
       this.dialog = true;
-      this.selectedTransaction = this.editedItem.permission
+      this.selectedTransaction = this.editedItem.permission;
     },
 
     deleteItem(item) {
@@ -212,7 +210,7 @@ export default {
     async deleteItemConfirm() {
       try {
         const userId = this.employeeTransaction[this.editedIndex].id;
-      
+
         const data = await LeadService.deleteStaff(userId);
         if (data.error_code === 0) {
           this.employeeTransaction.splice(this.editedIndex, 1);
@@ -222,7 +220,6 @@ export default {
       } catch (error) {
         console.error(error);
       }
-    
     },
 
     close() {
@@ -242,23 +239,28 @@ export default {
     },
 
     async save() {
-      const selectedTransaction = this.transactionPoint.find(item => item.name === this.selectedTransaction);
-          const payload = {
-            email: this.editedItem.email,
-            first_name: this.editedItem.first_name,
-            last_name: this.editedItem.last_name,
-            role_id: "6575e40d857fbaebbe06c957",
-            permission_id: selectedTransaction.id,
-            numberPhone: this.editedItem.numberPhone
-          }
+      const selectedTransaction = this.transactionPoint.find(
+        (item) => item.name === this.selectedTransaction
+      );
+      const payload = {
+        email: this.editedItem.email,
+        first_name: this.editedItem.first_name,
+        last_name: this.editedItem.last_name,
+        role_id: "6575e40d857fbaebbe06c957",
+        permission_id: selectedTransaction.id,
+        numberPhone: this.editedItem.numberPhone,
+      };
       if (this.editedIndex > -1) {
         try {
-          payload.userId = this.editedItem.id
+          payload.userId = this.editedItem.id;
           const res = await LeadService.updateHead(payload);
           if (res.error_code === 0) {
             // console.log(res.data);
-            this.editedItem.permission = this.selectedTransaction
-            Object.assign(this.employeeTransaction[this.editedIndex], this.editedItem);
+            this.editedItem.permission = this.selectedTransaction;
+            Object.assign(
+              this.employeeTransaction[this.editedIndex],
+              this.editedItem
+            );
           }
         } catch (error) {
           console.error(error);
@@ -268,15 +270,14 @@ export default {
           const res = await LeadService.createAccountHead(payload);
           if (res.error_code === 0) {
             console.log(res.data.username, res.data.password);
-            this.editedItem.id = res.data.id
-            this.editedItem.username = res.data.username
-            this.editedItem.permission = this.selectedTransaction
+            this.editedItem.id = res.data.id;
+            this.editedItem.username = res.data.username;
+            this.editedItem.permission = this.selectedTransaction;
             this.employeeTransaction.push(this.editedItem);
           }
         } catch (error) {
           console.error(error);
         }
-     
       }
       this.close();
     },
