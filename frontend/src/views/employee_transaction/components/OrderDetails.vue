@@ -13,39 +13,20 @@
 <script>
 export default {
   name: "OderDetails",
+  props: {
+    loadData: Boolean,
+    items: Object,
+  },
+  watch: {
+    items() {
+      this.loading = this.loadData;
+      // Cập nhật lại bảng khi items thay đổi
+      this.$forceUpdate();
+    },
+  },
   data() {
     return {
-      loadData: false,
-      items: [
-        {
-          id: 1,
-          shippingTime: "16/01/2023",
-          weight: 100,
-          price: 100000,
-          status: "Đang chuyển",
-        },
-        {
-          id: 2,
-          shippingTime: "10/10/2023",
-          weight: 200,
-          price: 200000,
-          status: "Chuyển thất bại",
-        },
-        {
-          id: 3,
-          shippingTime: "20/10/2023",
-          weight: 300,
-          price: 300000,
-          status: "Chuyển thành công",
-        },
-        {
-          id: 4,
-          shippingTime: "20/10/2023",
-          weight: 300,
-          price: 300000,
-          status: "Nhận từ điểm tập kết",
-        },
-      ],
+      loading: false,
       headers: [
         {
           title: "ID",
@@ -55,7 +36,6 @@ export default {
         },
         { title: "Thời gian gửi", key: "shippingTime", align: "center" },
         { title: "Khối lượng (g)", key: "weight", align: "center" },
-        { title: "Giá", key: "price", align: "center" },
         { title: "Trạng thái đơn hàng", key: "status", align: "center" },
       ],
     };
