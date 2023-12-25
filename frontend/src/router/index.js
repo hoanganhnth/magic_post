@@ -12,7 +12,8 @@ import StatisticalTransaction from "@/views/learder_transactionPoint/Statistical
 import CreatAccountTransaction from "@/views/learder_transactionPoint/CreatAccountTransaction";
 
 import OrderManage from "@/views/employee_transaction/OrderManage";
-import ConfirmOrders from "@/views/employee_transaction/ConfirmOrders";
+import OrderShipped from "@/views/employee_transaction/OrderShipped";
+import PrintAndRecord from "@/views/employee_transaction/PrintAndRecord";
 const routes = [
   {
     path: "/",
@@ -26,7 +27,8 @@ const routes = [
   { path: "/leader_collection/creat", component: CreatAccountCollection },
 
   { path: "/employee_transaction", component: OrderManage },
-  { path: "/employee_transaction/confirm", component: ConfirmOrders },
+  { path: "/employee_transaction/shipped", component: OrderShipped },
+  { path: "/employee_transaction/print", component: PrintAndRecord },
   {
     path: "/boss",
     name: "Boss",

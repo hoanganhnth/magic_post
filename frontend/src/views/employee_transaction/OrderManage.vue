@@ -5,7 +5,7 @@
       <div class="dashboard-content">
         <v-col>
           <order-details></order-details>
-          <creat-orders id="creat"></creat-orders>
+          <confirm-component></confirm-component>
         </v-col>
       </div>
     </div>
@@ -13,16 +13,16 @@
 </template>
 
 <script>
-import CreatOrders from "./components/CreatOrders.vue";
+import ConfirmComponent from "./components/ConfirmComponent.vue";
 import NavBarEmployee from "./components/NavBarEmployee.vue";
 import OrderDetails from "./components/OrderDetails.vue";
 
 export default {
-  name: "CreatAccountCollection",
+  name: "OrderManage",
   components: {
     NavBarEmployee,
     OrderDetails,
-    CreatOrders,
+    ConfirmComponent,
   },
 };
 </script>

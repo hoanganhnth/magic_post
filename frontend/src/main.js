@@ -22,6 +22,7 @@ import "@fortawesome/fontawesome-free/css/all.min.css";
 import "vuetify/dist/vuetify.min.css";
 import vuetify from "./plugins/vuetify";
 import { createPinia } from "pinia";
+import VueQRCodeComponent from "vue-qrcode-component";
 const pinia = createPinia();
 
 library.add(faLinkedinIn, faGithub, faFileLines);
@@ -33,4 +34,5 @@ createApp(App)
   .use(metaManager)
   .use(vuetify)
   .use(pinia)
+  .component("qr-code", VueQRCodeComponent)
   .mount("#app");

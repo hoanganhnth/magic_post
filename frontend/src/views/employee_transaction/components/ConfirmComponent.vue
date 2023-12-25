@@ -1,35 +1,40 @@
 <template>
   <v-container>
-    <h2>Danh sách đơn hàng cần xác nhận</h2>
-    <v-row>
-      <v-col v-for="(item, index) in orderItems" :key="index" cols="12">
-        <v-card class="card">
-          <v-card-title>Tên đơn hàng: {{ item.name }}</v-card-title>
-          <v-card-content class="content">Giá: {{ item.price }}</v-card-content>
-          <v-card-content class="content"
-            >Khối lượng: {{ item.weight }}</v-card-content
-          >
-          <v-card-content class="content"
-            >Thông tin đơn hàng: {{ item.status }}</v-card-content
-          >
-          <v-card-actions>
-            <v-btn color="primary" @click="confirmOrder(item)"
-              >Xác nhận đơn hàng
-              <v-icon id="icon" size="25" color="green" class="me-2">
-                <i class="fas fa-check"></i
-              ></v-icon>
-            </v-btn>
-          </v-card-actions>
-        </v-card>
-      </v-col>
-    </v-row>
-    <v-row v-if="orderItems.length === 0">
-      <v-col cols="12">
-        <v-card>
-          <v-card-text>No items in the order</v-card-text>
-        </v-card>
-      </v-col>
-    </v-row>
+    <v-card>
+      <v-card-title>Danh sách đơn hàng cần xác nhận</v-card-title>
+
+      <v-row>
+        <v-col v-for="(item, index) in orderItems" :key="index" cols="12">
+          <v-card class="card">
+            <v-card-title>Tên đơn hàng: {{ item.name }}</v-card-title>
+            <v-card-content class="content"
+              >Giá: {{ item.price }}</v-card-content
+            >
+            <v-card-content class="content"
+              >Khối lượng: {{ item.weight }}</v-card-content
+            >
+            <v-card-content class="content"
+              >Thông tin đơn hàng: {{ item.status }}</v-card-content
+            >
+            <v-card-actions>
+              <v-btn color="primary" @click="confirmOrder(item)"
+                >Xác nhận đơn hàng
+                <v-icon id="icon" size="25" color="green" class="me-2">
+                  <i class="fas fa-check"></i
+                ></v-icon>
+              </v-btn>
+            </v-card-actions>
+          </v-card>
+        </v-col>
+      </v-row>
+      <v-row v-if="orderItems.length === 0">
+        <v-col cols="12">
+          <v-card>
+            <v-card-text>No items in the order</v-card-text>
+          </v-card>
+        </v-col>
+      </v-row>
+    </v-card>
   </v-container>
 </template>
 
@@ -120,5 +125,6 @@ export default {
 .content {
   padding-left: 20px;
 }
+
 /* Add your custom styles here if needed */
 </style>
