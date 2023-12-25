@@ -25,7 +25,9 @@ export const LeadService = {
   async deleteStaff(payload) {
     try {
       const userId = payload;
-      const { data } = await useApiPrivate().delete(`/api/index/deleteStaff`, { params: { userId } });
+      const { data } = await useApiPrivate().delete(`/api/index/deleteStaff`, {
+        params: { userId },
+      });
       return data;
     } catch (error) {
       throw error.message;
@@ -46,9 +48,7 @@ export const LeadService = {
 
   async getAllPermission() {
     try {
-      const { data } = await useApiPrivate().get(
-        `/api/index/getAllPermission`,
-      );
+      const { data } = await useApiPrivate().get(`/api/index/getAllPermission`);
       return data;
     } catch (error) {
       throw error.message;
@@ -115,7 +115,7 @@ export const LeadService = {
   async getCollectionPoint() {
     try {
       const { data } = await useApiPrivate().get(
-        `/api/index/getCollectionPoint`,
+        `/api/index/getCollectionPoint`
       );
       return data;
     } catch (error) {
@@ -125,9 +125,7 @@ export const LeadService = {
 
   async getAllPoint() {
     try {
-      const { data } = await useApiPrivate().get(
-        `/api/index/getAllPoint`,
-      );
+      const { data } = await useApiPrivate().get(`/api/index/getAllPoint`);
       return data;
     } catch (error) {
       throw error.message;
@@ -137,7 +135,7 @@ export const LeadService = {
   async getTransactionPoint() {
     try {
       const { data } = await useApiPrivate().get(
-        `/api/index/getTransactionPoint`,
+        `/api/index/getTransactionPoint`
       );
       return data;
     } catch (error) {

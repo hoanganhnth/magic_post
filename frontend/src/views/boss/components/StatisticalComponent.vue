@@ -138,7 +138,6 @@ export default {
       type: Array,
       required: true,
     },
-    
   },
   methods: {
     getData() {
@@ -179,9 +178,9 @@ export default {
       this.loadData = false;
     },
     updateTransactions(selectedCollectionPoint) {
-        this.transactions = this.collectionPoints.find(cp => cp.name === selectedCollectionPoint).transactionPoints
-
-      
+      this.transactions = this.collectionPoints.find(
+        (cp) => cp.name === selectedCollectionPoint
+      ).transactionPoints;
     },
 
     formatDate(date) {

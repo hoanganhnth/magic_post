@@ -19,11 +19,39 @@ const routes = [
     name: "Home",
     component: HomeView,
   },
-  { path: "/leader_transaction", component: StatisticalTransaction },
-  { path: "/leader_transaction/creat", component: CreatAccountTransaction },
+  {
+    path: "/leader_transaction",
+    name: "Leader Transaction",
+    component: StatisticalTransaction,
+    meta: {
+      requiresAuth: true,
+    },
+  },
+  {
+    path: "/leader_transaction/creat",
+    name: "Leader Transaction Account",
+    component: CreatAccountTransaction,
+    meta: {
+      requiresAuth: true,
+    },
+  },
 
-  { path: "/leader_collection", component: StatisticalCollection },
-  { path: "/leader_collection/creat", component: CreatAccountCollection },
+  {
+    path: "/leader_collection",
+    name: "Leader Collection",
+    component: StatisticalCollection,
+    meta: {
+      requiresAuth: true,
+    },
+  },
+  {
+    path: "/leader_collection/creat",
+    name: "Leader Collection Account",
+    component: CreatAccountCollection,
+    meta: {
+      requiresAuth: true,
+    },
+  },
 
   { path: "/employee_transaction", component: OrderManage },
   { path: "/employee_transaction/confirm", component: ConfirmOrders },
@@ -85,9 +113,6 @@ router.beforeEach((to, from, next) => {
     // Nếu route yêu cầu xác thực và không có token, chuyển hướng đến trang đăng nhập
     next("/login");
   } else {
-    // if (to.name === 'Login' && storedRole === "leader") {
-    //   next('/boss');
-    // }
     if (storedToken && to.meta.requiresAuth) {
       switch (storedRole) {
         case "leader":
@@ -109,10 +134,26 @@ router.beforeEach((to, from, next) => {
           next("/");
           break;
         case "Head of collection point":
-          next("/");
+          if (
+            to.name === "Leader Collection" ||
+            to.name === "Leader Collection Account"
+          ) {
+            console.log("ok");
+            next();
+          } else {
+            console.log("ok");
+            next({ name: "Leader Collection" });
+          }
           break;
         case "Head of transaction point":
-          next();
+          if (
+            to.name === "Leader Transaction" ||
+            to.name === "Leader Transaction Account"
+          ) {
+            next();
+          } else {
+            next({ name: "Leader Transaction" });
+          }
           break;
       }
     } else {

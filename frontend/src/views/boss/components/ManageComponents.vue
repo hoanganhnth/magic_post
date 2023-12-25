@@ -8,7 +8,7 @@
           <v-card-text>
             <v-data-table
               :loading="loading"
-              :items="collectionPoints"
+              :items="collection_points"
               :headers="collectionHeaders"
               :items-per-page="5"
             ></v-data-table>
@@ -26,7 +26,7 @@
           <v-card-text>
             <v-data-table
               :loading="loading"
-              :items="transactionPoints"
+              :items="transaction_points"
               :headers="transactionHeaders"
               :items-per-page="5"
             ></v-data-table>
@@ -54,7 +54,7 @@
             ></v-text-field>
             <v-select
               v-model="selectedCollectionPoint"
-              :items="collectionPoints"
+              :items="collection_points"
               label="Thuộc điểm tập kết"
               item-title="name"
             ></v-select>
@@ -112,6 +112,8 @@ export default {
       selectedCollectionPoint: null,
       showTransactionDialog: false,
       showCollectionDialog: false,
+      collection_points: [],
+      transaction_points: [],
       newTransactionPoint: {
         id: "",
         name: "",
@@ -155,6 +157,9 @@ export default {
       loading: false,
     };
   },
+  created() {
+    this.initialize();
+  },
   props: {
     collectionPoints: {
       type: Array,
@@ -165,24 +170,42 @@ export default {
       required: true,
     },
   },
+  watch: {
+    collectionPoints(newVal, oldVal) {
+      if (newVal !== oldVal) {
+        this.initialize();
+      }
+    },
+    transactionPoints(newVal, oldVal) {
+      if (newVal !== oldVal) {
+        this.initialize();
+      }
+    },
+  },
 
   methods: {
+    initialize() {
+      this.collection_points = this.collectionPoints;
+      this.transaction_points = this.transactionPoints;
+    },
     async addTransactionPoint() {
       this.loading = true;
-      const selectedCollectionPoint = this.collectionPoints.find(
+      const selectedCollectionPoint = this.collection_points.find(
         (item) => item.name === this.selectedCollectionPoint
       );
-      this.newTransactionPoint.collectionPoint_id = selectedCollectionPoint.id
+      this.newTransactionPoint.collectionPoint_id = selectedCollectionPoint.id;
       try {
-          const res = await LeadService.createTransactionPoint(this.newTransactionPoint);
-          if (res.error_code === 0) {
-            this.newTransactionPoint.id = res.data.newPoint.id;
-            this.transactionPoints.push({ ...this.newTransactionPoint });
-            this.showTransactionDialog = false;
-            this.loading = false;
-          }
+        const res = await LeadService.createTransactionPoint(
+          this.newTransactionPoint
+        );
+        if (res.error_code === 0) {
+          this.newTransactionPoint.id = res.data.newPoint.id;
+          this.transaction_points.push({ ...this.newTransactionPoint });
+          this.showTransactionDialog = false;
+          this.loading = false;
+        }
       } catch (error) {
-        console.error(error)
+        console.error(error);
         this.loading = false;
       }
     },
@@ -190,15 +213,17 @@ export default {
       this.loading = true;
 
       try {
-          const res = await LeadService.createCollectionPoint(this.newCollectionPoint);
-          if (res.error_code === 0) {
-            this.newCollectionPoint.id = res.data.newPoint.id;
-            this.collectionPoints.push({ ...this.newCollectionPoint });
-            this.showCollectionDialog = false;
-            this.loading = false;
-          }
+        const res = await LeadService.createCollectionPoint(
+          this.newCollectionPoint
+        );
+        if (res.error_code === 0) {
+          this.newCollectionPoint.id = res.data.newPoint.id;
+          this.collection_points.push({ ...this.newCollectionPoint });
+          this.showCollectionDialog = false;
+          this.loading = false;
+        }
       } catch (error) {
-        console.error(error)
+        console.error(error);
         this.loading = false;
       }
     },

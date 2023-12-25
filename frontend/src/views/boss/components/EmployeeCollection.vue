@@ -5,7 +5,7 @@
     <v-card-text>
       <v-row>
         <v-col cols="12">
-          <v-data-table :headers="headers" :items="employeeCollection">
+          <v-data-table :headers="headers" :items="list_employee">
             <template v-slot:top>
               <v-toolbar flat>
                 <v-toolbar-title>Thông tin nhân viên</v-toolbar-title>
@@ -25,7 +25,6 @@
                     <v-card-text>
                       <v-container>
                         <v-row>
-                          
                           <v-col cols="12" sm="6" md="4">
                             <v-text-field
                               v-model="editedItem.first_name"
@@ -39,7 +38,7 @@
                               label="Last name"
                             ></v-text-field>
                           </v-col>
-                      
+
                           <v-col cols="12" sm="6" md="4">
                             <v-text-field
                               v-model="editedItem.email"
@@ -126,6 +125,16 @@
 import { LeadService } from "../../../service/LeadService";
 export default {
   name: "EmployeeCollection",
+  props: {
+    employeeCollection: {
+      type: Array,
+      required: true,
+    },
+    collectionPoint: {
+      type: Array,
+      required: true,
+    },
+  },
   data: () => ({
     selectedCollectionPoint: null,
     dialog: false,
@@ -143,7 +152,7 @@ export default {
       { title: "Số điện thoại", key: "numberPhone" },
       { title: "Actions", key: "actions", sortable: false },
     ],
-    // list_employee: [],
+    list_employee: [],
     editedIndex: -1,
     editedItem: {
       id: "",
@@ -170,22 +179,17 @@ export default {
       return this.editedIndex === -1 ? "New Item" : "Edit Item";
     },
   },
-  props: {
-    employeeCollection: {
-      type: Array,
-      required: true,
-    },
-    collectionPoint: {
-      type: Array,
-      required: true,
-    },
-  },
   watch: {
     dialog(val) {
       val || this.close();
     },
     dialogDelete(val) {
       val || this.closeDelete();
+    },
+    employeeCollection(newVal, oldVal) {
+      if (newVal !== oldVal) {
+        this.initialize();
+      }
     },
   },
 
@@ -195,36 +199,36 @@ export default {
 
   methods: {
     async initialize() {
+      this.list_employee = this.employeeCollection.slice();
     },
 
     editItem(item) {
-      this.editedIndex = this.employeeCollection.indexOf(item);
+      this.editedIndex = this.list_employee.indexOf(item);
       this.editedItem = Object.assign({}, item);
       this.dialog = true;
-      this.selectedCollectionPoint = this.editedItem.permission
+      this.selectedCollectionPoint = this.editedItem.permission;
     },
 
     deleteItem(item) {
-      this.editedIndex = this.employeeCollection.indexOf(item);
-      console.log(this.employeeCollection[this.editedIndex])
+      this.editedIndex = this.list_employee.indexOf(item);
+      console.log(this.list_employee[this.editedIndex]);
       this.editedItem = Object.assign({}, item);
       this.dialogDelete = true;
     },
 
     async deleteItemConfirm() {
       try {
-        const userId = this.employeeCollection[this.editedIndex].id;
-      
+        const userId = this.list_employee[this.editedIndex].id;
+
         const data = await LeadService.deleteStaff(userId);
         if (data.error_code === 0) {
-          this.employeeCollection.splice(this.editedIndex, 1);
+          this.list_employee.splice(this.editedIndex, 1);
           this.closeDelete();
           console.log(data.message);
         }
       } catch (error) {
         console.error(error);
       }
-    
     },
 
     close() {
@@ -244,39 +248,42 @@ export default {
     },
 
     async save() {
-
-      const selectedCollectionPoint = this.collectionPoint.find(item => item.name === this.selectedCollectionPoint);
-          const payload = {
-            email: this.editedItem.email,
-            first_name: this.editedItem.first_name,
-            last_name: this.editedItem.last_name,
-            role_id: "6575e37f857fbaebbe06c92d",
-            permission_id: selectedCollectionPoint.id,
-            numberPhone: this.editedItem.numberPhone
-          }
+      const selectedCollectionPoint = this.collectionPoint.find(
+        (item) => item.name === this.selectedCollectionPoint
+      );
+      const payload = {
+        email: this.editedItem.email,
+        first_name: this.editedItem.first_name,
+        last_name: this.editedItem.last_name,
+        role_id: "6575e37f857fbaebbe06c92d",
+        permission_id: selectedCollectionPoint.id,
+        numberPhone: this.editedItem.numberPhone,
+      };
 
       if (this.editedIndex > -1) {
         try {
-          payload.userId = this.editedItem.id
+          payload.userId = this.editedItem.id;
           const res = await LeadService.updateHead(payload);
           if (res.error_code === 0) {
             // console.log(res.data);
-            this.editedItem.permission = this.selectedCollectionPoint
-            Object.assign(this.employeeCollection[this.editedIndex], this.editedItem);
+            this.editedItem.permission = this.selectedCollectionPoint;
+            Object.assign(
+              this.list_employee[this.editedIndex],
+              this.editedItem
+            );
           }
         } catch (error) {
           console.error(error);
         }
       } else {
         try {
-         
           const res = await LeadService.createAccountHead(payload);
           if (res.error_code === 0) {
             console.log(res.data.username, res.data.password);
-            this.editedItem.id = res.data.id
-            this.editedItem.username = res.data.username
-            this.editedItem.permission = this.selectedCollectionPoint
-            this.employeeCollection.push(this.editedItem);
+            this.editedItem.id = res.data.id;
+            this.editedItem.username = res.data.username;
+            this.editedItem.permission = this.selectedCollectionPoint;
+            this.list_employee.push(this.editedItem);
           }
         } catch (error) {
           console.error(error);

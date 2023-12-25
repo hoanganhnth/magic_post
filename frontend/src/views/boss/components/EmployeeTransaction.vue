@@ -5,7 +5,7 @@
     <v-card-text>
       <v-row>
         <v-col cols="12">
-          <v-data-table :headers="headers" :items="employeeTransaction">
+          <v-data-table :headers="headers" :items="list_employee">
             <template v-slot:top>
               <v-toolbar flat>
                 <v-toolbar-title>Thông tin nhân viên</v-toolbar-title>
@@ -141,7 +141,7 @@ export default {
       { title: "Số điện thoại", key: "numberPhone" },
       { title: "Actions", key: "actions", sortable: false },
     ],
-    // list_employee: [],
+    list_employee: [],
     editedIndex: -1,
     editedItem: {
       id: "",
@@ -176,6 +176,11 @@ export default {
     dialogDelete(val) {
       val || this.closeDelete();
     },
+    employeeTransaction(newVal, oldVal) {
+      if (newVal !== oldVal) {
+        this.initialize();
+      }
+    },
   },
   props: {
     employeeTransaction: {
@@ -192,28 +197,30 @@ export default {
   },
 
   methods: {
-    initialize() {},
+    initialize() {
+      this.list_employee = this.employeeTransaction;
+    },
 
     editItem(item) {
-      this.editedIndex = this.employeeTransaction.indexOf(item);
+      this.editedIndex = this.list_employee.indexOf(item);
       this.editedItem = Object.assign({}, item);
       this.dialog = true;
       this.selectedTransaction = this.editedItem.permission;
     },
 
     deleteItem(item) {
-      this.editedIndex = this.employeeTransaction.indexOf(item);
+      this.editedIndex = this.list_employee.indexOf(item);
       this.editedItem = Object.assign({}, item);
       this.dialogDelete = true;
     },
 
     async deleteItemConfirm() {
       try {
-        const userId = this.employeeTransaction[this.editedIndex].id;
+        const userId = this.list_employee[this.editedIndex].id;
 
         const data = await LeadService.deleteStaff(userId);
         if (data.error_code === 0) {
-          this.employeeTransaction.splice(this.editedIndex, 1);
+          this.list_employee.splice(this.editedIndex, 1);
           this.closeDelete();
           console.log(data.message);
         }
@@ -258,7 +265,7 @@ export default {
             // console.log(res.data);
             this.editedItem.permission = this.selectedTransaction;
             Object.assign(
-              this.employeeTransaction[this.editedIndex],
+              this.list_employee[this.editedIndex],
               this.editedItem
             );
           }
@@ -273,7 +280,7 @@ export default {
             this.editedItem.id = res.data.id;
             this.editedItem.username = res.data.username;
             this.editedItem.permission = this.selectedTransaction;
-            this.employeeTransaction.push(this.editedItem);
+            this.list_employee.push(this.editedItem);
           }
         } catch (error) {
           console.error(error);

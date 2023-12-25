@@ -3,7 +3,9 @@
     <nap-bar-boss></nap-bar-boss>
     <div class="dashboard-app">
       <div class="dashboard-content">
-        <statistical-component :collectionPoints = "collectionPoints"></statistical-component>
+        <statistical-component
+          :collectionPoints="collectionPoints"
+        ></statistical-component>
       </div>
     </div>
   </div>
@@ -25,7 +27,7 @@ export default {
     this.initialize();
   },
   methods: {
-    async  initialize() {
+    async initialize() {
       try {
         const res1 = await LeadService.getAllPoint();
         if (res1.error_code === 0) {
@@ -34,7 +36,7 @@ export default {
       } catch (error) {
         console.error(error);
       }
-    }
+    },
   },
 };
 </script>

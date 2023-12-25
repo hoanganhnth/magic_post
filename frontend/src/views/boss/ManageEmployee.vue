@@ -5,8 +5,15 @@
       <div class="dashboard-content">
         <v-app>
           <v-main>
-            <employee-collection :employeeCollection = "employeeCollection" :collectionPoint = "collectionPoint"> </employee-collection>
-            <employee-transaction :employeeTransaction = "employeeTransaction" :transactionPoint = "transactionPoint"></employee-transaction>
+            <employee-collection
+              :employeeCollection="employeeCollection"
+              :collectionPoint="collectionPoint"
+            >
+            </employee-collection>
+            <employee-transaction
+              :employeeTransaction="employeeTransaction"
+              :transactionPoint="transactionPoint"
+            ></employee-transaction>
           </v-main>
         </v-app>
       </div>
@@ -57,9 +64,8 @@ export default {
       } catch (error) {
         console.error(error);
       }
-      
     },
-  }
+  },
 };
 </script>
 

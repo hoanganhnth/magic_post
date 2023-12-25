@@ -3,7 +3,10 @@
     <nap-bar-boss></nap-bar-boss>
     <div class="dashboard-app">
       <div class="dashboard-content">
-        <manage-components :collectionPoints = "collectionPoints" :transactionPoints = "transactionPoints"></manage-components>
+        <manage-components
+          :collectionPoints="collectionPoints"
+          :transactionPoints="transactionPoints"
+        ></manage-components>
       </div>
     </div>
   </div>
@@ -26,7 +29,7 @@ export default {
     this.initialize();
   },
   methods: {
-    async  initialize() {
+    async initialize() {
       try {
         const res1 = await LeadService.getCollectionPoint();
         const res2 = await LeadService.getTransactionPoint();
@@ -41,7 +44,7 @@ export default {
       } catch (error) {
         console.error(error);
       }
-    }
+    },
   },
 };
 </script>
