@@ -8,20 +8,15 @@ const {
   collection_head,
   transaction_head,
   RolePermission,
+  User,
 } = require("../models/User");
 
 async function createCollectionPoint(req, res) {
   const { name, address } = req.body;
   try {
-    const existingPoint = await CollectionPoint.findOne({ name });
-    if (existingPoint) {
-      return res
-        .status(409)
-        .json({ message: "CollectionPoint already exists" });
-    }
     const existPoint = await CollectionPoint.findOne({name})
     if (existPoint) {
-      return res.status(409).json({ message: "Point already exists" });
+      return res.status(409).json({error_code: 1, message: "Point already exists" });
     }
     const newPoint = await CollectionPoint.create({
       name: name,
@@ -61,39 +56,33 @@ async function createCollectionPoint(req, res) {
           permission_id: permissionPoint.id
         })
      
-        return res.json({ newPoint, permissionPoint });
+        return res.json({error_code: 0, data: { newPoint, permissionPoint }});
       } catch (error) {
         console.error("create role head and staff error:", error);
         return res
           .status(500)
-          .json({ message: "Could not create role head and staff" });
+          .json({error_code: 1, message: "Could not create role head and staff" });
       }
     } catch (err) {
       console.error("create permission CollectionPoint error:", err);
       return res
         .status(500)
-        .json({ message: "Could not create permission CollectionPoint" });
+        .json({error_code: 1, message: "Could not create permission CollectionPoint" });
     }
   } catch (error) {
     console.error("create CollectionPoint error:", error);
     return res
       .status(500)
-      .json({ message: "Could not create CollectionPoint" });
+      .json({error_code: 1, message: "Could not create CollectionPoint" });
   }
 }
 
 async function createTransactionPoint(req, res) {
   const { name, address, collectionPoint_id } = req.body;
   try {
-    const existingPoint = await TransactionPoint.findOne({ name });
-    if (existingPoint) {
-      return res
-        .status(409)
-        .json({ message: "TransactionPoint already exists" });
-    }
     const existPoint = await TransactionPoint.findOne({name})
     if (existPoint) {
-      return res.status(409).json({ message: "Point already exists" });
+      return res.status(409).json({error_code: 1, message: "Point already exists" });
     }
     const newPoint = await TransactionPoint.create({
       name: name,
@@ -130,28 +119,24 @@ async function createTransactionPoint(req, res) {
           permission_id: permissionPoint.id
         })
         // Nếu role chưa tồn tại, tạo mới
-        
-        
-        
-        
-        return res.json({ newPoint, permissionPoint });
+        return res.json({error_code: 0, data: { newPoint, permissionPoint }});
       } catch (error) {
         console.error("create rolePermission head and staff error:", error);
         return res
           .status(500)
-          .json({ message: "Could not create rolePermission head and staff" });
+          .json({error_code: 1, message: "Could not create rolePermission head and staff" });
       }
     } catch (err) {
       console.error("create permission TransactionPoint error:", err);
       return res
         .status(500)
-        .json({ message: "Could not create permission TransactionPoint" });
+        .json({error_code: 1, message: "Could not create permission TransactionPoint" });
     }
   } catch (error) {
     console.error("create TransactionPoint error:", error);
     return res
       .status(500)
-      .json({ message: "Could not create TransactionPoint" });
+      .json({error_code:1, message: "Could not create TransactionPoint" });
   }
 }
 
@@ -234,20 +219,58 @@ async function deleteCollectionPoint(req, res) {
 async function getAllTransactionPoint(req, res) {
   try {
     const transactionPoint = await TransactionPoint.find();
-    return res.json(transactionPoint);
+    const transactionPointsWithCollectionPoint = transactionPoint.map(async (tp) => {
+      const permission = await Permission.findOne({transactionPoint_id: tp._id})
+      const user = await User.findOne({permission: permission.name})
+      const collectionPoint = await CollectionPoint.findById(tp.collectionPoint_id);
+      if (!user) {
+        return { ...tp.toObject(), collectionPoint: collectionPoint?.name, manageAccount: "", orders:0 };
+      }
+      return { ...tp.toObject(), collectionPoint: collectionPoint?.name, manageAccount: user.email };
+    });
+    
+    // Wait for all promises to resolve
+    const transactionPoints = await Promise.all(transactionPointsWithCollectionPoint);
+    
+    return res.json({error_code: 0,data: {transactionPoints}});
   } catch (error) {
     console.error("get transactionPoint error:", error);
-    return res.status(500).json({ message: "Could not get transactionPoint" });
+    return res.status(500).json({error_code: 1, message: "Could not get transactionPoint" });
   }
 }
 
 async function getAllCollectionPoint(req, res) {
   try {
     const collectionPoint = await CollectionPoint.find();
-    return res.json(collectionPoint);
+    const collectionPointsWithCollectionPoint = collectionPoint.map(async (tp) => {
+      const permission = await Permission.findOne({collectionPoint_id: tp._id})
+      const user = await User.findOne({permission: permission.name})
+      if (!user) {
+        return { ...tp.toObject(), manageAccount: "" };
+      }
+      return { ...tp.toObject(), manageAccount: user.email, orders: 0 };
+    });
+    
+    // Wait for all promises to resolve
+    const collectionPoints = await Promise.all(collectionPointsWithCollectionPoint);
+    return res.json({error_code: 0, data: {collectionPoints}});
   } catch (error) {
     console.error("get collectionPoint error:", error);
-    return res.status(500).json({ message: "Could not get collectionPoint" });
+    return res.status(500).json({error_code: 1, message: "Could not get collectionPoint" });
+  }
+}
+async function getAllPoint(req, res) {
+  try {
+    const collectionPoint = await CollectionPoint.find();
+    const collectionPointWithTransactionPoint = collectionPoint.map(async (po) => {
+      const transactionPoint = await TransactionPoint.find({collectionPoint_id: po._id})
+      return { ...po.toObject(), transactionPoints: transactionPoint}
+    })
+    const collectionPoints = await Promise.all(collectionPointWithTransactionPoint);
+    return res.json({error_code: 0, data: {collectionPoints}});
+  } catch (error) {
+    console.error("get point error:", error);
+    return res.status(500).json({error_code: 1, message: "Could not get point" });
   }
 }
 
@@ -258,4 +281,5 @@ module.exports = {
   deleteCollectionPoint,
   getAllTransactionPoint,
   getAllCollectionPoint,
+  getAllPoint
 };

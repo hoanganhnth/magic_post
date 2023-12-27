@@ -113,7 +113,7 @@ async function registerStaff(req, res) {
             password: hashedPassword,
             first_name,
             last_name,
-            userRole: transactionStaff.name,
+            userRole: collectionStaff.name,
             permission: permission.name,
             numberPhone,
             rolePermission_id: rolePermissionUser.id
@@ -195,12 +195,12 @@ async function getAllHead(req, res) {
 async function getAllStaff(req, res) {
   try {
     if (!req.user.userRole) {
-      return res.status(403).json({ message: "User does not have a role" });
+      return res.status(403).json({error_code: 1, message: "User does not have a role" });
     }
     let staffTranRole, staffColRole ;
     const permissionRoleHead = await RolePermission.findById(req.user.rolePermission_id);
     if (!permissionRoleHead) {
-      return res.status(404).json({ message: "Rolepermission head not found" });
+      return res.status(404).json({error_code: 1, message: "Rolepermission head not found" });
     }
 
     switch(req.user.userRole) {
@@ -211,12 +211,12 @@ async function getAllStaff(req, res) {
         }
         const permissionRoleTranStaff = await RolePermission.findOne({role_id: staffTranRole._id, permission_id: permissionRoleHead.permission_id})
         if (!permissionRoleTranStaff) {
-          return res.status(404).json({ message: "Rolepermission staff not found" });
+          return res.status(404).json({error_code: 1, message: "Rolepermission staff not found" });
         }
-        const transacionStaff = await User.find({
+        const transactionStaff = await User.find({
           rolePermission_id: permissionRoleTranStaff
         })
-        return res.status(200).json(transacionStaff); 
+        return res.status(200).json({error_code: 0,data: {transactionStaff}}); 
 
       case collection_head:
         staffColRole = await Role.findOne({ name: collection_staff });
@@ -225,13 +225,13 @@ async function getAllStaff(req, res) {
         }
         const permissionRoleColStaff = await RolePermission.findOne({role_id: staffColRole._id, permission_id: permissionRoleHead.permission_id})
         if (!permissionRoleColStaff) {
-          return res.status(404).json({ message: "Rolepermission staff not found" });
+          return res.status(404).json({error_code: 1, message: "Rolepermission staff not found" });
         }
         const collectionStaff = await User.find({
           rolePermission_id: permissionRoleColStaff
         })
         
-        return res.status(200).json(collectionStaff);
+        return res.status(200).json({error_code: 0,data: {collectionStaff}});
 
       default:
         console.log("User not permission")
@@ -239,7 +239,7 @@ async function getAllStaff(req, res) {
     }  
   } catch (error) {
     console.error("get head error:", error);
-    return res.status(500).json({ message: "Could not get head" });
+    return res.status(500).json({error_code: 1, message: "Could not get head" });
   }
 }
 

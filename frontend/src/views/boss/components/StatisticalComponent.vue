@@ -28,9 +28,9 @@
                   <v-col cols="12">
                     <v-select
                       v-model="selectedCollectionPoint"
-                      :items="colletions"
+                      :items="collectionPoints"
                       label="Điểm tập kết"
-                      item-title="state"
+                      item-title="name"
                     ></v-select>
                   </v-col>
                 </v-row>
@@ -41,7 +41,7 @@
                       v-model="selectedTransactionPoint"
                       :items="transactions"
                       label="Điểm giao dịch"
-                      item-title="state"
+                      item-title="name"
                     ></v-select>
                   </v-col>
                 </v-row>
@@ -79,12 +79,12 @@ export default {
       toDate: new Date().toISOString().substr(0, 10), // Giá trị mặc định là ngày hôm nay
       loadData: false,
       // bien collections luu cac diem tapj ket
-      colletions: [
-        { id: 1, state: "Hà Nội" },
-        { id: 2, state: "Hải Phòng" },
-        { id: 3, state: "Đà Nẵng" },
-        { id: 4, state: "TP HCM" },
-      ],
+      // colletions: [
+      //   { id: 1, state: "Hà Nội" },
+      //   { id: 2, state: "Hải Phòng" },
+      //   { id: 3, state: "Đà Nẵng" },
+      //   { id: 4, state: "TP HCM" },
+      // ],
       // bien transactions ten cac diem giao dich thuoc diem tap ket da chon
       transactions: [],
       // bien items luu thong tin don hang
@@ -133,7 +133,12 @@ export default {
       ],
     };
   },
-
+  props: {
+    collectionPoints: {
+      type: Array,
+      required: true,
+    },
+  },
   methods: {
     getData() {
       this.loadData = true;
@@ -173,60 +178,9 @@ export default {
       this.loadData = false;
     },
     updateTransactions(selectedCollectionPoint) {
-      // hàm này sẽ cập nhật giá trị của các điểm giao dịch thuộc điểm tập kết đã chọn
-      if (selectedCollectionPoint === "Hà Nội") {
-        this.transactions = [
-          {
-            id: 1,
-            state: "Cầu Giấy",
-          },
-          {
-            id: 2,
-            state: "Hoàng Mai",
-          },
-          // Thêm các điểm giao dịch khác nếu cần
-        ];
-      } else if (selectedCollectionPoint === "Hải Phòng") {
-        this.transactions = [
-          {
-            id: 1,
-            state: "TP Hải Phòng",
-          },
-          {
-            id: 2,
-            state: "Cát Bà",
-          },
-          // Thêm các điểm giao dịch khác nếu cần
-        ];
-        // Thêm logic xử lý cho điểm tập kết Hải Phòng
-      } else if (selectedCollectionPoint === "Đà Nẵng") {
-        this.transactions = [
-          {
-            id: 1,
-            state: "TP Đà Nẵng",
-          },
-          {
-            id: 2,
-            state: "ABCD",
-          },
-          // Thêm các điểm giao dịch khác nếu cần
-        ];
-        // Thêm logic xử lý cho điểm tập kết Hải Phòng
-      } else {
-        this.transactions = [
-          {
-            id: 1,
-            state: "Quan 1",
-          },
-          {
-            id: 2,
-            state: "Quan 7",
-          },
-          // Thêm các điểm giao dịch khác nếu cần
-        ];
-      }
-
-      // Các điều kiện khác cho các điểm tập kết khác
+      this.transactions = this.collectionPoints.find(
+        (cp) => cp.name === selectedCollectionPoint
+      ).transactionPoints;
     },
 
     formatDate(date) {

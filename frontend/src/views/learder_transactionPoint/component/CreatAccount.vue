@@ -27,31 +27,27 @@
                         <v-row>
                           <v-col cols="12" sm="6" md="4">
                             <v-text-field
-                              v-model="editedItem.id"
-                              label="ID"
+                              v-model="editedItem.first_name"
+                              label="Frist name"
                             ></v-text-field>
                           </v-col>
                           <v-col cols="12" sm="6" md="4">
                             <v-text-field
-                              v-model="editedItem.name"
-                              label="Tên nhân viên"
+                              v-model="editedItem.last_name"
+                              label="Last name"
                             ></v-text-field>
                           </v-col>
+
                           <v-col cols="12" sm="6" md="4">
                             <v-text-field
                               v-model="editedItem.email"
                               label="Email"
                             ></v-text-field>
                           </v-col>
+
                           <v-col cols="12" sm="6" md="4">
                             <v-text-field
-                              v-model="editedItem.collection"
-                              label="Điểm quản lý"
-                            ></v-text-field>
-                          </v-col>
-                          <v-col cols="12" sm="6" md="4">
-                            <v-text-field
-                              v-model="editedItem.phone"
+                              v-model="editedItem.numberPhone"
                               label="Số điện thoại"
                             ></v-text-field>
                           </v-col>
@@ -110,6 +106,7 @@
 </template>
 
 <script>
+import { StaffService } from "../../../service/StaffService";
 export default {
   name: "CreatAccount",
   data: () => ({
@@ -123,26 +120,29 @@ export default {
         sortable: false,
         key: "id",
       },
-      { title: "Tên nhân viên", key: "name" },
+      { title: "Tên tài khoản", key: "username" },
       { title: "Email", key: "email" },
-      { title: "Điểm quản lý", key: "collection" },
-      { title: "Số điện thoại", key: "phone" },
+      { title: "Số điện thoại", key: "numberPhone" },
     ],
     list_employee: [],
     editedIndex: -1,
     editedItem: {
-      id: 0,
-      name: "",
+      id: "",
+      first_name: "",
+      last_name: "",
+      username: "",
       email: "",
-      collection: "",
-      phone: "",
+      permission: "",
+      numberPhone: "",
     },
     defaultItem: {
-      id: 0,
-      name: "",
+      id: "",
+      first_name: "",
+      last_name: "",
+      username: "",
       email: "",
-      collection: "",
-      phone: "",
+      permission: "",
+      numberPhone: "",
     },
   }),
 
@@ -159,37 +159,25 @@ export default {
     dialogDelete(val) {
       val || this.closeDelete();
     },
+    transactionStaffs(newVal, oldVal) {
+      if (newVal !== oldVal) {
+        this.initialize();
+      }
+    },
   },
-
   created() {
     this.initialize();
+  },
+  props: {
+    transactionStaffs: {
+      type: Array,
+      required: true,
+    },
   },
 
   methods: {
     initialize() {
-      this.list_employee = [
-        {
-          id: 1,
-          name: "hua",
-          email: "test@gmail.com",
-          collection: "Hà Nội",
-          phone: "0912231223",
-        },
-        {
-          id: 2,
-          name: "pham",
-          email: "test1@gmail.com",
-          collection: "Đà Nẵng",
-          phone: "0912231223",
-        },
-        {
-          id: 3,
-          name: "hoang",
-          email: "test3@gmail.com",
-          collection: "TP. HCM",
-          phone: "0912231223",
-        },
-      ];
+      this.list_employee = this.transactionStaffs;
     },
 
     close() {
@@ -208,11 +196,30 @@ export default {
       });
     },
 
-    save() {
+    async save() {
       if (this.editedIndex > -1) {
         Object.assign(this.list_employee[this.editedIndex], this.editedItem);
+        // try {
+        //   const res = await StaffService.registerStaff(this.editedItem);
+        //   if (res.error_code === 0) {
+        //     console.log(res.data);
+        //   }
+        // } catch (error) {
+        //   console.error(error);
+        // }
       } else {
-        this.list_employee.push(this.editedItem);
+        try {
+          const res = await StaffService.registerStaff(this.editedItem);
+          if (res.error_code === 0) {
+            console.log(res.data.username, res.data.password);
+            this.editedItem.id = res.data.id;
+            this.editedItem.username = res.data.username;
+            this.editedItem.permission = localStorage.getItem("permission");
+            this.list_employee.push(this.editedItem);
+          }
+        } catch (error) {
+          console.error(error);
+        }
       }
       this.close();
     },

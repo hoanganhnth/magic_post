@@ -43,7 +43,6 @@ export const useAuthStore = defineStore("auth", {
         const { data } = await useApi().post(`/api/auth/login`, payload);
         this.accessToken = data.access_token;
         // await this.getUser();
-        console.log(data.access_token);
         localStorage.setItem("token", data.access_token);
         return data;
       } catch (error) {
@@ -68,6 +67,7 @@ export const useAuthStore = defineStore("auth", {
           },
         });
         localStorage.setItem("userrole", data.userRole);
+        localStorage.setItem("permission", data.permission);
         return data;
       } catch (error) {
         throw error.message;
@@ -81,6 +81,7 @@ export const useAuthStore = defineStore("auth", {
         this.user = {};
         localStorage.removeItem("token");
         localStorage.removeItem("userrole");
+        localStorage.removeItem("permission");
       } catch (error) {
         throw error.message;
       }

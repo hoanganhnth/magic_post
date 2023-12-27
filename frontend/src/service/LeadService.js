@@ -112,11 +112,10 @@ export const LeadService = {
     }
   },
 
-  async getCollectionPoint(payload) {
+  async getCollectionPoint() {
     try {
       const { data } = await useApiPrivate().get(
-        `/api/index/getCollectionPoint`,
-        payload
+        `/api/index/getCollectionPoint`
       );
       return data;
     } catch (error) {
@@ -124,11 +123,19 @@ export const LeadService = {
     }
   },
 
-  async getTransactionPoint(payload) {
+  async getAllPoint() {
+    try {
+      const { data } = await useApiPrivate().get(`/api/index/getAllPoint`);
+      return data;
+    } catch (error) {
+      throw error.message;
+    }
+  },
+
+  async getTransactionPoint() {
     try {
       const { data } = await useApiPrivate().get(
-        `/api/index/getTransactionPoint`,
-        payload
+        `/api/index/getTransactionPoint`
       );
       return data;
     } catch (error) {

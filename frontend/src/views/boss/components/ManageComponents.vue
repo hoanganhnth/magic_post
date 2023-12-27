@@ -8,7 +8,7 @@
           <v-card-text>
             <v-data-table
               :loading="loading"
-              :items="collectionPoints"
+              :items="collection_points"
               :headers="collectionHeaders"
               :items-per-page="5"
             ></v-data-table>
@@ -26,7 +26,7 @@
           <v-card-text>
             <v-data-table
               :loading="loading"
-              :items="transactionPoints"
+              :items="transaction_points"
               :headers="transactionHeaders"
               :items-per-page="5"
             ></v-data-table>
@@ -45,17 +45,19 @@
         <v-card-text>
           <v-form @submit.prevent="addTransactionPoint">
             <v-text-field
-              v-model="newTransactionPoint.name_transaction"
+              v-model="newTransactionPoint.name"
               label="Tên điểm giao dịch"
             ></v-text-field>
             <v-text-field
               v-model="newTransactionPoint.address"
               label="Địa chỉ"
             ></v-text-field>
-            <v-text-field
-              v-model="newTransactionPoint.collection"
+            <v-select
+              v-model="selectedCollectionPoint"
+              :items="collection_points"
               label="Thuộc điểm tập kết"
-            ></v-text-field>
+              item-title="name"
+            ></v-select>
             <v-text-field
               v-model="newTransactionPoint.email"
               label="Tài khoản quản lý"
@@ -78,17 +80,17 @@
         <v-card-text>
           <v-form @submit.prevent="addCollectionPoint">
             <v-text-field
-              v-model="newCollectionPoint.name_collection"
+              v-model="newCollectionPoint.name"
               label="Tên điểm tập kết"
             ></v-text-field>
             <v-text-field
               v-model="newCollectionPoint.address"
               label="Địa chỉ"
             ></v-text-field>
-            <v-text-field
+            <!-- <v-text-field
               v-model="newCollectionPoint.email"
               label="Tài khoản quản lý"
-            ></v-text-field>
+            ></v-text-field> -->
             <!-- Các trường thông tin khác nếu cần -->
 
             <v-btn type="submit" color="primary">Lưu</v-btn>
@@ -103,60 +105,29 @@
 </template>
 
 <script>
+import { LeadService } from "../../../service/LeadService";
 export default {
   data() {
     return {
+      selectedCollectionPoint: null,
       showTransactionDialog: false,
       showCollectionDialog: false,
+      collection_points: [],
+      transaction_points: [],
       newTransactionPoint: {
-        id: 10,
-        name_transaction: "",
-        collection: "",
+        id: "",
+        name: "",
+        collectionPoint_id: "",
         orders: 0,
         address: "",
-        email: "",
+        manageAccount: "",
       },
       newCollectionPoint: {
-        id: 12,
-        name_collection: "",
+        id: "",
+        name: "",
         address: "",
-        email: "",
+        manageAccount: "",
       },
-      // ... (các dữ liệu và thuộc tính khác)
-      transactionPoints: [
-        {
-          id: 1,
-          name_transaction: "Điểm giao dịch A",
-          address: "144 Xuân Thủy",
-          collection: "Hà Nội",
-          orders: 350,
-          email: "test1@gmail.com",
-        },
-        {
-          id: 2,
-          name_transaction: "Điểm giao dịch A",
-          address: "144 Xuân Thủy",
-          collection: "Hà Nội",
-          orders: 350,
-          email: "test1@gmail.com",
-        },
-        {
-          id: 3,
-          name_transaction: "Điểm giao dịch A",
-          address: "144 Xuân Thủy",
-          collection: "Hà Nội",
-          orders: 350,
-          email: "test1@gmail.com",
-        },
-        {
-          id: 4,
-          name_transaction: "Điểm giao dịch A",
-          address: "144 Xuân Thủy",
-          collection: "Hà Nội",
-          orders: 350,
-          email: "test1@gmail.com",
-        },
-      ],
       transactionHeaders: [
         {
           title: "ID",
@@ -164,11 +135,11 @@ export default {
           sortable: false,
           key: "id",
         },
-        { title: "Tên điểm giao dịch", key: "name_transaction", align: "end" },
+        { title: "Tên điểm giao dịch", key: "name", align: "end" },
         { title: "Địa chỉ", key: "address", align: "end" },
-        { title: "Thuộc điểm tập kết", key: "collection", align: "end" },
+        { title: "Thuộc điểm tập kết", key: "collectionPoint", align: "end" },
         { title: "Tổng số đơn hàng", key: "orders", align: "end" },
-        { title: "Tài khoản quản lý", key: "email", align: "end" },
+        { title: "Tài khoản quản lý", key: "manageAccount", align: "end" },
       ],
 
       collectionHeaders: [
@@ -178,54 +149,83 @@ export default {
           sortable: false,
           key: "id",
         },
-        { title: "Tên điểm tập kết", key: "name_collection", align: "end" },
+        { title: "Tên điểm tập kết", key: "name", align: "end" },
         { title: "Địa chỉ", key: "address", align: "end" },
         { title: "Tổng số đơn hàng", key: "orders", align: "end" },
-        { title: "Tài khoản quản lý", key: "email", align: "end" },
-      ],
-      collectionPoints: [
-        {
-          id: 1,
-          name_collection: "Điểm giao dịch A",
-          address: "144 Xuân Thủy",
-          orders: 350,
-          email: "test1@gmail.com",
-        },
-        {
-          id: 2,
-          name_collection: "Điểm giao dịch A",
-          address: "144 Xuân Thủy",
-          orders: 350,
-          email: "test2@gmail.com",
-        },
-        {
-          id: 3,
-          name_collection: "Điểm giao dịch A",
-          address: "144 Xuân Thủy",
-          orders: 350,
-          email: "test3@gmail.com",
-        },
+        { title: "Tài khoản quản lý", key: "manageAccount", align: "end" },
       ],
       loading: false,
     };
   },
+  created() {
+    this.initialize();
+  },
+  props: {
+    collectionPoints: {
+      type: Array,
+      required: true,
+    },
+    transactionPoints: {
+      type: Array,
+      required: true,
+    },
+  },
+  watch: {
+    collectionPoints(newVal, oldVal) {
+      if (newVal !== oldVal) {
+        this.initialize();
+      }
+    },
+    transactionPoints(newVal, oldVal) {
+      if (newVal !== oldVal) {
+        this.initialize();
+      }
+    },
+  },
 
   methods: {
-    addTransactionPoint() {
-      this.loading = true;
-      this.newTransactionPoint.id = this.transactionPoints.length + 1;
-      this.transactionPoints.push({ ...this.newTransactionPoint });
-      this.showTransactionDialog = false;
-      this.loading = false;
-      // Có thể thêm logic xử lý khác nếu cần
+    initialize() {
+      this.collection_points = this.collectionPoints;
+      this.transaction_points = this.transactionPoints;
     },
-    addCollectionPoint() {
+    async addTransactionPoint() {
       this.loading = true;
-      this.newCollectionPoint.id = this.collectionPoints.length + 1;
-      this.collectionPoints.push({ ...this.newCollectionPoint });
-      this.showCollectionDialog = false;
-      this.loading = false;
-      // Có thể thêm logic xử lý khác nếu cần
+      const selectedCollectionPoint = this.collection_points.find(
+        (item) => item.name === this.selectedCollectionPoint
+      );
+      this.newTransactionPoint.collectionPoint_id = selectedCollectionPoint.id;
+      try {
+        const res = await LeadService.createTransactionPoint(
+          this.newTransactionPoint
+        );
+        if (res.error_code === 0) {
+          this.newTransactionPoint.id = res.data.newPoint.id;
+          this.transaction_points.push({ ...this.newTransactionPoint });
+          this.showTransactionDialog = false;
+          this.loading = false;
+        }
+      } catch (error) {
+        console.error(error);
+        this.loading = false;
+      }
+    },
+    async addCollectionPoint() {
+      this.loading = true;
+
+      try {
+        const res = await LeadService.createCollectionPoint(
+          this.newCollectionPoint
+        );
+        if (res.error_code === 0) {
+          this.newCollectionPoint.id = res.data.newPoint.id;
+          this.collection_points.push({ ...this.newCollectionPoint });
+          this.showCollectionDialog = false;
+          this.loading = false;
+        }
+      } catch (error) {
+        console.error(error);
+        this.loading = false;
+      }
     },
   },
 };

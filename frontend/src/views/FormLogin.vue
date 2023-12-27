@@ -96,7 +96,16 @@ export default {
       username: "",
       password: "",
       error: null, // Thêm biến error để lưu thông báo lỗi
+      storedRole: "",
     };
+  },
+
+  watch: {
+    storedRole(newVal, oldVal) {
+      if (newVal !== oldVal) {
+        this.navigation(newVal);
+      }
+    },
   },
   methods: {
     async login() {
@@ -106,15 +115,29 @@ export default {
           password: this.password,
         };
         // const response = await AuthService.login(this.username, this.password);
-        const data = await useAuthStore().login(payload);
+        await useAuthStore().login(payload);
         await useAuthStore().getUser();
-        console.log(data);
         // Nếu đăng nhập thành công, chuyển hướng đến trang chính
-        this.$router.push("/boss");
+        this.storedRole = localStorage.getItem("userrole");
       } catch (error) {
         console.error(error);
         // Nếu có lỗi, hiển thị thông báo lỗi
         this.error = "Tài khoản hoặc mật khẩu chưa chính xác!";
+      }
+    },
+    navigation(newVal) {
+      if (newVal === "leader") {
+        this.$router.push({ name: "Boss" });
+      } else if (newVal === "Collection staff") {
+        this.$router.push({ name: "Staff Collection" });
+      } else if (newVal === "Transaction staff") {
+        this.$router.push({ name: "Staff Transaction" });
+      } else if (newVal === "Head of transaction point") {
+        this.$router.push({ name: "Leader Transaction" });
+      } else if (newVal === "Head of collection point") {
+        this.$router.push({ name: "Leader Collection" });
+      } else {
+        this.$router.push({ name: "Home" });
       }
     },
   },

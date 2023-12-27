@@ -6,13 +6,13 @@
       </p>
     </header>
     <nav class="dashboard-nav-list">
-      <router-link to="/leader_transaction"
+      <router-link to="/leader_collection"
         ><a href="#" class="dashboard-nav-item"
           ><i class="fas fa-box-open"></i> Quản lý đơn hàng
         </a></router-link
       >
 
-      <router-link to="/leader_transaction/creat"
+      <router-link to="/leader_collection/creat"
         ><a href="#" class="dashboard-nav-item"
           ><i class="fas fa-users"></i> Quản lý tài khoản
         </a></router-link

@@ -2,7 +2,7 @@
 
 import { useApiPrivate } from "../composables/useApi";
 
-const StaffService = {
+export const StaffService = {
   async createNewShipment(payload) {
     try {
       const { data } = await useApiPrivate().post(
@@ -185,18 +185,6 @@ const StaffService = {
     try {
       const { data } = await useApiPrivate().get(
         `/api/index/getShipmentCollection`,
-        payload
-      );
-      return data;
-    } catch (error) {
-      throw error.message;
-    }
-  },
-
-  async getShipmentTransaction(payload) {
-    try {
-      const { data } = await useApiPrivate().get(
-        `/api/index/getShipmentTransaction`,
         payload
       );
       return data;
