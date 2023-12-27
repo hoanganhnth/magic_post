@@ -48,7 +48,6 @@ const productSchema = new mongoose.Schema({
 
   const shipmentSchema = new mongoose.Schema({
     status: { type: String, enum: ['Preparing', 'Shipped', 'ArrivedDestination', 'Delivering', 'Successed', 'Canceled'], default: 'Preparing' },
-    product_id: { type: mongoose.Schema.Types.ObjectId, ref: 'Product', required: true },
     now_address: { type: String },
     user_address_id: { type: mongoose.Schema.Types.ObjectId, ref: 'UserAddress', required: true, },
     fee: { type: String, required: true },

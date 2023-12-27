@@ -66,6 +66,7 @@ async function createNewShipment(req, res) {
     allTransactionPoint.forEach(async (transaction) => {
       transactionPoints.push(transaction.address)
     })
+    console.log(transactionPoints.length)
     const nearPoint = await distanceCalculator.calculateMinDistance(receiver_address, transactionPoints)
     const endTransactionPoint = await TransactionPoint.findOne({address: nearPoint})
     
