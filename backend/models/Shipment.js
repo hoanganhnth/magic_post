@@ -54,6 +54,9 @@ const productSchema = new mongoose.Schema({
     fee: { type: String, required: true },
     tax: { type: String },
     paided: { type: String, enum: ['Y', 'N'], default: 'N' },
+    goods_type: { type: String, required: true },
+    goods_name: { type: String, required: true },
+    goods_weight: { type: String, required: true },
   });
 
   

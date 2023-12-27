@@ -203,7 +203,7 @@ export default {
 
     async deleteItemConfirm() {
       try {
-        const userId = this.employeeCollection[this.editedIndex].id;
+        const userId = this.list_employee[this.editedIndex].id;
 
         const data = await StaffService.deleteStaff(userId);
         if (data.error_code === 0) {
@@ -234,12 +234,20 @@ export default {
 
     async save() {
       if (this.editedIndex > -1) {
-        Object.assign(this.list_employee[this.editedIndex], this.editedItem);
+        try {
+          const res = await StaffService.updateStaff(this.editedItem);
+          if (res.error_code === 0) {
+            Object.assign(
+              this.list_employee[this.editedIndex],
+              this.editedItem
+            );
+          }
+        } catch (error) {
+          console.error(error);
+        }
       } else {
         try {
-          console.log(this.editedItem);
           const res = await StaffService.registerStaff(this.editedItem);
-
           if (res.error_code === 0) {
             console.log(res.data.username, res.data.password);
             this.editedItem.id = res.data.id;

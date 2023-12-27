@@ -7,6 +7,8 @@ const { auth,isAdmin, isTransactionStaff, isCollectionHead, isCollectionStaff} =
 
 router.post('/registerStaff', auth, accountControllers.registerStaff)
 router.get('/getAllStaff',auth,  accountControllers.getAllStaff)
+router.delete('/deleteStaff',auth,  accountControllers.deleteStaff)
+router.post('/updateStaff',auth,  accountControllers.updateStaff)
 
 router.get('/getAllHead',  isAdmin,  accountControllers.getAllHead)
 router.post('/updateUser',  isAdmin,  accountControllers.updateUser)
@@ -14,7 +16,7 @@ router.post('/updateHead',  isAdmin,  accountControllers.updateHead)
 router.get('/getAllPermission',  isAdmin,  accountControllers.getAllPermission)
 router.get('/allRole', isAdmin, accountControllers.showAllRole)
 router.post('/createRole', isAdmin,  accountControllers.createRole)
-router.delete('/deleteStaff', isAdmin,  accountControllers.deleteStaff)
+
 
 router.post('/createCollectionPoint', isAdmin,  locationControllers.createCollectionPoint)
 router.post('/createTransactionPoint', isAdmin,  locationControllers.createTransactionPoint)

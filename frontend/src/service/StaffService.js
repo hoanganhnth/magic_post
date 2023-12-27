@@ -27,6 +27,18 @@ export const StaffService = {
     }
   },
 
+  async updateStaff(payload) {
+    try {
+      const { data } = await useApiPrivate().post(
+        `/api/index/updateStaff`,
+        payload
+      );
+      return data;
+    } catch (error) {
+      throw error.message;
+    }
+  },
+
   async createShipmentFromTPToCP(payload) {
     try {
       const { data } = await useApiPrivate().post(
@@ -50,6 +62,17 @@ export const StaffService = {
     }
   },
 
+  async deleteStaff(payload) {
+    try {
+      const userId = payload;
+      const { data } = await useApiPrivate().delete(`/api/index/deleteStaff`, {
+        params: { userId },
+      });
+      return data;
+    } catch (error) {
+      throw error.message;
+    }
+  },
   async confirmShipmentSuOrCa(payload) {
     try {
       const { data } = await useApiPrivate().post(
@@ -73,11 +96,10 @@ export const StaffService = {
     }
   },
 
-  async getShipmentTransaction(payload) {
+  async getShipmentTransaction() {
     try {
       const { data } = await useApiPrivate().get(
-        `/api/index/getShipmentTransaction`,
-        payload
+        `/api/index/getShipmentTransaction`
       );
       return data;
     } catch (error) {

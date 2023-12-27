@@ -1,5 +1,5 @@
 const axios = require('axios');
-const apiKey = 'AIzaSyDGJzg7CGYeba8HyYvSRgL38RvRBxr1MVQ';
+const apiKey = 'AIzaSyA9OFKWKH4_hoV7BrrQP7lFR3G10g10V4c';
 
 async function calculateDistance(origin, destination) {
   try {

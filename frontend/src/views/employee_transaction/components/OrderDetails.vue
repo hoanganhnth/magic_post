@@ -16,29 +16,30 @@ export default {
   data() {
     return {
       loadData: false,
-      items: [
-        {
-          id: 1,
-          shippingTime: "16/01/2023",
-          weight: 100,
-          price: 100000,
-          status: "Trả lại điểm giao dịch",
-        },
-        {
-          id: 2,
-          shippingTime: "10/10/2023",
-          weight: 200,
-          price: 200000,
-          status: "Chuyển thất bại",
-        },
-        {
-          id: 3,
-          shippingTime: "20/10/2023",
-          weight: 300,
-          price: 300000,
-          status: "Chuyển thành công",
-        },
-      ],
+      items: [],
+      // items: [
+      //   {
+      //     id: 1,
+      //     shippingTime: "16/01/2023",
+      //     weight: 100,
+      //     price: 100000,
+      //     status: "Trả lại điểm giao dịch",
+      //   },
+      //   {
+      //     id: 2,
+      //     shippingTime: "10/10/2023",
+      //     weight: 200,
+      //     price: 200000,
+      //     status: "Chuyển thất bại",
+      //   },
+      //   {
+      //     id: 3,
+      //     shippingTime: "20/10/2023",
+      //     weight: 300,
+      //     price: 300000,
+      //     status: "Chuyển thành công",
+      //   },
+      // ],
       headers: [
         {
           title: "ID",
@@ -46,15 +47,36 @@ export default {
           sortable: false,
           key: "id",
         },
-        { title: "Thời gian gửi", key: "shippingTime", align: "center" },
-        { title: "Khối lượng (g)", key: "weight", align: "center" },
-        { title: "Giá", key: "price", align: "center" },
+        { title: "Thời gian gửi", key: "created_at", align: "center" },
+        { title: "Tên hàng", key: "goods_name", align: "center" },
+        { title: "Khối lượng (g)", key: "goods_weight", align: "center" },
+        { title: "Giá", key: "fee", align: "center" },
         { title: "Trạng thái đơn hàng", key: "status", align: "center" },
       ],
     };
   },
+  props: {
+    shipments: {
+      type: Array,
+      required: true,
+    },
+  },
+
+  created() {
+    this.initialize();
+  },
+  watch: {
+    shipments(newVal, oldVal) {
+      if (newVal !== oldVal) {
+        this.initialize();
+      }
+    },
+  },
 
   methods: {
+    initialize() {
+      this.items = this.shipments;
+    },
     getColor(status) {
       if (status === "Chuyển thành công") return "green";
       else if (status === "Chuyển thất bại") return "orange";

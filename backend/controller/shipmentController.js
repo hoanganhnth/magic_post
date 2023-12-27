@@ -41,14 +41,14 @@ async function createNewShipment(req, res) {
     permission.transactionPoint_id
   );
   try {
-    const product = await Product.create({
-      type: product_type,
-      name: product_name,
-      weight: product_weight,
-    });
-    if (!product) {
-      return res.status(500).json({ message: "Could not create product" });
-    }
+    // const product = await Product.create({
+    //   type: product_type,
+    //   name: product_name,
+    //   weight: product_weight,
+    // });
+    // if (!product) {
+    //   return res.status(500).json({ message: "Could not create product" });
+    // }
     const address = await UserAddress.create({
       sender_username,
       sender_address,
@@ -76,7 +76,9 @@ async function createNewShipment(req, res) {
     const fee = calculateShippingFee(distance, numbericWeight).toString()
 
     const shipment = await Shipment.create({
-      product_id: product._id,
+      goods_type: product_type,
+      goods_name: product_name,
+      goods_weight: product_weight,
       user_address_id: address.id,
       fee: fee,
       now_address: startTransactionPoint.name
@@ -93,12 +95,12 @@ async function createNewShipment(req, res) {
       shipment_id: shipment.id,
       transactionPoint_id: permission.transactionPoint_id,
     });
-    return res.status(201).json({ shipment, product, address, route: {
+    return res.status(201).json({error_code: 0, data: { shipment, address, route: {
       transactionPoint1: startTransactionPoint.name,
       collectionPoint1: (await CollectionPoint.findById(startTransactionPoint.collectionPoint_id)).name,
       collectionPoint2: (await CollectionPoint.findById(endTransactionPoint.collectionPoint_id)).name,
       transactionPoint2: endTransactionPoint.name,
-    } });
+    }}});
   } catch (error) {
     await Product.findOneAndDelete({
       type: product_type,
@@ -113,7 +115,7 @@ async function createNewShipment(req, res) {
       receiver_address,
     })
     console.error("create shipment error:", error);
-    return res.status(500).json({ message: "Could not create shipment" });
+    return res.status(500).json({error_code: 1, message: "Could not create shipment" });
   }
 }
 
@@ -192,7 +194,7 @@ async function getShipmentTransaction(req, res) {
     
     const permission = await Permission.findOne({name: req.user.permission});
     if (!permission) {
-      return res.status(404).json({ message: "Permission not found" });
+      return res.status(404).json({error_code:1, message: "Permission not found" });
     }
     const transactionShipment = await TransactionShipment.find({
       transactionPoint_id: permission.transactionPoint_id,
@@ -205,12 +207,12 @@ async function getShipmentTransaction(req, res) {
     const relatedShipments = await Shipment.find({
       _id: { $in: transactionShipmentIds },
     });
-    return res.status(200).json({ relatedShipments });
+    return res.status(200).json({error_code: 0, data: {relatedShipments }});
   } catch (error) {
     console.error("get shipment transaction point error:", error);
     return res
       .status(500)
-      .json({ message: "Could not get shipment transaction point" });
+      .json({error_code:1, message: "Could not get shipment transaction point" });
   }
 }
 async function deleteNewShipment(req, res) {

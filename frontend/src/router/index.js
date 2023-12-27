@@ -52,9 +52,22 @@ const routes = [
       requiresAuth: true,
     },
   },
-
-  { path: "/employee_transaction", component: OrderManage },
-  { path: "/employee_transaction/confirm", component: ConfirmOrders },
+  {
+    path: "/employee_transaction",
+    name: "Employee Transaction",
+    component: OrderManage,
+    meta: {
+      requiresAuth: true,
+    },
+  },
+  {
+    path: "/employee_transaction/confirm",
+    name: "Employee Transaction Confirm",
+    component: ConfirmOrders,
+    meta: {
+      requiresAuth: true,
+    },
+  },
   {
     path: "/boss",
     name: "Boss",
@@ -131,17 +144,22 @@ router.beforeEach((to, from, next) => {
           next("/");
           break;
         case "Transaction staff":
-          next("/");
+          if (
+            to.name === "Employee Transaction Confirm" ||
+            to.name === "Employee Transaction"
+          ) {
+            next();
+          } else {
+            next({ name: "Leader Collection" });
+          }
           break;
         case "Head of collection point":
           if (
             to.name === "Leader Collection" ||
             to.name === "Leader Collection Account"
           ) {
-            console.log("ok");
             next();
           } else {
-            console.log("ok");
             next({ name: "Leader Collection" });
           }
           break;

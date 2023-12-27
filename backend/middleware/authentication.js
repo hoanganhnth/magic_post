@@ -14,18 +14,18 @@ function authentication(req, res, next) {
         const user = await User.findById(decoded.id).select({ password: 0, refresh_token: 0 }).exec()
         if(user){
           req.user = user.toObject({ getters: true })
-          const rolePermission = await RolePermission.findById(req.user.rolePermission_id)
-          if (!rolePermission) {
-            return res.status(403).json({ message: "User does not have a role" })
-          }
-          const role = await Role.findById(rolePermission.role_id)
-          if (!role) {
-            return res.status(403).json({ message: "Role not found" })
-          }
-          const permission = await Permission.findById(rolePermission.permission_id)
-          if (!permission) {
-            return res.status(403).json({ message: "permission not found" })
-          }
+          // const rolePermission = await RolePermission.findById(req.user.rolePermission_id)
+          // if (!rolePermission) {
+          //   return res.status(403).json({ message: "User does not have a role" })
+          // }
+          // const role = await Role.findById(rolePermission.role_id)
+          // if (!role) {
+          //   return res.status(403).json({ message: "Role not found" })
+          // }
+          // const permission = await Permission.findById(rolePermission.permission_id)
+          // if (!permission) {
+          //   return res.status(403).json({ message: "permission not found" })
+          // }
           // req.user.permission = permission.name
           // req.user.userRole = role.name
         }else{
