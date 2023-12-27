@@ -11,15 +11,15 @@
           ><i class="fas fa-box-open"></i> Thông tin đơn hàng
         </a>
       </router-link>
-      <router-link to="/employee_transaction/confirm"
+      <router-link to="/employee_transaction/shipped"
         ><a href="#" class="dashboard-nav-item"
-          ><i class="fas fa-edit"></i> Xác nhận đơn hàng
+          ><i class="fas fa-cart-plus"></i> Tạo đơn hàng
         </a></router-link
       >
 
-      <router-link to="/boss/manage_collection"
+      <router-link to="/employee_transaction/print"
         ><a href="#" class="dashboard-nav-item"
-          ><i class="fas fa-cart-plus"></i> Tạo đơn hàng</a
+          ><i class="fas fa-edit"></i> Ghi nhận và in biên nhận</a
         >
       </router-link>
 

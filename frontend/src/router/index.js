@@ -12,7 +12,8 @@ import StatisticalTransaction from "@/views/learder_transactionPoint/Statistical
 import CreatAccountTransaction from "@/views/learder_transactionPoint/CreatAccountTransaction";
 
 import OrderManage from "@/views/employee_transaction/OrderManage";
-import ConfirmOrders from "@/views/employee_transaction/ConfirmOrders";
+import OrderShipped from "@/views/employee_transaction/OrderShipped";
+import PrintAndRecord from "@/views/employee_transaction/PrintAndRecord";
 const routes = [
   {
     path: "/",
@@ -52,6 +53,7 @@ const routes = [
       requiresAuth: true,
     },
   },
+<<<<<<< HEAD
   {
     path: "/employee_transaction",
     name: "Employee Transaction",
@@ -68,6 +70,12 @@ const routes = [
       requiresAuth: true,
     },
   },
+=======
+
+  { path: "/employee_transaction", component: OrderManage },
+  { path: "/employee_transaction/shipped", component: OrderShipped },
+  { path: "/employee_transaction/print", component: PrintAndRecord },
+>>>>>>> 225bda8e0963e31ba60ac61cee90963d130295a9
   {
     path: "/boss",
     name: "Boss",

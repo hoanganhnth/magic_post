@@ -3,22 +3,26 @@
     <nav-bar-employee></nav-bar-employee>
     <div class="dashboard-app">
       <div class="dashboard-content">
-        <confirm-component></confirm-component>
+        <print-orders></print-orders>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import ConfirmComponent from "./components/ConfirmComponent.vue";
 import NavBarEmployee from "./components/NavBarEmployee.vue";
+import PrintOrders from "./components/PrintOrders.vue";
 
 export default {
-  name: "ConfirmOrders",
+  name: "CreatAccountCollection",
   components: {
     NavBarEmployee,
-    ConfirmComponent,
+    PrintOrders,
   },
 };
 </script>
-<style scoped></style>
+<style>
+.dashboard-content {
+  margin-left: 20px !important;
+}
+</style>
