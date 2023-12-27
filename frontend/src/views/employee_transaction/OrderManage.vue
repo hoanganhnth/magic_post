@@ -4,7 +4,10 @@
     <div class="dashboard-app">
       <div class="dashboard-content">
         <v-col>
-          <order-details :shipments="shipments" :loadData="loadData"></order-details>
+          <order-details
+            :shipments="shipments"
+            :loadData="loadData"
+          ></order-details>
           <confirm-component
             v-on:confirmOrder="confirmOrder"
             :orderItems="orderItems"
@@ -25,32 +28,7 @@ export default {
   data: function () {
     return {
       loadData: false,
-      items: [
-        {
-          id: 1,
-          shippingTime: "16/01/2023",
-          weight: 100,
-          status: "Đang chuyển",
-        },
-        {
-          id: 2,
-          shippingTime: "10/10/2023",
-          weight: 200,
-          status: "Chuyển thất bại",
-        },
-        {
-          id: 3,
-          shippingTime: "20/10/2023",
-          weight: 300,
-          status: "Chuyển thành công",
-        },
-        {
-          id: 4,
-          shippingTime: "20/10/2023",
-          weight: 300,
-          status: "Nhận từ điểm tập kết",
-        },
-      ],
+      shipments: [],
       orderItems: [
         // đây là list các đơn hàng cần xác nhận
         {
@@ -118,36 +96,29 @@ export default {
     OrderDetails,
     ConfirmComponent,
   },
-  methods: {
-    confirmOrder(data) {
-      (this.loadData = true),
-        (this.orderItems = this.orderItems.filter(function (items) {
-          return items !== data;
-        }));
-      this.items.push(data);
-      console.log(this.items);
-      this.loadData = false;
-    },
-  },
-  data() {
-    return {
-      shipments: [],
-    };
-  },
   created() {
     this.initialize();
   },
   methods: {
     async initialize() {
       try {
-        console.log(1);
         const res = await StaffService.getShipmentTransaction();
         if (res.error_code === 0) {
           this.shipments = res.data.relatedShipments;
+          console.log(this.shipments);
         }
       } catch (error) {
         console.error(error);
       }
+    },
+    confirmOrder(data) {
+      (this.loadData = true),
+        (this.orderItems = this.orderItems.filter(function (items) {
+          return items !== data;
+        }));
+      this.shipments.push(data);
+      console.log(this.items);
+      this.loadData = false;
     },
   },
 };

@@ -3,7 +3,7 @@
     <v-card-title>Thống kê hàng hóa</v-card-title>
 
     <v-data-table :loading="loadData" :items="items" :headers="headers">
-      <template v-slot:[`item.status`]="{ value }">
+      <template v-slot:[`items.status`]="{ value }">
         <v-chip :color="getColor(value)"> {{ value }} </v-chip>
       </template>
     </v-data-table>
@@ -13,13 +13,6 @@
 <script>
 export default {
   name: "OderDetails",
-  props: {
-    loadData: Boolean,
-    items: Object,
-  },
-  watch: {
-    
-  },
   data() {
     return {
       loading: false,
@@ -31,9 +24,9 @@ export default {
           sortable: false,
           key: "id",
         },
-        { title: "Thời gian gửi", key: "shippingTime", align: "center" },
-        { title: "Khối lượng (g)", key: "weight", align: "center" },
-        { title: "Giá", key: "price", align: "center" },
+        { title: "Thời gian gửi", key: "created_at", align: "center" },
+        { title: "Khối lượng (g)", key: "goods_weight", align: "center" },
+        { title: "Giá", key: "fee", align: "center" },
         { title: "Trạng thái đơn hàng", key: "status", align: "center" },
       ],
     };
@@ -43,6 +36,7 @@ export default {
       type: Array,
       required: true,
     },
+    loadData: Boolean,
   },
 
   created() {
@@ -52,18 +46,16 @@ export default {
     shipments(newVal, oldVal) {
       if (newVal !== oldVal) {
         this.initialize();
+        this.loading = this.loadData;
+        // this.$forceUpdate();
       }
-    },
-    items() {
-      this.loading = this.loadData;
-      // Cập nhật lại bảng khi items thay đổi
-      this.$forceUpdate();
     },
   },
 
   methods: {
     initialize() {
       this.items = this.shipments;
+      console.log(this.items);
     },
     getColor(status) {
       if (status === "Chuyển thành công") return "green";

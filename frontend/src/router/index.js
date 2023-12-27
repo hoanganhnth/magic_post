@@ -53,7 +53,6 @@ const routes = [
       requiresAuth: true,
     },
   },
-<<<<<<< HEAD
   {
     path: "/employee_transaction",
     name: "Employee Transaction",
@@ -63,19 +62,15 @@ const routes = [
     },
   },
   {
-    path: "/employee_transaction/confirm",
-    name: "Employee Transaction Confirm",
-    component: ConfirmOrders,
+    path: "/employee_transaction/shipped",
+    name: "Employee Transaction Shipped",
+    component: OrderShipped,
     meta: {
       requiresAuth: true,
     },
   },
-=======
 
-  { path: "/employee_transaction", component: OrderManage },
-  { path: "/employee_transaction/shipped", component: OrderShipped },
   { path: "/employee_transaction/print", component: PrintAndRecord },
->>>>>>> 225bda8e0963e31ba60ac61cee90963d130295a9
   {
     path: "/boss",
     name: "Boss",

@@ -136,29 +136,29 @@
                   <v-card>
                     <v-card-title>1.Người gửi</v-card-title>
                     <v-card-text
-                      >Họ tên: {{ displayedInfo.senderName }}</v-card-text
+                      >Họ tên: {{ displayedInfo.sender_username }}</v-card-text
                     >
                     <v-card-text
                       >Số điện thoại:
-                      {{ displayedInfo.senderPhone }}</v-card-text
+                      {{ displayedInfo.sender_phone }}</v-card-text
                     >
                     <v-card-text
-                      >Địa chỉ: {{ displayedInfo.senderAddress }}</v-card-text
+                      >Địa chỉ: {{ displayedInfo.sender_address }}</v-card-text
                     >
                   </v-card>
                 </v-col>
                 <v-col cols="12">
                   <v-card>
                     <v-card-title>3.Loại hàng gửi</v-card-title>
-                    <v-card-text
-                      >Tên mặt hàng: {{ displayedInfo.orderName }}</v-card-text
-                    >
-                    <v-card-text
-                      >Loại: {{ displayedInfo.orderType }}</v-card-text
-                    >
+                    <v-card-text>
+                      Tên mặt hàng: {{ displayedInfo.product_name }}
+                    </v-card-text>
+                    <v-card-text>
+                      Loại: {{ displayedInfo.product_type }}
+                    </v-card-text>
                     <v-card-text
                       >Khối lượng:
-                      {{ displayedInfo.orderWeight }} (g)</v-card-text
+                      {{ displayedInfo.product_weight }} (g)</v-card-text
                     >
                   </v-card>
                 </v-col>
@@ -187,16 +187,16 @@
                 <v-col cols="12">
                   <v-card>
                     <v-card-title>2.Người nhận</v-card-title>
-                    <v-card-text
-                      >Họ tên: {{ displayedInfo.receiverName }}</v-card-text
-                    >
-                    <v-card-text
-                      >Số điện thoại:
-                      {{ displayedInfo.receiverPhone }}</v-card-text
-                    >
-                    <v-card-text
-                      >Địa chỉ: {{ displayedInfo.receiverAddress }}</v-card-text
-                    >
+                    <v-card-text>
+                      Họ tên: {{ displayedInfo.receiver_username }}
+                    </v-card-text>
+                    <v-card-text>
+                      Số điện thoại:
+                      {{ displayedInfo.receiver_phone }}
+                    </v-card-text>
+                    <v-card-text>
+                      Địa chỉ: {{ displayedInfo.receiver_address }}
+                    </v-card-text>
                   </v-card>
                 </v-col>
                 <v-col cols="12">
@@ -234,6 +234,7 @@
 </template>
 
 <script>
+import { StaffService } from "../../../service/StaffService";
 export default {
   data() {
     return {
@@ -255,30 +256,40 @@ export default {
       },
       date: new Date().toISOString().substr(0, 10),
       displayedInfo: {
-        receiverName: "",
-        receiverPhone: "",
-        receiverAddress: "",
-        senderName: "",
-        senderPhone: "",
-        senderAddress: "",
-        orderType: "",
-        orderName: "",
-        orderWeight: "",
+        receiver_username: "",
+        receiver_phone: "",
+        receiver_address: "",
+        sender_username: "",
+        sender_phone: "",
+        sender_address: "",
+        product_type: "",
+        product_name: "",
+        product_weight: "",
       },
     };
   },
   methods: {
-    submit() {
-      this.id = "12344A12D";
-      this.displayedInfo.receiverName = this.receiver.name;
-      this.displayedInfo.receiverPhone = this.receiver.phone;
-      this.displayedInfo.receiverAddress = this.receiver.address;
-      this.displayedInfo.senderAddress = this.sender.address;
-      this.displayedInfo.senderName = this.sender.name;
-      this.displayedInfo.senderPhone = this.sender.phone;
-      this.displayedInfo.orderName = this.order.name;
-      this.displayedInfo.orderType = this.order.type;
-      this.displayedInfo.orderWeight = this.order.weight;
+    async submit() {
+      // this.id = "12344A12D";
+      this.displayedInfo.receiver_username = this.receiver.name;
+      this.displayedInfo.receiver_phone = this.receiver.phone;
+      this.displayedInfo.receiver_address = this.receiver.address;
+      this.displayedInfo.sender_address = this.sender.address;
+      this.displayedInfo.sender_username = this.sender.name;
+      this.displayedInfo.sender_phone = this.sender.phone;
+      this.displayedInfo.product_name = this.order.name;
+      this.displayedInfo.product_type = this.order.type;
+      this.displayedInfo.product_weight = this.order.weight;
+      try {
+        const res = await StaffService.createNewShipment(this.displayedInfo);
+        if (res.error_code === 0) {
+          console.log(res);
+          // res.data.shipment.fee  : là phí
+          
+        }
+      } catch (error) {
+        console.error(error);
+      }
     },
     formatDate(date) {
       return date
