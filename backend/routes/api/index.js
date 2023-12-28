@@ -32,6 +32,7 @@ router.post('/createNewShipment',isTransactionStaff,  shipmentControllers.create
 router.delete('/deleteNewShipment',isTransactionStaff,  shipmentControllers.deleteNewShipment)
 router.post('/createShipmentFromTPToCP',isTransactionStaff,  shipmentControllers.createShipmentFromTPToCP)
 router.get('/getShipmentTransaction',isTransactionStaff,  shipmentControllers.getShipmentTransaction)
+router.get('/getShipmentTransactionBystatus',isTransactionStaff,  shipmentControllers.getShipmentTransactionBystatus)
 router.post('/confirmShipmentSuOrCa',isTransactionStaff,  shipmentControllers.confirmShipmentSuOrCa)
 router.post('/createShipmentToUser',isTransactionStaff,  shipmentControllers.createShipmentToUser)
 router.post('/confirmShipmentFromCPToTP',isTransactionStaff,  shipmentControllers.confirmShipmentFromCPToTP)

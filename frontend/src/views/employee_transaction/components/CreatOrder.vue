@@ -8,7 +8,7 @@
       </template>
       <template v-slot:[`item.add`]="{ item }">
         <div>
-          <div v-if="item.status === 'Gửi điểm tập kết'">
+          <div v-if="item.status === 'Shipped'">
             <v-btn class="button" @click="addItemCollection(item)">
               Chuyển đơn hàng đến điểm tập kết
             </v-btn>
@@ -78,6 +78,7 @@
 </template>
 
 <script>
+import { StaffService } from "../../../service/StaffService";
 export default {
   name: "CreatOrder",
   data() {
@@ -132,16 +133,28 @@ export default {
     save() {
       this.dialog = false;
     },
-    saveCollection() {
+    async saveCollection() {
       this.dialogCollection = false;
+      console.log("ok")
+      const id = "";
+      try {
+        const res1 = await StaffService.createShipmentFromTPToCP(id);
+        if (res1.error_code === 0) {
+          console.log(res1.message); 
+          // xóa cái cũ ở đây
+    
+        }
+      } catch (error) {
+        console.error(error);
+      }
     },
     initialize() {
       this.items = this.shipments;
     },
     getColor(status) {
-      if (status === "Nhận từ điểm tập kết") return "green";
-      else if (status === "Chuyển thất bại") return "red";
-      else return "orange";
+      // if (status === "Nhận từ điểm tập kết") return "green";
+      // else if (status === "Chuyển thất bại") return "red";
+      // else return "orange";
     },
     addItem(item) {
       this.dialog = true;

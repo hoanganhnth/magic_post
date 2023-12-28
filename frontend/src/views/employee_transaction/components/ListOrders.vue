@@ -31,71 +31,25 @@ export default {
       ],
     };
   },
-
+  watch: {
+    shipments(newVal, oldVal) {
+      if (newVal !== oldVal) {
+        this.initialize();
+      }
+    },
+  },
+  props: {
+    shipments: {
+      type: Array,
+      required: true,
+    },
+  },
   created() {
     this.initialize();
   },
-
   methods: {
     initialize() {
-      this.items = [
-        {
-          id: 1,
-          fee: "100",
-          created_at: "20/12/2023",
-          goods_weight: "500g",
-          status: "Chuyển thành công",
-        },
-        {
-          id: 2,
-          fee: "200",
-          created_at: "20/12/2023",
-          goods_weight: "500g",
-          status: "Chuyển thành công",
-        },
-        {
-          id: 3,
-          fee: "200",
-          created_at: "20/12/2023",
-          goods_weight: "500g",
-          status: "Chuyển thất bại",
-        },
-        {
-          id: 4,
-          fee: "200",
-          created_at: "20/12/2023",
-          goods_weight: "500g",
-          status: "Chuyển thất bại",
-        },
-        {
-          id: 5,
-          fee: "200",
-          created_at: "20/12/2023",
-          goods_weight: "500g",
-          status: "Nhận từ điểm tập kết",
-        },
-        {
-          id: 6,
-          fee: "200",
-          created_at: "20/12/2023",
-          goods_weight: "500g",
-          status: "Nhận từ điểm tập kết",
-        },
-        {
-          id: 7,
-          fee: "200",
-          created_at: "20/12/2023",
-          goods_weight: "500g",
-          status: "Nhận từ điểm tập kết",
-        },
-        {
-          id: 8,
-          fee: "200",
-          created_at: "20/12/2023",
-          goods_weight: "500g",
-          status: "Nhận từ điểm tập kết",
-        },
-      ];
+      this.items = this.shipments;
     },
     getColor(status) {
       if (status === "Chuyển thành công") return "green";

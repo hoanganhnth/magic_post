@@ -15,6 +15,31 @@ const transactionPointSchema = new mongoose.Schema({
     ref: "CollectionPoint",
     required: true
   },
+  total_shipment: {
+    type: Number,
+    required: true,
+    default: 0, 
+  },
+  success_shipment: {
+    type: Number,
+    required: true,
+    default: 0, 
+  },
+  cancel_shipment: {
+    type: Number,
+    required: true,
+    default: 0, 
+  },
+  receive_shipment: {
+    type: Number,
+    required: true,
+    default: 0, 
+  },
+  tranfer_shipment: {
+    type: Number,
+    required: true,
+    default: 0, 
+  },
 });
 
 const collectionPointSchema = new mongoose.Schema({
@@ -25,6 +50,31 @@ const collectionPointSchema = new mongoose.Schema({
   address: {
     type: String,
     required: true
+  },
+  total_shipment: {
+    type: Number,
+    required: true,
+    default: 0, 
+  },
+  success_shipment: {
+    type: Number,
+    required: true,
+    default: 0, 
+  },
+  cancel_shipment: {
+    type: Number,
+    required: true,
+    default: 0, 
+  },
+  receive_shipment: {
+    type: Number,
+    required: true,
+    default: 0, 
+  },
+  tranfer_shipment: {
+    type: Number,
+    required: true,
+    default: 0, 
   },
 });
 

@@ -110,14 +110,39 @@ export default {
   mounted() {
     this.fetchData();
   },
+  watch: {
+    transactionPoint(newVal, oldVal) {
+      if (newVal !== oldVal) {
+        this.initialize();
+      }
+    },
+  },
+  props: {
+    transactionPoint: {
+      type: Object,
+      required: true,
+    },
+  },
+  created() {
+    this.initialize();
+  },
   methods: {
+    initialize() {
+      if (this.transactionPoint) {
+        this.totalOrders = this.transactionPoint.total_shipment;
+        this.ordersReceived = this.transactionPoint.receive_shipment;
+        this.ordersSuccess = this.transactionPoint.success_shipment;
+        this.ordersFail = this.transactionPoint.cancel_shipment;
+        this.address = this.transactionPoint.name;
+      }
+    },
     fetchData() {
       // Lấy dữ liệu từ API hoặc database
       // ...
-      this.totalOrders = 300;
-      this.ordersReceived = 250;
-      this.ordersSuccess = 230;
-      this.ordersFail = 20;
+      // this.totalOrders = 300;
+      // this.ordersReceived = 250;
+      // this.ordersSuccess = 230;
+      // this.ordersFail = 20;
     },
   },
 };

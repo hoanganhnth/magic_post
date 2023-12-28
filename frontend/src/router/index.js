@@ -152,7 +152,8 @@ router.beforeEach((to, from, next) => {
         case "Transaction staff":
           if (
             to.name === "Employee Transaction Confirm" ||
-            to.name === "Employee Transaction"
+            to.name === "Employee Transaction" ||
+            to.name === "Employee Transaction Statistics"
           ) {
             next();
           } else {

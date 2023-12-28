@@ -31,86 +31,86 @@ export default {
       loadData: false,
       shipments: [
         // đây là list các đơn hàng cần thêm
-        {
-          id: 8,
-          fee: "200",
-          created_at: "20/12/2023",
-          goods_weight: "500g",
-          status: "Gửi điểm tập kết",
-        },
-        {
-          id: 9,
-          fee: "250",
-          created_at: "20/12/2023",
-          goods_weight: "400g",
-          status: "Gửi điểm tập kết",
-        },
-        {
-          id: 121,
-          fee: "200",
-          created_at: "20/12/2023",
-          goods_weight: "500g",
-          status: "Nhận từ điểm tập kết",
-        },
+        // {
+        //   id: 8,
+        //   fee: "200",
+        //   created_at: "20/12/2023",
+        //   goods_weight: "500g",
+        //   status: "Gửi điểm tập kết",
+        // },
+        // {
+        //   id: 9,
+        //   fee: "250",
+        //   created_at: "20/12/2023",
+        //   goods_weight: "400g",
+        //   status: "Gửi điểm tập kết",
+        // },
+        // {
+        //   id: 121,
+        //   fee: "200",
+        //   created_at: "20/12/2023",
+        //   goods_weight: "500g",
+        //   status: "Nhận từ điểm tập kết",
+        // },
       ],
       orderItems: [
         // đây là list các đơn hàng cần xác nhận
-        {
-          id: 1,
-          fee: "100",
-          created_at: "20/12/2023",
-          goods_weight: "500g",
-          status: "Chuyển thành công",
-        },
-        {
-          id: 2,
-          fee: "200",
-          created_at: "20/12/2023",
-          goods_weight: "500g",
-          status: "Chuyển thành công",
-        },
-        {
-          id: 3,
-          fee: "200",
-          created_at: "20/12/2023",
-          goods_weight: "500g",
-          status: "Chuyển thất bại",
-        },
-        {
-          id: 4,
-          fee: "200",
-          created_at: "20/12/2023",
-          goods_weight: "500g",
-          status: "Chuyển thất bại",
-        },
-        {
-          id: 5,
-          fee: "200",
-          created_at: "20/12/2023",
-          goods_weight: "500g",
-          status: "Nhận từ điểm tập kết",
-        },
-        {
-          id: 6,
-          fee: "200",
-          created_at: "20/12/2023",
-          goods_weight: "500g",
-          status: "Nhận từ điểm tập kết",
-        },
-        {
-          id: 7,
-          fee: "200",
-          created_at: "20/12/2023",
-          goods_weight: "500g",
-          status: "Nhận từ điểm tập kết",
-        },
-        {
-          id: 8,
-          fee: "200",
-          created_at: "20/12/2023",
-          goods_weight: "500g",
-          status: "Nhận từ điểm tập kết",
-        },
+        // {
+        //   id: 1,
+        //   fee: "100",
+        //   created_at: "20/12/2023",
+        //   goods_weight: "500g",
+        //   status: "Chuyển thành công",
+        // },
+        // {
+        //   id: 2,
+        //   fee: "200",
+        //   created_at: "20/12/2023",
+        //   goods_weight: "500g",
+        //   status: "Chuyển thành công",
+        // },
+        // {
+        //   id: 3,
+        //   fee: "200",
+        //   created_at: "20/12/2023",
+        //   goods_weight: "500g",
+        //   status: "Chuyển thất bại",
+        // },
+        // {
+        //   id: 4,
+        //   fee: "200",
+        //   created_at: "20/12/2023",
+        //   goods_weight: "500g",
+        //   status: "Chuyển thất bại",
+        // },
+        // {
+        //   id: 5,
+        //   fee: "200",
+        //   created_at: "20/12/2023",
+        //   goods_weight: "500g",
+        //   status: "Nhận từ điểm tập kết",
+        // },
+        // {
+        //   id: 6,
+        //   fee: "200",
+        //   created_at: "20/12/2023",
+        //   goods_weight: "500g",
+        //   status: "Nhận từ điểm tập kết",
+        // },
+        // {
+        //   id: 7,
+        //   fee: "200",
+        //   created_at: "20/12/2023",
+        //   goods_weight: "500g",
+        //   status: "Nhận từ điểm tập kết",
+        // },
+        // {
+        //   id: 8,
+        //   fee: "200",
+        //   created_at: "20/12/2023",
+        //   goods_weight: "500g",
+        //   status: "Nhận từ điểm tập kết",
+        // },
         // Add more items as needed
       ],
     };
@@ -126,24 +126,52 @@ export default {
   methods: {
     async initialize() {
       try {
-        const res = await StaffService.getShipmentTransaction();
-        if (res.error_code === 0) {
-          this.shipments = res.data.relatedShipments;
-          console.log(this.shipments);
+        let payload1 = "Receive";
+        const res1 = await StaffService.getShipmentTransactionByStatus(
+          payload1
+        );
+        if (res1.error_code === 0) {
+          this.shipments = res1.data.relatedShipments;
+          // console.log(this.shipments);
+        }
+      } catch (error) {
+        console.error(error);
+      }
+      try {
+        const payload2 = "Waiting";
+        const res2 = await StaffService.getShipmentTransactionByStatus(
+          payload2
+        );
+        if (res2.error_code === 0) {
+          this.orderItems = res2.data.relatedShipments;
+          // console.log(this.orderItems);
+        } else {
+          console.log(res2.message);
         }
       } catch (error) {
         console.error(error);
       }
     },
-    confirmOrder(data) {
-      (this.loadData = true),
-        (this.orderItems = this.orderItems.filter(function (items) {
-          return items !== data;
-        }));
-      if (data.status === "Nhận từ điểm tập kết") {
-        this.shipments.push(data);
-      }
+    async confirmOrder(data) {
       console.log(data);
+      try {
+        const shipmentId = data.id;
+        const res = await StaffService.confirmShipmentFromCPToTP(shipmentId);
+        if (res.error_code === 0) {
+          data.status = res.data.shipment_update.status;
+          this.shipments.push(data);
+          (this.loadData = true),
+            (this.orderItems = this.orderItems.filter(function (items) {
+              return items !== data;
+            }));
+          console.log(res.message);
+        } else {
+          console.log(res.message);
+        }
+      } catch (error) {
+        console.error(error);
+      }
+
       this.loadData = false;
     },
 

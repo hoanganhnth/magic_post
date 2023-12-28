@@ -16,7 +16,7 @@
                   <p>Khối lượng: {{ item.goods_weight }}</p>
                 </v-col>
                 <v-col cols="4">
-                  <p>Thông tin đơn hàng: {{ item.status }}</p>
+                  <p>Trạng thái đơn hàng: {{ item.status }}</p>
                 </v-col>
               </v-row>
             </v-card-text>
