@@ -39,7 +39,7 @@
     <v-row>
       <v-col cols="12">
         <v-card>
-          <v-card-title>Tạo đơn hàng đến người dùng</v-card-title>
+          <v-card-title>Tạo đơn hàng đến điểm giao dịch</v-card-title>
           <v-card-text>
             <v-row>
               <v-col cols="12">

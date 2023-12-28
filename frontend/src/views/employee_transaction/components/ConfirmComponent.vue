@@ -6,14 +6,14 @@
       <v-row>
         <v-col v-for="(item, index) in orderItems" :key="index" cols="12">
           <v-card class="card">
-            <v-card-title>Tên đơn hàng: {{ item.name }}</v-card-title>
+            <v-card-title>ID đơn hàng: {{ item.id }}</v-card-title>
             <v-card-text>
               <v-row>
                 <v-col cols="4">
-                  <p>Thời gian gửi: {{ item.shippingTime }}</p>
+                  <p>Thời gian gửi: {{ item.created_at }}</p>
                 </v-col>
                 <v-col cols="4">
-                  <p>Khối lượng: {{ item.weight }}</p>
+                  <p>Khối lượng: {{ item.goods_weight }}</p>
                 </v-col>
                 <v-col cols="4">
                   <p>Thông tin đơn hàng: {{ item.status }}</p>

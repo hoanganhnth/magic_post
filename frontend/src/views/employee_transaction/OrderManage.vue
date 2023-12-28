@@ -4,10 +4,11 @@
     <div class="dashboard-app">
       <div class="dashboard-content">
         <v-col>
-          <order-details
+          <creat-order
+            v-on:addOrder="addOrder"
             :shipments="shipments"
             :loadData="loadData"
-          ></order-details>
+          ></creat-order>
           <confirm-component
             v-on:confirmOrder="confirmOrder"
             :orderItems="orderItems"
@@ -21,70 +22,93 @@
 <script>
 import ConfirmComponent from "./components/ConfirmComponent.vue";
 import NavBarEmployee from "./components/NavBarEmployee.vue";
-import OrderDetails from "./components/OrderDetails.vue";
+import CreatOrder from "./components/CreatOrder.vue";
 import { StaffService } from "../../service/StaffService";
 export default {
   name: "OrderManage",
   data: function () {
     return {
       loadData: false,
-      shipments: [],
+      shipments: [
+        // đây là list các đơn hàng cần thêm
+        {
+          id: 8,
+          fee: "200",
+          created_at: "20/12/2023",
+          goods_weight: "500g",
+          status: "Gửi điểm tập kết",
+        },
+        {
+          id: 9,
+          fee: "250",
+          created_at: "20/12/2023",
+          goods_weight: "400g",
+          status: "Gửi điểm tập kết",
+        },
+        {
+          id: 121,
+          fee: "200",
+          created_at: "20/12/2023",
+          goods_weight: "500g",
+          status: "Nhận từ điểm tập kết",
+        },
+      ],
       orderItems: [
         // đây là list các đơn hàng cần xác nhận
         {
           id: 1,
-          name: "Product 1",
-          shippingTime: "20/12/2023",
-          weight: "500g",
+          fee: "100",
+          created_at: "20/12/2023",
+          goods_weight: "500g",
           status: "Chuyển thành công",
         },
         {
           id: 2,
-          name: "Product 2",
-          shippingTime: "20/12/2023",
-          weight: "500g",
+          fee: "200",
+          created_at: "20/12/2023",
+          goods_weight: "500g",
           status: "Chuyển thành công",
         },
         {
           id: 3,
-          name: "Product 3",
-          shippingTime: "20/12/2023",
-          weight: "500g",
+          fee: "200",
+          created_at: "20/12/2023",
+          goods_weight: "500g",
           status: "Chuyển thất bại",
         },
         {
           id: 4,
-          name: "Product 4",
-          shippingTime: "20/12/2023",
-          weight: "500g",
+          fee: "200",
+          created_at: "20/12/2023",
+          goods_weight: "500g",
           status: "Chuyển thất bại",
         },
         {
           id: 5,
-          name: "Product 5",
-          shippingTime: "20/12/2023",
-          weight: "500g",
+          fee: "200",
+          created_at: "20/12/2023",
+          goods_weight: "500g",
           status: "Nhận từ điểm tập kết",
         },
         {
           id: 6,
-          name: "Product 6",
-          shippingTime: "20/12/2023",
-          weight: "500g",
+          fee: "200",
+          created_at: "20/12/2023",
+          goods_weight: "500g",
           status: "Nhận từ điểm tập kết",
         },
         {
           id: 7,
-          name: "Product 7",
-          shippingTime: "20/12/2023",
-          weight: "500g",
+          fee: "200",
+          created_at: "20/12/2023",
+          goods_weight: "500g",
           status: "Nhận từ điểm tập kết",
         },
         {
           id: 8,
-          name: "Product 8",
-          shippingTime: "20/12/2023",
-          weight: "500g",
+          fee: "200",
+          created_at: "20/12/2023",
+          goods_weight: "500g",
           status: "Nhận từ điểm tập kết",
         },
         // Add more items as needed
@@ -93,8 +117,8 @@ export default {
   },
   components: {
     NavBarEmployee,
-    OrderDetails,
     ConfirmComponent,
+    CreatOrder,
   },
   created() {
     this.initialize();
@@ -116,8 +140,19 @@ export default {
         (this.orderItems = this.orderItems.filter(function (items) {
           return items !== data;
         }));
-      this.shipments.push(data);
-      console.log(this.items);
+      if (data.status === "Nhận từ điểm tập kết") {
+        this.shipments.push(data);
+      }
+      console.log(data);
+      this.loadData = false;
+    },
+
+    addOrder(data) {
+      (this.loadData = true),
+        (this.shipments = this.shipments.filter(function (items) {
+          return items !== data;
+        }));
+      console.log(data);
       this.loadData = false;
     },
   },

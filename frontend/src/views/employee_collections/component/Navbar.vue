@@ -6,25 +6,19 @@
       </p>
     </header>
     <nav class="dashboard-nav-list">
-      <router-link to="/employee_transaction/statistics">
+      <router-link to="/employee_collection">
         <a href="#" class="dashboard-nav-item"
-          ><i class="fas fa-box-open"></i> Thông tin đơn hàng
+          ><i class="fas fa-box-open"></i> Đơn hàng từ điểm tập kết
         </a>
       </router-link>
-      <router-link to="/employee_transaction"
+      <router-link to="/employee_collection"
         ><a href="#" class="dashboard-nav-item"
-          ><i class="fas fa-cart-plus"></i> Tạo đơn hàng
+          ><i class="fas fa-cart-plus"></i> Đơn hàng từ điểm giao dịch
         </a></router-link
       >
 
-      <router-link to="/employee_transaction/print"
-        ><a href="#" class="dashboard-nav-item"
-          ><i class="fas fa-edit"></i> Ghi nhận và in biên nhận</a
-        >
-      </router-link>
-
       <div class="nav-item-divider"></div>
-      <router-link to="/" @click="logout">
+      <router-link to="" @click="logout">
         <a href="#" class="dashboard-nav-item"
           ><i class="fas fa-sign-out-alt"></i> Đăng xuất</a
         ></router-link

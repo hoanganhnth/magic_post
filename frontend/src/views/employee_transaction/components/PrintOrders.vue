@@ -285,7 +285,6 @@ export default {
         if (res.error_code === 0) {
           console.log(res);
           // res.data.shipment.fee  : là phí
-          
         }
       } catch (error) {
         console.error(error);

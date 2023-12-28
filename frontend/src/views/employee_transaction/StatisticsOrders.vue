@@ -2,21 +2,20 @@
   <div class="dashboard">
     <nav-bar-employee></nav-bar-employee>
     <div class="dashboard-app">
-      <div class="dashboard-content">
-        <order-to-collections></order-to-collections>
-      </div>
+      <div class="dashboard-content"></div>
+      <statistics-trans-component></statistics-trans-component>
     </div>
   </div>
 </template>
 
 <script>
 import NavBarEmployee from "./components/NavBarEmployee.vue";
-import OrderToCollections from "./components/OrderToCollections.vue";
+import StatisticsTransComponent from "./components/StatisticsTransComponent.vue";
 export default {
   name: "ConfirmOrders",
   components: {
     NavBarEmployee,
-    OrderToCollections,
+    StatisticsTransComponent,
   },
 };
 </script>

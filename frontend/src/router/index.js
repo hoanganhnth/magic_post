@@ -12,9 +12,12 @@ import StatisticalTransaction from "@/views/learder_transactionPoint/Statistical
 import CreatAccountTransaction from "@/views/learder_transactionPoint/CreatAccountTransaction";
 
 import OrderManage from "@/views/employee_transaction/OrderManage";
-import OrderShipped from "@/views/employee_transaction/OrderShipped";
+import StatisticsOrders from "@/views/employee_transaction/StatisticsOrders";
 import PrintAndRecord from "@/views/employee_transaction/PrintAndRecord";
+
+import ConfirmCollection from "@/views/employee_collections/ConfirmCollection";
 const routes = [
+  { path: "/employee_collection", component: ConfirmCollection },
   {
     path: "/",
     name: "Home",
@@ -62,9 +65,9 @@ const routes = [
     },
   },
   {
-    path: "/employee_transaction/shipped",
-    name: "Employee Transaction Shipped",
-    component: OrderShipped,
+    path: "/employee_transaction/statistics",
+    name: "Employee Transaction Statistics",
+    component: StatisticsOrders,
     meta: {
       requiresAuth: true,
     },
