@@ -17,7 +17,14 @@ import PrintAndRecord from "@/views/employee_transaction/PrintAndRecord";
 
 import CreatCollection from "@/views/employee_collections/CreatCollection";
 const routes = [
-  { path: "/employee_collection", component: CreatCollection },
+  {
+    path: "/employee_collection",
+    name: "Employee Collection",
+    component: CreatCollection,
+    meta: {
+      requiresAuth: true,
+    },
+  },
   {
     path: "/",
     name: "Home",
@@ -72,8 +79,14 @@ const routes = [
       requiresAuth: true,
     },
   },
-
-  { path: "/employee_transaction/print", component: PrintAndRecord },
+  {
+    path: "/employee_transaction/print",
+    name: "Employee Transaction Create New",
+    component: PrintAndRecord,
+    meta: {
+      requiresAuth: true,
+    },
+  },
   {
     path: "/boss",
     name: "Boss",
@@ -147,13 +160,20 @@ router.beforeEach((to, from, next) => {
           }
           break;
         case "Collection staff":
-          next("/");
+          if (
+            to.name === "Employee Collection" ||
+            to.name === "Employee Collection"
+          ) {
+            next();
+          } else {
+            next({ name: "Employee Collection" });
+          }
           break;
         case "Transaction staff":
           if (
-            to.name === "Employee Transaction Confirm" ||
             to.name === "Employee Transaction" ||
-            to.name === "Employee Transaction Statistics"
+            to.name === "Employee Transaction Statistics" ||
+            to.name === "Employee Transaction Create New"
           ) {
             next();
           } else {

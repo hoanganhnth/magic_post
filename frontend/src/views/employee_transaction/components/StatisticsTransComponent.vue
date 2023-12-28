@@ -104,7 +104,7 @@ export default {
       ordersReceived: 0,
       ordersSuccess: 0,
       ordersFail: 0,
-      address: "144 Xuân thủy",
+      address: "",
     };
   },
   mounted() {
