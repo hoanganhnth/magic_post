@@ -25,22 +25,14 @@
       <v-dialog v-model="dialogCollection" max-width="500px">
         <v-card>
           <v-card-title>
-            <span class="text-h5">Thêm điểm tập kết</span>
+            <span class="text-h5">Chuyển đơn hàng đến điểm tập kết</span>
           </v-card-title>
 
           <v-card-text>
-            <v-container>
-              <v-row>
-                <v-col cols="12" sm="6" md="4">
-                  <v-select
-                    v-model="selectedCollectionPoint"
-                    :items="collectionPoint"
-                    label="Điểm tập kết"
-                    item-title="name"
-                  ></v-select>
-                </v-col>
-              </v-row>
-            </v-container>
+            <p>
+              Bạn có chắc chắn muốn thêm đơn hàng này vào danh sách chuyển đến
+              tập kết
+            </p>
           </v-card-text>
 
           <v-card-actions>
@@ -48,12 +40,8 @@
             <v-btn color="blue-darken-1" variant="text" @click="close">
               Thoát
             </v-btn>
-            <v-btn
-              color="blue-darken-1"
-              variant="text"
-              @click="saveCollection()"
-            >
-              Lưu
+            <v-btn color="blue-darken-1" variant="text" @click="saveCollection">
+              Đổng ý
             </v-btn>
           </v-card-actions>
         </v-card>

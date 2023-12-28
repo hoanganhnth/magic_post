@@ -1,6 +1,6 @@
 <template>
   <v-container class="container">
-    <h3>Thống kê đơn hàng tại điểm giao dịch {{ address }}</h3>
+    <h4>Thống kê đơn hàng tại điểm giao dịch {{ address }}</h4>
     <v-row justify="space-around">
       <v-col cols="4">
         <v-card>
@@ -124,13 +124,12 @@ export default {
 </script>
 
 <style scoped>
-h3 {
+h4 {
   margin-left: 5%;
-  margin-bottom: 10%;
+  margin-bottom: 5%;
 }
 .container {
-  margin-bottom: 40%;
-  max-height: 100%;
+  max-height: 50%;
   max-width: 100%;
 }
 </style>

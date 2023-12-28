@@ -8,18 +8,18 @@
     <nav class="dashboard-nav-list">
       <router-link to="/employee_transaction/statistics">
         <a href="#" class="dashboard-nav-item"
-          ><i class="fas fa-box-open"></i> Thông tin đơn hàng
+          ><i class="fas fa-box-open"></i> Thống kê đơn hàng
         </a>
       </router-link>
       <router-link to="/employee_transaction"
         ><a href="#" class="dashboard-nav-item"
-          ><i class="fas fa-cart-plus"></i> Tạo đơn hàng
+          ><i class="fas fa-cart-plus"></i> Xử lý đơn hàng
         </a></router-link
       >
 
       <router-link to="/employee_transaction/print"
         ><a href="#" class="dashboard-nav-item"
-          ><i class="fas fa-edit"></i> Ghi nhận và in biên nhận</a
+          ><i class="fas fa-edit"></i> Ghi nhận và in đơn</a
         >
       </router-link>
 
