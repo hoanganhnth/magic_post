@@ -15,9 +15,9 @@ import OrderManage from "@/views/employee_transaction/OrderManage";
 import StatisticsOrders from "@/views/employee_transaction/StatisticsOrders";
 import PrintAndRecord from "@/views/employee_transaction/PrintAndRecord";
 
-import ConfirmCollection from "@/views/employee_collections/ConfirmCollection";
+import CreatCollection from "@/views/employee_collections/CreatCollection";
 const routes = [
-  { path: "/employee_collection", component: ConfirmCollection },
+  { path: "/employee_collection", component: CreatCollection },
   {
     path: "/",
     name: "Home",
