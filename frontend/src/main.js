@@ -23,8 +23,16 @@ import "vuetify/dist/vuetify.min.css";
 import vuetify from "./plugins/vuetify";
 import { createPinia } from "pinia";
 import VueQRCodeComponent from "vue-qrcode-component";
+import VueHtmlToPaper from "vue-html-to-paper";
 const pinia = createPinia();
-
+const options = {
+  name: "_blank",
+  specs: ["fullscreen=yes", "titlebar=yes", "scrollbars=yes"],
+  styles: [
+    "https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css",
+    "https://unpkg.com/kidlat-css/css/kidlat.css",
+  ],
+};
 library.add(faLinkedinIn, faGithub, faFileLines);
 
 createApp(App)
@@ -34,5 +42,6 @@ createApp(App)
   .use(metaManager)
   .use(vuetify)
   .use(pinia)
+  .use(VueHtmlToPaper, options)
   .component("qr-code", VueQRCodeComponent)
   .mount("#app");

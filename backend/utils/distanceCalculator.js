@@ -32,7 +32,7 @@ async function calculateMinDistance(origin, destinations) {
 
     // const minDistance = Math.min(...distances);
     // const nearestLocation = destinations[distances.indexOf(minDistance)];
-    const nearestLocation = destinations[10];
+    const nearestLocation = destinations[0];
     console.log(nearestLocation)
     return nearestLocation;
   } catch (error) {

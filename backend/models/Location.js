@@ -35,7 +35,7 @@ const transactionPointSchema = new mongoose.Schema({
     required: true,
     default: 0, 
   },
-  tranfer_shipment: {
+  transfer_shipment: {
     type: Number,
     required: true,
     default: 0, 
@@ -51,27 +51,12 @@ const collectionPointSchema = new mongoose.Schema({
     type: String,
     required: true
   },
-  total_shipment: {
-    type: Number,
-    required: true,
-    default: 0, 
-  },
-  success_shipment: {
-    type: Number,
-    required: true,
-    default: 0, 
-  },
-  cancel_shipment: {
-    type: Number,
-    required: true,
-    default: 0, 
-  },
   receive_shipment: {
     type: Number,
     required: true,
     default: 0, 
   },
-  tranfer_shipment: {
+  transfer_shipment: {
     type: Number,
     required: true,
     default: 0, 

@@ -9,6 +9,7 @@ router.post('/registerStaff', auth, accountControllers.registerStaff)
 router.get('/getAllStaff',auth,  accountControllers.getAllStaff)
 router.delete('/deleteStaff',auth,  accountControllers.deleteStaff)
 router.post('/updateStaff',auth,  accountControllers.updateStaff)
+router.post('/updatePoint',isAdmin,  shipmentControllers.updatePoint)
 
 router.get('/getAllHead',  isAdmin,  accountControllers.getAllHead)
 router.post('/updateUser',  isAdmin,  accountControllers.updateUser)

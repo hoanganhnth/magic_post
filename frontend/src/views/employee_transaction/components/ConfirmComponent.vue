@@ -27,6 +27,12 @@
                   <i class="fas fa-check"></i
                 ></v-icon>
               </v-btn>
+              <v-btn color="primary"
+                >Hủy
+                <v-icon id="icon" size="25" color="red" class="me-2">
+                  <i class="far fa-trash-alt"></i
+                ></v-icon>
+              </v-btn>
             </v-card-actions>
           </v-card>
         </v-col>
