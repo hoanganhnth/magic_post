@@ -154,7 +154,7 @@ h4 {
   margin-bottom: 5%;
 }
 .container {
-  max-height: 50%;
+  max-height: 70%;
   max-width: 100%;
 }
 </style>

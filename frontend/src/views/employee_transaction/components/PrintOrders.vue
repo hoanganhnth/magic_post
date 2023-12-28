@@ -1,7 +1,7 @@
 <template>
   <v-app>
     <v-row>
-      <v-col cols="6">
+      <v-col cols="12">
         <v-form ref="form">
           <v-row>
             <v-col cols="12" sm="6">
@@ -101,7 +101,7 @@
           <v-btn @click="submit" color="primary">Xác nhận</v-btn>
         </v-form>
       </v-col>
-      <v-col cols="6">
+      <v-col cols="8" id="bill">
         <v-container class="ml-auto">
           <v-container class="header">
             <h3 style="font-family: Trebuchet MS; font-weight: bold">
@@ -227,8 +227,8 @@
             </v-col>
           </v-row>
         </v-container>
-        <v-btn color="primary">In vận đơn</v-btn>
       </v-col>
+      <v-btn @click="print" color="primary">In vận đơn</v-btn>
     </v-row>
   </v-app>
 </template>
@@ -299,6 +299,22 @@ export default {
           })
         : "";
     },
+    print() {
+      // const options = {
+      //   name: "_blank",
+      //   specs: ["fullscreen=yes", "titlebar=yes", "scrollbars=yes"],
+      //   styles: [
+      //     "https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css",
+      //     "https://unpkg.com/kidlat-css/css/kidlat.css",
+      //     "https://cdn.jsdelivr.net/npm/@vuetify/core@2.4.3/dist/vuetify.min.css",
+      //   ],
+      // };
+
+      // this.$htmlToPaper("bill", options);
+      const content = document.querySelector("#bill");
+      // In hóa đơn
+      window.print(content);
+    },
   },
 };
 </script>
@@ -347,6 +363,53 @@ export default {
   border-radius: 0px;
   border: 0.5px solid #000;
   margin: 0px !important;
+}
+
+@media print {
+  #reponsive {
+    height: 326px;
+  }
+  .no-boder {
+    border: 0px !important;
+  }
+  .signature {
+    height: 120px;
+    border: 0px !important;
+  }
+
+  .content {
+    padding: 20px;
+  }
+  .ml-auto {
+    border: 0.5px solid #000;
+    max-width: 100%;
+    height: auto;
+  }
+
+  .no-gutters > .v-col {
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+  .v-card-text {
+    padding-left: 25px;
+    padding-bottom: 5px;
+    font-size: 16px;
+    color: #333;
+    line-height: 1;
+  }
+
+  .header {
+    height: 120px;
+    border: none !important;
+    margin: 10px;
+    margin-top: 0px;
+  }
+
+  .v-card {
+    border-radius: 0px;
+    border: 0.5px solid #000;
+    margin: 0px !important;
+  }
 }
 /* Your component styles here */
 </style>
