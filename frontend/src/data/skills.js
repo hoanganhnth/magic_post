@@ -2,32 +2,22 @@ const skills = [
   {
     id: 1,
     title: "63 TỈNH THÀNH ",
-    image: "backend_blue.png",
+    image: "63_tinh.png",
     languages: [
       {
         id: 1,
-        title: "a",
+        title: "Miền Bắc",
         css: "java",
       },
       {
         id: 2,
-        title: "b",
+        title: "Miền Trung",
         css: "groovy",
       },
       {
         id: 3,
-        title: "c",
+        title: "Miền Nam",
         css: "solr",
-      },
-      {
-        id: 4,
-        title: "d",
-        css: "spring",
-      },
-      {
-        id: 5,
-        title: "e",
-        css: "docker",
       },
     ],
     description: "Dịch vụ phủ sóng khắp 63 tỉnh thành",
@@ -35,21 +25,21 @@ const skills = [
   {
     id: 2,
     title: "NHÂN SỰ CHUYÊN NGHIỆP",
-    image: "frontend_blue.png",
+    image: "nhan_su.png",
     languages: [
       {
         id: 1,
-        title: "a",
+        title: "Linh hoạt",
         css: "tensorflow",
       },
       {
         id: 2,
-        title: "b",
+        title: "Tận tâm",
         css: "pytorch",
       },
       {
         id: 3,
-        title: "c",
+        title: "Thân thiện",
         css: "opencv",
       },
     ],
@@ -58,21 +48,21 @@ const skills = [
   {
     id: 3,
     title: "BƯU CỤC RỘNG KHẮP",
-    image: "ai_blue.png",
+    image: "buu_cuc.png",
     languages: [
       {
         id: 1,
-        title: "a",
+        title: "An toàn",
         css: "tensorflow",
       },
       {
         id: 2,
-        title: "b",
+        title: "Ổn định",
         css: "pytorch",
       },
       {
         id: 3,
-        title: "c",
+        title: "Chuyên nghiệp",
         css: "opencv",
       },
     ],

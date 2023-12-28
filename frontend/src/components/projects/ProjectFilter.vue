@@ -9,7 +9,7 @@ export default {
     },
     selectOptions: {
       type: Array,
-      default: () => ["Web Development", "Machine Learning"],
+      default: () => ["Hỏa tốc", "Giao hàng tiết kiệm"],
     },
   },
 };
@@ -22,7 +22,7 @@ export default {
     :id="select"
     class="form-select"
   >
-    <option value class="text-sm sm:text-md">All Projects</option>
+    <option value class="text-sm sm:text-md">All</option>
     <option
       v-for="option in selectOptions"
       :key="option"

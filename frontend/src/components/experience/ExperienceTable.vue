@@ -1,5 +1,5 @@
 <template>
-  <base-container title="Giới thiệu">
+  <base-container title="TIÊU CHÍ">
     <div class="col-md-12 pt-3">
       <ul class="timeline timeline-split">
         <single-job v-for="job in experience" :key="job.id" :job="job" />

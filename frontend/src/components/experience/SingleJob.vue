@@ -6,7 +6,7 @@
     <div class="timeline-marker"></div>
     <div class="timeline-content">
       <h5 class="timeline-title mb-md-3">
-        {{ job.position }} @
+        {{ job.position }} 
         <a v-if="job.url" :href="job.url" target="_blank">{{ job.company }}</a>
         <a v-if="!job.url">{{ job.company }}</a>
       </h5>
