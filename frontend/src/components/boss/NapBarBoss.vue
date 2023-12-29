@@ -6,12 +6,7 @@
       </p>
     </header>
     <nav class="dashboard-nav-list">
-      <router-link to="/boss">
-        <a href="#" class="dashboard-nav-item"
-          ><i class="fas fa-home"></i> Trang chủ
-        </a>
-      </router-link>
-      <router-link to="/boss/statistical"
+      <router-link to="/boss"
         ><a href="#" class="dashboard-nav-item"
           ><i class="fas fa-box-open"></i> Quản lý đơn hàng
         </a></router-link

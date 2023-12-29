@@ -3,6 +3,7 @@
     <nap-bar-boss></nap-bar-boss>
     <div class="dashboard-app">
       <div class="dashboard-content">
+        <genera-component></genera-component>
         <statistical-component
           :collectionPoints="collectionPoints"
         ></statistical-component>
@@ -14,9 +15,10 @@
 <script>
 import NapBarBoss from "../../components/boss/NapBarBoss.vue";
 import { LeadService } from "../../service/LeadService";
+import GeneraComponent from "./components/GeneraComponent.vue";
 import StatisticalComponent from "./components/StatisticalComponent.vue";
 export default {
-  components: { NapBarBoss, StatisticalComponent },
+  components: { NapBarBoss, StatisticalComponent, GeneraComponent },
   name: "ManageStatistical",
   data() {
     return {
