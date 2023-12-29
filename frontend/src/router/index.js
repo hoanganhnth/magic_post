@@ -2,7 +2,6 @@ import { createRouter, createWebHistory } from "vue-router";
 import HomeView from "../views/HomeView.vue";
 import FormLogin from "../views/FormLogin.vue";
 import ManageEmployee from "@/views/boss/ManageEmployee";
-import BossDashboard from "@/views/boss/BossDashboard";
 import ManageSystem from "@/views/boss/ManageSystem";
 import ManageStatistical from "@/views/boss/ManageStatistical";
 
@@ -87,14 +86,6 @@ const routes = [
       requiresAuth: true,
     },
   },
-  {
-    path: "/boss",
-    name: "Boss",
-    component: BossDashboard,
-    meta: {
-      requiresAuth: true,
-    },
-  },
   { path: "/login", name: "Login", component: FormLogin },
   {
     path: "/boss/employee",
@@ -113,7 +104,7 @@ const routes = [
     },
   },
   {
-    path: "/boss/statistical",
+    path: "/boss",
     name: "Boss Statistical",
     component: ManageStatistical,
     meta: {

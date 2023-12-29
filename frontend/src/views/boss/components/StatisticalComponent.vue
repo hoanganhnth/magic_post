@@ -2,28 +2,46 @@
   <v-app>
     <v-main>
       <v-card>
-        <v-card-title>Thống kê hàng hóa</v-card-title>
+        <v-card-title>Đơn hàng từ điêm tập kết</v-card-title>
 
         <v-card-text>
           <v-row>
             <v-col cols="12">
               <v-form>
                 <v-row>
-                  <v-col cols="6">
-                    <v-text-field
-                      v-model="fromDate"
-                      label="Từ ngày"
-                      type="date"
-                    ></v-text-field>
-                  </v-col>
-                  <v-col cols="6">
-                    <v-text-field
-                      v-model="toDate"
-                      label="Đến ngày"
-                      type="date"
-                    ></v-text-field>
+                  <v-col cols="12">
+                    <v-select
+                      v-model="selectedCollectionPoint2"
+                      :items="collectionPoints"
+                      label="Điểm tập kết"
+                      item-title="name"
+                    ></v-select>
                   </v-col>
                 </v-row>
+              </v-form>
+            </v-col>
+          </v-row>
+        </v-card-text>
+
+        <v-card-actions>
+          <v-btn color="primary" @click="getDataCollection">Lấy dữ liệu</v-btn>
+        </v-card-actions>
+
+        <v-data-table
+          :loading="loadCollection"
+          :items="itemsCollection"
+          :headers="headersCollection"
+        >
+        </v-data-table>
+      </v-card>
+
+      <v-card>
+        <v-card-title>Đơn hàng từ điểm giao dịch</v-card-title>
+
+        <v-card-text>
+          <v-row>
+            <v-col cols="12">
+              <v-form>
                 <v-row>
                   <v-col cols="12">
                     <v-select
@@ -34,7 +52,6 @@
                     ></v-select>
                   </v-col>
                 </v-row>
-
                 <v-row>
                   <v-col cols="12">
                     <v-select
@@ -51,10 +68,14 @@
         </v-card-text>
 
         <v-card-actions>
-          <v-btn color="primary" @click="getData">Lấy dữ liệu</v-btn>
+          <v-btn color="primary" @click="getDataTransaction">Lấy dữ liệu</v-btn>
         </v-card-actions>
 
-        <v-data-table :loading="loadData" :items="items" :headers="headers">
+        <v-data-table
+          :loading="loadTransaction"
+          :items="itemsTransaction"
+          :headers="headersTransaction"
+        >
         </v-data-table>
       </v-card>
     </v-main>
@@ -75,20 +96,14 @@ export default {
     return {
       selectedTransactionPoint: null, // 2 bien nay luu gia tri diem giao dich+ diem tap ket da chon trong form
       selectedCollectionPoint: null,
+      selectedCollectionPoint2: null,
       fromDate: new Date().toISOString().substr(0, 10), // Giá trị mặc định là ngày hôm nay
       toDate: new Date().toISOString().substr(0, 10), // Giá trị mặc định là ngày hôm nay
-      loadData: false,
-      // bien collections luu cac diem tapj ket
-      // colletions: [
-      //   { id: 1, state: "Hà Nội" },
-      //   { id: 2, state: "Hải Phòng" },
-      //   { id: 3, state: "Đà Nẵng" },
-      //   { id: 4, state: "TP HCM" },
-      // ],
-      // bien transactions ten cac diem giao dich thuoc diem tap ket da chon
+      loadCollection: false,
+      loadTransaction: false,
       transactions: [],
       // bien items luu thong tin don hang
-      items: [
+      itemsCollection: [
         {
           id: 1,
           pointOfSale: "Điểm giao dịch A",
@@ -105,16 +120,24 @@ export default {
           weight: 200,
           price: 200000,
         },
+      ],
+      itemsTransaction: [
         {
-          id: 3,
-          pointOfSale: "Điểm giao dịch C",
-          shippingTime: "4 ngày",
-          estimatedReceivedTime: "8 ngày",
-          weight: 300,
-          price: 300000,
+          id: 1,
+          pointOfSale: "Điểm giao dịch A",
+          shippingTime: "2 ngày",
+          weight: 100,
+          price: 100000,
+        },
+        {
+          id: 2,
+          pointOfSale: "Điểm giao dịch B",
+          shippingTime: "3 ngày",
+          weight: 200,
+          price: 200000,
         },
       ],
-      headers: [
+      headersTransaction: [
         {
           title: "ID",
           align: "start",
@@ -123,11 +146,18 @@ export default {
         },
         { title: "Điểm giao dịch", key: "pointOfSale", align: "end" },
         { title: "Thời gian gửi", key: "shippingTime", align: "end" },
+        { title: "Khối lượng (g)", key: "weight", align: "end" },
+        { title: "Giá", key: "price", align: "end" },
+      ],
+      headersCollection: [
         {
-          title: "Thời gian tối đa",
-          key: "estimatedReceivedTime",
-          align: "end",
+          title: "ID",
+          align: "start",
+          sortable: false,
+          key: "id",
         },
+        { title: "Điểm tập kết", key: "pointOfSale", align: "end" },
+        { title: "Thời gian gửi", key: "shippingTime", align: "end" },
         { title: "Khối lượng (g)", key: "weight", align: "end" },
         { title: "Giá", key: "price", align: "end" },
       ],
@@ -139,43 +169,21 @@ export default {
       required: true,
     },
   },
+  created() {
+    this.setup();
+  },
   methods: {
-    getData() {
-      this.loadData = true;
-
-      // Lấy thông tin từ điểm tập kết đã chọn
-      if (this.selectedTransactionPoint) {
-        if (this.selectedTransactionPoint == "Cầu Giấy")
-          this.items = [
-            {
-              id: 1,
-              pointOfSale: "144 Xuân Thủy",
-              shippingTime: "2 ngày",
-              estimatedReceivedTime: "4 ngày",
-              weight: 200,
-              price: 100000,
-            },
-            {
-              id: 2,
-              pointOfSale: "75 Hồ Tùng Mậu",
-              shippingTime: "3 ngày",
-              estimatedReceivedTime: "6 ngày",
-              weight: 200,
-              price: 200000,
-            },
-            {
-              id: 3,
-              pointOfSale: "123 Trần Duy Hưng",
-              shippingTime: "4 ngày",
-              estimatedReceivedTime: "8 ngày",
-              weight: 300,
-              price: 300000,
-            },
-          ];
-        // Thực hiện các thao tác khác với thông tin đã lấy
+    getDataCollection() {},
+    getDataTransaction() {},
+    setup() {
+      try {
+        this.selectedCollectionPoint = this.collectionPoints[0].name;
+        this.selectedCollectionPoint2 = this.collectionPoints[0].name;
+        this.updateTransactions(this.selectedCollectionPoint);
+        this.selectedTransactionPoint = this.transactions[0].name;
+      } catch (error) {
+        console.log(error);
       }
-
-      this.loadData = false;
     },
     updateTransactions(selectedCollectionPoint) {
       this.transactions = this.collectionPoints.find(
