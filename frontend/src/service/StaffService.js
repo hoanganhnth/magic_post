@@ -79,7 +79,9 @@ export const StaffService = {
     try {
       const { data } = await useApiPrivate().post(
         `/api/index/confirmShipmentSuOrCa`,
-        payload
+        {
+          shipmentId: payload,
+        }
       );
       return data;
     } catch (error) {
@@ -127,6 +129,21 @@ export const StaffService = {
     }
   },
 
+  async getShipmentCollectionByStatus(payload) {
+    try {
+      const status = payload;
+      const { data } = await useApiPrivate().get(
+        `/api/index/getShipmentCollectionByStatus`,
+        {
+          params: { status },
+        }
+      );
+      return data;
+    } catch (error) {
+      throw error.message;
+    }
+  },
+
   async createShipmentCancel(payload) {
     try {
       const status = payload;
@@ -156,7 +173,9 @@ export const StaffService = {
     try {
       const { data } = await useApiPrivate().post(
         `/api/index/confirmShipmentFromTPToCP`,
-        payload
+        {
+          shipmentId: payload,
+        }
       );
       return data;
     } catch (error) {
@@ -180,7 +199,9 @@ export const StaffService = {
     try {
       const { data } = await useApiPrivate().post(
         `/api/index/confirmShipmentFromCPToCP`,
-        payload
+        {
+          shipmentId: payload,
+        }
       );
       return data;
     } catch (error) {
@@ -192,7 +213,9 @@ export const StaffService = {
     try {
       const { data } = await useApiPrivate().post(
         `/api/index/createShipmentFromCPToTP`,
-        payload
+        {
+          shipmentId: payload,
+        }
       );
       return data;
     } catch (error) {

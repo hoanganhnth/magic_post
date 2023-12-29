@@ -8,12 +8,12 @@
       </template>
       <template v-slot:[`item.add`]="{ item }">
         <div>
-          <div v-if="item.status === 'Gửi điểm tập kết'">
+          <div v-if="item.status === 'Arrived Destination To CollectionPoint'">
             <v-btn class="button" @click="addItemCollection(item)">
               Chuyển đơn hàng đến điểm tập kết
             </v-btn>
           </div>
-          <div v-if="item.status === 'Nhận từ điểm tập kết'">
+          <div v-if="item.status === 'Arrived Destination To TransactionPoint'">
             <v-btn class="button" @click="addItem(item)">
               Chuyển đơn hàng đến điểm giao dịch đích
             </v-btn>
@@ -78,6 +78,7 @@
 </template>
 
 <script>
+import { StaffService } from "../../../service/StaffService";
 export default {
   name: "CreatOrder",
   data() {
@@ -144,14 +145,41 @@ export default {
       else if (status === "Chuyển thất bại") return "red";
       else return "orange";
     },
-    addItem(item) {
+    async addItem(item) {
       this.dialog = true;
       this.itemDelete = item;
+      try {
+        const res1 = await StaffService.createShipmentFromCPToTP(
+          this.itemDelete.id
+        );
+        if (res1.error_code === 0) {
+          console.log(res1.data);
+          this.$emit("addOrder", this.itemDelete);
+          console.log("ok");
+          //xóa cái cũ ở đây
+        }
+        this.dialogCollection = false;
+      } catch (error) {
+        console.error(error);
+      }
     },
-    addItemCollection(item) {
+    async addItemCollection(item) {
       this.dialogCollection = true;
       this.itemDelete = item;
-      console.log(item);
+      try {
+        const res1 = await StaffService.createShipmentFromCPToCP(
+          this.itemDelete.id
+        );
+        if (res1.error_code === 0) {
+          console.log(res1.data);
+          this.$emit("addOrder", this.itemDelete);
+          console.log("ok");
+          //xóa cái cũ ở đây
+        }
+        this.dialogCollection = false;
+      } catch (error) {
+        console.error(error);
+      }
     },
     addOrder(itemDelete) {
       this.$emit("addOrder", itemDelete);

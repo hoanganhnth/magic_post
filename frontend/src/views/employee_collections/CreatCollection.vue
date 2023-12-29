@@ -21,6 +21,7 @@
 import ConfirmOrders from "./component/ConfirmOrders.vue";
 import CreatComponent from "./component/CreatComponent.vue";
 import Navbar from "./component/Navbar.vue";
+import { StaffService } from "../../service/StaffService";
 export default {
   name: "CreatCollection",
   components: {
@@ -31,90 +32,8 @@ export default {
   data: function () {
     return {
       loadData: false,
-      shipments: [
-        // đây là list các đơn hàng cần thêm
-        {
-          id: 8,
-          fee: "200",
-          created_at: "20/12/2023",
-          goods_weight: "500g",
-          status: "Gửi điểm tập kết",
-        },
-        {
-          id: 9,
-          fee: "250",
-          created_at: "20/12/2023",
-          goods_weight: "400g",
-          status: "Gửi điểm tập kết",
-        },
-        {
-          id: 121,
-          fee: "200",
-          created_at: "20/12/2023",
-          goods_weight: "500g",
-          status: "Gửi điểm tập kết",
-        },
-      ],
-      orderItems: [
-        // đây là list các đơn hàng cần xác nhận
-        {
-          id: 1,
-          fee: "100",
-          created_at: "20/12/2023",
-          goods_weight: "500g",
-          status: "Gửi điểm tập kết",
-        },
-        {
-          id: 2,
-          fee: "200",
-          created_at: "20/12/2023",
-          goods_weight: "500g",
-          status: "Nhận từ điểm tập kết",
-        },
-        {
-          id: 3,
-          fee: "200",
-          created_at: "20/12/2023",
-          goods_weight: "500g",
-          status: "Nhận từ điểm tập kết",
-        },
-        {
-          id: 4,
-          fee: "200",
-          created_at: "20/12/2023",
-          goods_weight: "500g",
-          status: "Nhận từ điểm tập kết",
-        },
-        {
-          id: 5,
-          fee: "200",
-          created_at: "20/12/2023",
-          goods_weight: "500g",
-          status: "Nhận từ điểm tập kết",
-        },
-        {
-          id: 6,
-          fee: "200",
-          created_at: "20/12/2023",
-          goods_weight: "500g",
-          status: "Nhận từ điểm tập kết",
-        },
-        {
-          id: 7,
-          fee: "200",
-          created_at: "20/12/2023",
-          goods_weight: "500g",
-          status: "Nhận từ điểm tập kết",
-        },
-        {
-          id: 8,
-          fee: "200",
-          created_at: "20/12/2023",
-          goods_weight: "500g",
-          status: "Nhận từ điểm tập kết",
-        },
-        // Add more items as needed
-      ],
+      shipments: [],
+      orderItems: [],
     };
   },
 
@@ -122,25 +41,69 @@ export default {
     this.initialize();
   },
   methods: {
-    initialize() {},
-    // async initialize() {
-    //   try {
-    //     const res = await StaffService.getShipmentTransaction();
-    //     if (res.error_code === 0) {
-    //       this.shipments = res.data.relatedShipments;
-    //       console.log(this.shipments);
-    //     }
-    //   } catch (error) {
-    //     console.error(error);
-    //   }
-    // },
-    confirmOrder(data) {
-      (this.loadData = true),
-        (this.orderItems = this.orderItems.filter(function (items) {
-          return items !== data;
-        }));
-      this.shipments.push(data);
-      console.log(data);
+    async initialize() {
+      try {
+        let payload1 = "Receive";
+        const res1 = await StaffService.getShipmentCollectionByStatus(payload1);
+        if (res1.error_code === 0) {
+          this.shipments = res1.data.relatedShipments;
+          // console.log(this.shipments);
+        }
+      } catch (error) {
+        console.error(error);
+      }
+      try {
+        const payload2 = "Waiting";
+        const res2 = await StaffService.getShipmentCollectionByStatus(payload2);
+        if (res2.error_code === 0) {
+          this.orderItems = res2.data.relatedShipments;
+          // console.log(this.orderItems);
+        } else {
+          console.log(res2.message);
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    },
+    async confirmOrder(data) {
+      if (data.status === "Shipped from CollectionPoint") {
+        try {
+          const shipmentId = data.id;
+          const res = await StaffService.confirmShipmentFromCPToCP(shipmentId);
+          if (res.error_code === 0) {
+            data.status = res.data.shipment_update.status;
+            this.shipments.push(data);
+            (this.loadData = true),
+              (this.orderItems = this.orderItems.filter(function (items) {
+                return items !== data;
+              }));
+            console.log(res.message);
+          } else {
+            console.log(res.message);
+          }
+        } catch (error) {
+          console.error(error);
+        }
+      } else if (data.status == "Shipped from TransactionPoint") {
+        try {
+          const shipmentId = data.id;
+          const res = await StaffService.confirmShipmentFromTPToCP(shipmentId);
+          if (res.error_code === 0) {
+            data.status = res.data.shipment_update.status;
+            this.shipments.push(data);
+            (this.loadData = true),
+              (this.orderItems = this.orderItems.filter(function (items) {
+                return items !== data;
+              }));
+            console.log(res.message);
+          } else {
+            console.log(res.message);
+          }
+        } catch (error) {
+          console.error(error);
+        }
+      }
+
       this.loadData = false;
     },
 

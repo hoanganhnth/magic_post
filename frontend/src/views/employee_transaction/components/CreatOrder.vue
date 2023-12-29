@@ -5,12 +5,12 @@
     <v-data-table :loading="loadData" :items="shipments" :headers="headers">
       <template v-slot:[`item.add`]="{ item }">
         <div>
-          <div v-if="item.status === 'Preparing'">
+          <div v-if="item.status === 'Preparing' || item.status === 'Cancel'">
             <v-btn class="button" @click="addItemCollection(item)">
               Chuyển đơn hàng đến điểm tập kết
             </v-btn>
           </div>
-          <div v-if="item.status === 'Nhận từ điểm tập kết'">
+          <div v-if="item.status === 'ArrivedDestinationToU'">
             <v-btn class="button" @click="addItem(item)">
               Chuyển đơn hàng đến người nhận
             </v-btn>
@@ -179,6 +179,7 @@ export default {
     },
     saveDelete() {
       this.dialogDelete = false;
+      this.$emit("addOrder", this.itemDelete);
     },
     deleteOrder() {
       this.dialogDelete = true;

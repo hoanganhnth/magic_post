@@ -129,7 +129,7 @@ export default {
       if (newVal === "leader") {
         this.$router.push({ name: "Boss" });
       } else if (newVal === "Collection staff") {
-        this.$router.push({ name: "Staff Collection" });
+        this.$router.push({ name: "Employee Collection" });
       } else if (newVal === "Transaction staff") {
         this.$router.push({ name: "Employee Transaction" });
       } else if (newVal === "Head of transaction point") {

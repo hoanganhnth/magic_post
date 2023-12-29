@@ -160,10 +160,7 @@ router.beforeEach((to, from, next) => {
           }
           break;
         case "Collection staff":
-          if (
-            to.name === "Employee Collection" ||
-            to.name === "Employee Collection"
-          ) {
+          if (to.name === "Employee Collection") {
             next();
           } else {
             next({ name: "Employee Collection" });

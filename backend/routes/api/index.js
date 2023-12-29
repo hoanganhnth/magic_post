@@ -46,7 +46,8 @@ router.post('/createShipmentFromCPToCP',isCollectionStaff,  shipmentControllers.
 router.post('/confirmShipmentFromCPToCP',isCollectionStaff,  shipmentControllers.confirmShipmentFromCPToCP)
 router.post('/confirmShipmentFromTPToCP',isCollectionStaff,  shipmentControllers.confirmShipmentFromTPToCP)
 router.post('/createShipmentFromCPToTP',isCollectionStaff,  shipmentControllers.createShipmentFromCPToTP)
+router.get('/getShipmentCollectionBystatus',isCollectionStaff,  shipmentControllers.getShipmentCollectionBystatus)
 
-router.post('/getShipmentCollection',isCollectionHead,  shipmentControllers.getShipmentCollection)
+router.get('/getShipmentCollection',isCollectionStaff,  shipmentControllers.getShipmentCollection)
 
 module.exports = router

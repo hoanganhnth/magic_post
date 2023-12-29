@@ -41,8 +41,7 @@ const experience = [
   {
     id: 3,
     date: "AN TOÀN BƯU GỬI",
-    position:
-      "An toàn bưu gửi là một vấn đề quan trọng cần được quan tâm.",
+    position: "An toàn bưu gửi là một vấn đề quan trọng cần được quan tâm.",
     description: [
       {
         id: 1,
@@ -65,8 +64,7 @@ const experience = [
   {
     id: 4,
     date: "THỜI GIAN TOÀN TRÌNH BƯU GỬI",
-    position:
-      "Đảm bảo giao hàng đến tay khách hàng đúng thời hạn.",
+    position: "Đảm bảo giao hàng đến tay khách hàng đúng thời hạn.",
     description: [
       {
         id: 1,
@@ -105,8 +103,7 @@ const experience = [
   {
     id: 6,
     date: "SỰ HÀI LÒNG CỦA KHÁCH HÀNG",
-    position:
-      "Tập trung vào việc cải thiện sự hài lòng của khách hàng.",
+    position: "Tập trung vào việc cải thiện sự hài lòng của khách hàng.",
     description: [
       {
         id: 1,

@@ -45,9 +45,20 @@ const productSchema = new mongoose.Schema({
       delete ret.__v;
     }
   });
-
+  const shipmentStatus = {
+    Preparing: 'Preparing',
+    ShippedFromCollectionPoint: 'Shipped from CollectionPoint',
+    ShippedFromTransactionPoint: 'Shipped from TransactionPoint',
+    ArrivedDestinationToC: 'Arrived Destination To CollectionPoint',
+    ArrivedDestinationToT: 'Arrived Destination To TransactionPoint',
+    ArrivedDestinationToU: 'Arrived Destination To User',
+    Delivering: 'Delivering',
+    Successed: 'Successed',
+    Canceled: 'Canceled'
+  };
+  
   const shipmentSchema = new mongoose.Schema({
-    status: { type: String, enum: ['Preparing', 'Shipped', 'ArrivedDestination', 'Delivering', 'Successed', 'Canceled'], default: 'Preparing' },
+    status: { type: String, enum: Object.values(shipmentStatus), default: shipmentStatus.Preparing },
     now_address: { type: String },
     user_address_id: { type: mongoose.Schema.Types.ObjectId, ref: 'UserAddress', required: true, },
     fee: { type: String, required: true },
@@ -58,16 +69,28 @@ const productSchema = new mongoose.Schema({
     goods_weight: { type: String, required: true },
   });
 
+  const transactionStatus = {
+    Transfer: 'Transfer',
+    Receive: 'Receive',
+    Waiting: 'Waiting',
+    Cancel: 'Cancel',
+    Return: 'Return'
+  };
   
   const transactionShipmentSchema = new mongoose.Schema({
     transactionPoint_id: {type: mongoose.Schema.Types.ObjectId, ref: 'TransactionPoint', required: true,  },
     shipment_id:  {type: mongoose.Schema.Types.ObjectId, ref: 'Shipment', required: true  },
-    status:  { type: String, enum: ['Transfer', 'Receive', 'Waiting', 'Cancel', 'Return'], default: 'Receive'},
+    status:  { type: String, enum: Object.values(transactionStatus), default: transactionStatus.Receive },
   });
+  const collectionStatus = {
+    Transfer: 'Transfer',
+    Receive: 'Receive',
+    Waiting: 'Waiting'
+  };
   const collectionShipmentSchema = new mongoose.Schema({
     collectionPoint_id: {type: mongoose.Schema.Types.ObjectId, ref: 'CollectionPoint', required: true  },
     shipment_id:  {type: mongoose.Schema.Types.ObjectId, ref: 'Shipment', required: true  },
-    status:  { type: String, enum: ['Transfer', 'Receive', 'Waiting'], default: 'Receive' },
+    status:  { type: String, enum: Object.values(collectionStatus), default: collectionStatus.Receive  },
   });
 
   const routeSchema = new mongoose.Schema({
@@ -173,5 +196,8 @@ const productSchema = new mongoose.Schema({
     Shipment,
     CollectionShipment,
     TransactionShipment,
-    Route
+    Route,
+    shipmentStatus,
+    transactionStatus,
+    collectionStatus
   };

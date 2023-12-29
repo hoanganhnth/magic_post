@@ -71,7 +71,7 @@ export default {
       }
     },
     async confirmOrder(data) {
-      console.log(data);
+      // console.log(data);
       try {
         const shipmentId = data.id;
         const res = await StaffService.confirmShipmentFromCPToTP(shipmentId);

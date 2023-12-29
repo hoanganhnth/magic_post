@@ -35,7 +35,7 @@
   <div class="bg-dark text-white">
     <div class="d-flex justify-content-around">
       <div>
-        <br>
+        <br />
         Magic<span class="prim">Post</span>
         <h5>CÔNG TY TNHH MỘT THÀNH VIÊN CHUYỂN PHÁT NHANH</h5>
         <div class="h7">
@@ -46,7 +46,7 @@
         </div>
       </div>
       <div>
-        <br><br>
+        <br /><br />
         <h5>THÔNG TIN LIÊN HỆ</h5>
         <div class="h7">
           <ul class="nav flex-column">
@@ -59,7 +59,7 @@
         </div>
       </div>
       <div>
-        <br><br>
+        <br /><br />
         <h5>TẢI ỨNG DỤNG</h5>
         <div class="d-flex flex-row">
           <img
