@@ -153,7 +153,6 @@ export default {
           this.itemDelete.id
         );
         if (res1.error_code === 0) {
-          console.log(res1.data);
           this.$emit("addOrder", this.itemDelete);
           console.log("ok");
           //xóa cái cũ ở đây
@@ -164,14 +163,12 @@ export default {
       }
     },
     async addItemCollection(item) {
-      this.dialogCollection = true;
       this.itemDelete = item;
       try {
         const res1 = await StaffService.createShipmentFromCPToCP(
           this.itemDelete.id
         );
         if (res1.error_code === 0) {
-          console.log(res1.data);
           this.$emit("addOrder", this.itemDelete);
           console.log("ok");
           //xóa cái cũ ở đây

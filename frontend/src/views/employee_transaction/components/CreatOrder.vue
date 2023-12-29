@@ -10,7 +10,7 @@
               Chuyển đơn hàng đến điểm tập kết
             </v-btn>
           </div>
-          <div v-if="item.status === 'ArrivedDestinationToU'">
+          <div v-if="item.status === 'Arrived Destination To User'">
             <v-btn class="button" @click="addItem(item)">
               Chuyển đơn hàng đến người nhận
             </v-btn>
@@ -177,9 +177,19 @@ export default {
       this.dialogCollection = false;
       this.dialogDelete = false;
     },
-    saveDelete() {
+    async saveDelete() {
       this.dialogDelete = false;
       this.$emit("addOrder", this.itemDelete);
+      try {
+        const res1 = await StaffService.deleteNewShipment(this.itemDelete.id);
+        if (res1.error_code === 0) {
+          this.$emit("addOrder", this.itemDelete);
+          console.log("ok");
+          //xóa cái cũ ở đây
+        }
+      } catch (error) {
+        console.error(error);
+      }
     },
     deleteOrder() {
       this.dialogDelete = true;
@@ -198,22 +208,33 @@ export default {
       else if (status === "Chuyển thất bại") return "red";
       else return "orange";
     },
-    addItem(item) {
+    async addItem(item) {
       this.dialog = true;
       this.itemDelete = item;
       console.log(item);
+
+      try {
+        const res1 = await StaffService.createShipmentToUser(
+          this.itemDelete.id
+        );
+        if (res1.error_code === 0) {
+          this.$emit("addOrder", this.itemDelete);
+          console.log("ok");
+          //xóa cái cũ ở đây
+        }
+        this.dialogCollection = false;
+      } catch (error) {
+        console.error(error);
+      }
     },
     async addItemCollection(item) {
-      this.dialogCollection = false;
       this.itemEdit = item;
       this.itemDelete = item;
       try {
         const res1 = await StaffService.createShipmentFromTPToCP(
           this.itemDelete.id
         );
-        console.log(res1);
         if (res1.error_code === 0) {
-          console.log(res1.data);
           this.$emit("addOrder", this.itemDelete);
           console.log("ok");
           //xóa cái cũ ở đây

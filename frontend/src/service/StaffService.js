@@ -19,7 +19,9 @@ export const StaffService = {
     try {
       const { data } = await useApiPrivate().delete(
         `/api/index/deleteNewShipment`,
-        payload
+        {
+          shipmentId: payload,
+        }
       );
       return data;
     } catch (error) {
@@ -56,7 +58,9 @@ export const StaffService = {
     try {
       const { data } = await useApiPrivate().post(
         `/api/index/createShipmentToUser`,
-        payload
+        {
+          shipmentId: payload,
+        }
       );
       return data;
     } catch (error) {
