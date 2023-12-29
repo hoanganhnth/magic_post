@@ -17,7 +17,7 @@
         </div>
         <v-btn @click="search" color="primary">Xác nhận</v-btn>
       </form>
-      <div v-if="dialog" max-width="600px" style="margin-top: 20px">
+      <div v-if="dialog" style="margin-top: 20px">
         <card-infomation :idOder="idOrder"></card-infomation>
       </div>
     </PageSection>

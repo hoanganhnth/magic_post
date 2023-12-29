@@ -6,6 +6,15 @@
       </p>
     </header>
     <nav class="dashboard-nav-list">
+      <v-img
+        style="margin-left: 40px"
+        :width="150"
+        aspect-ratio="9/9"
+        cover
+        src="../../assets/images/boss.png"
+      >
+      </v-img>
+      <p style="margin-left: 70px; color: aliceblue">{{ userName }}</p>
       <router-link to="/boss"
         ><a href="#" class="dashboard-nav-item"
           ><i class="fas fa-box-open"></i> Quản lý đơn hàng
@@ -37,6 +46,11 @@
 import { useAuthStore } from "../../store/auth";
 export default {
   name: "NavBar",
+  data() {
+    return {
+      userName: "@NguyenB",
+    };
+  },
   methods: {
     async logout() {
       try {

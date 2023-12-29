@@ -99,10 +99,10 @@
             </v-col>
           </v-row>
         </v-form>
-        <br>
+        <br />
         <div class="pdf">
-        <v-btn @click="dowloadPDF" color="primary">In vận đơn</v-btn>
-      </div>
+          <v-btn @click="dowloadPDF" color="primary">In vận đơn</v-btn>
+        </div>
       </v-col>
     </v-row>
   </v-app>
@@ -110,7 +110,7 @@
 
 <script>
 import { StaffService } from "../../../service/StaffService";
-import jspdf  from 'jspdf'; 
+import jspdf from "jspdf";
 export default {
   data() {
     return {
@@ -146,14 +146,14 @@ export default {
   },
   methods: {
     dowloadPDF() {
-      const logo = require('@/assets/images/sos.png');
+      const logo = require("@/assets/images/sos.png");
 
       const doc = new jspdf();
       var imgLogo = new Image();
       imgLogo.src = logo;
-      doc.addImage(imgLogo, 'PNG', 0, 0, 200, 141);
+      doc.addImage(imgLogo, "PNG", 0, 0, 200, 141);
       doc.save("Vận đơn.pdf");
-    }, 
+    },
     async submit() {
       // this.id = "12344A12D";
       this.displayedInfo.receiver_username = this.receiver.name;
