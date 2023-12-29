@@ -191,9 +191,9 @@ export default {
         console.error(error);
       }
     },
-    deleteOrder() {
+    deleteOrder(item) {
       this.dialogDelete = true;
-      this.$emit("addOrder", this.itemDelete);
+      this.itemDelete = item;
     },
     save() {
       this.dialog = false;
