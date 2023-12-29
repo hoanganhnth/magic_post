@@ -25,6 +25,7 @@ export default {
           key: "id",
         },
         { title: "Thời gian gửi", key: "created_at", align: "center" },
+        { title: "Cập nhật lúc", key: "updated_at", align: "center" },
         { title: "Khối lượng (g)", key: "goods_weight", align: "center" },
         { title: "Giá", key: "fee", align: "center" },
         { title: "Trạng thái đơn hàng", key: "status", align: "center" },

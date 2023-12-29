@@ -83,6 +83,7 @@
 </template>
 
 <script>
+import { LeadService } from "../../../service/LeadService";
 export default {
   watch: {
     selectedCollectionPoint: function (newCollectionPoint) {
@@ -103,40 +104,8 @@ export default {
       loadTransaction: false,
       transactions: [],
       // bien items luu thong tin don hang
-      itemsCollection: [
-        {
-          id: 1,
-          pointOfSale: "Điểm giao dịch A",
-          shippingTime: "2 ngày",
-          estimatedReceivedTime: "4 ngày",
-          weight: 100,
-          price: 100000,
-        },
-        {
-          id: 2,
-          pointOfSale: "Điểm giao dịch B",
-          shippingTime: "3 ngày",
-          estimatedReceivedTime: "6 ngày",
-          weight: 200,
-          price: 200000,
-        },
-      ],
-      itemsTransaction: [
-        {
-          id: 1,
-          pointOfSale: "Điểm giao dịch A",
-          shippingTime: "2 ngày",
-          weight: 100,
-          price: 100000,
-        },
-        {
-          id: 2,
-          pointOfSale: "Điểm giao dịch B",
-          shippingTime: "3 ngày",
-          weight: 200,
-          price: 200000,
-        },
-      ],
+      itemsCollection: [],
+      itemsTransaction: [],
       headersTransaction: [
         {
           title: "ID",
@@ -144,10 +113,11 @@ export default {
           sortable: false,
           key: "id",
         },
-        { title: "Điểm giao dịch", key: "pointOfSale", align: "end" },
-        { title: "Thời gian gửi", key: "shippingTime", align: "end" },
-        { title: "Khối lượng (g)", key: "weight", align: "end" },
-        { title: "Giá", key: "price", align: "end" },
+        { title: "Điểm tập kết", key: "transactionName", align: "end" },
+        { title: "Thời gian gửi", key: "created_at", align: "end" },
+        { title: "Cập nhật lúc", key: "updated_at", align: "end" },
+        { title: "Khối lượng (g)", key: "goods_weight", align: "end" },
+        { title: "Giá", key: "fee", align: "end" },
       ],
       headersCollection: [
         {
@@ -156,10 +126,11 @@ export default {
           sortable: false,
           key: "id",
         },
-        { title: "Điểm tập kết", key: "pointOfSale", align: "end" },
-        { title: "Thời gian gửi", key: "shippingTime", align: "end" },
-        { title: "Khối lượng (g)", key: "weight", align: "end" },
-        { title: "Giá", key: "price", align: "end" },
+        { title: "Điểm giao dịch", key: "collectionName", align: "end" },
+        { title: "Thời gian gửi", key: "created_at", align: "end" },
+        { title: "Cập nhật lúc", key: "updated_at", align: "end" },
+        { title: "Khối lượng (g)", key: "goods_weight", align: "end" },
+        { title: "Giá", key: "fee", align: "end" },
       ],
     };
   },
@@ -173,14 +144,42 @@ export default {
     this.setup();
   },
   methods: {
-    getDataCollection() {},
-    getDataTransaction() {},
+    async getDataCollection() {
+      try {
+        const res = await LeadService.getShipmentByCollectionPoint(
+          this.selectedCollectionPoint2
+        );
+        if (res.error_code === 0) {
+          // console.log(res.data);
+          this.itemsCollection = res.data.relatedShipments;
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    },
+    async getDataTransaction() {
+      try {
+        const res = await LeadService.getShipmentByTransactionPoint(
+          this.selectedTransactionPoint
+        );
+        if (res.error_code === 0) {
+          // console.log(res.data);
+          this.itemsTransaction = res.data.relatedShipments;
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    },
     setup() {
       try {
-        this.selectedCollectionPoint = this.collectionPoints[0].name;
-        this.selectedCollectionPoint2 = this.collectionPoints[0].name;
-        this.updateTransactions(this.selectedCollectionPoint);
-        this.selectedTransactionPoint = this.transactions[0].name;
+        // this.selectedCollectionPoint = this.collectionPoints[0].name;
+        // this.selectedCollectionPoint2 = this.collectionPoints[0].name;
+        // this.updateTransactions(this.selectedCollectionPoint);
+        console.log(this.transactions);
+        console.log(this.collectionPoints);
+        if (this.transactions[0]) {
+          this.selectedTransactionPoint = this.transactions[0].name;
+        }
       } catch (error) {
         console.log(error);
       }

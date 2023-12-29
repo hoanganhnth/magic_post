@@ -55,6 +55,36 @@ export const LeadService = {
     }
   },
 
+  async getShipmentByCollectionPoint(payload) {
+    try {
+      const collectionPointName = payload;
+      const { data } = await useApiPrivate().get(
+        `/api/index/getShipmentByCollectionPoint`,
+        {
+          params: { collectionPointName },
+        }
+      );
+      return data;
+    } catch (error) {
+      throw error.message;
+    }
+  },
+
+  async getShipmentByTransactionPoint(payload) {
+    try {
+      const transactionPointName = payload;
+      const { data } = await useApiPrivate().get(
+        `/api/index/getShipmentByTransactionPoint`,
+        {
+          params: { transactionPointName },
+        }
+      );
+      return data;
+    } catch (error) {
+      throw error.message;
+    }
+  },
+
   async getAllRole() {
     try {
       const { data } = await useApiPrivate().get(`/api/index/allRole`);

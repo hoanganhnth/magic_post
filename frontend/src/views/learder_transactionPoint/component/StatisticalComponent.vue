@@ -2,7 +2,9 @@
   <v-app>
     <v-main>
       <v-card>
-        <v-card-title>Thống kê hàng hóa</v-card-title>
+        <v-card-title>
+          Thống kê hàng hóa tại {{ transactionPoint.name }}
+        </v-card-title>
 
         <v-card-text>
           <v-row>
@@ -47,6 +49,11 @@ export default {
       // Lưu ý: Bạn có thể cần thay đổi logic dưới đây để phản ánh các yêu cầu của bạn
       this.updateTransactions(newCollectionPoint);
     },
+    shipments(newVal, oldVal) {
+      if (newVal !== oldVal) {
+        this.initialize();
+      }
+    },
   },
 
   name: "StatisticalComponent",
@@ -67,32 +74,7 @@ export default {
       // bien transactions ten cac diem giao dich thuoc diem tap ket da chon
       transactions: [],
       // bien items luu thong tin don hang
-      items: [
-        {
-          id: 1,
-          pointOfSale: "Điểm giao dịch A",
-          shippingTime: "2 ngày",
-          estimatedReceivedTime: "4 ngày",
-          weight: 100,
-          price: 100000,
-        },
-        {
-          id: 2,
-          pointOfSale: "Điểm giao dịch B",
-          shippingTime: "3 ngày",
-          estimatedReceivedTime: "6 ngày",
-          weight: 200,
-          price: 200000,
-        },
-        {
-          id: 3,
-          pointOfSale: "Điểm giao dịch C",
-          shippingTime: "4 ngày",
-          estimatedReceivedTime: "8 ngày",
-          weight: 300,
-          price: 300000,
-        },
-      ],
+      items: [],
       headers: [
         {
           title: "ID",
@@ -100,20 +82,30 @@ export default {
           sortable: false,
           key: "id",
         },
-        { title: "Điểm giao dịch", key: "pointOfSale", align: "end" },
-        { title: "Thời gian gửi", key: "shippingTime", align: "end" },
-        {
-          title: "Thời gian tối đa",
-          key: "estimatedReceivedTime",
-          align: "end",
-        },
-        { title: "Khối lượng (g)", key: "weight", align: "end" },
-        { title: "Giá", key: "price", align: "end" },
+        { title: "Thời gian gửi", key: "created_at", align: "end" },
+        { title: "Cập nhật lúc", key: "updated_at", align: "end" },
+        { title: "Khối lượng (g)", key: "goods_weight", align: "end" },
+        { title: "Giá", key: "fee", align: "end" },
       ],
     };
   },
-
+  created() {
+    this.initialize();
+  },
+  props: {
+    shipments: {
+      type: Array,
+      required: true,
+    },
+    transactionPoint: {
+      type: Array,
+      required: true,
+    },
+  },
   methods: {
+    initialize() {
+      this.items = this.shipments;
+    },
     getData() {
       this.loadData = true;
 

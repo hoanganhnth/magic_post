@@ -27,13 +27,15 @@ router.get('/getAllPoint', isAdmin,  locationControllers.getAllPoint)
 router.delete('/deleteTransactionPoint', isAdmin,  locationControllers.deleteTransactionPoint)
 router.delete('/deleteCollectionPoint', isAdmin,  locationControllers.deleteCollectionPoint)
 router.delete('/deleteShipment', isAdmin,  shipmentControllers.deleteShipment)
+router.get('/getShipmentByCollectionPoint', isAdmin,  shipmentControllers.getShipmentByCollectionPoint)
+router.get('/getShipmentByTransactionPoint', isAdmin,  shipmentControllers.getShipmentByTransactionPoint)
 
 
 router.post('/createNewShipment',isTransactionStaff,  shipmentControllers.createNewShipment)
 router.delete('/deleteNewShipment',isTransactionStaff,  shipmentControllers.deleteNewShipment)
 router.post('/createShipmentFromTPToCP',isTransactionStaff,  shipmentControllers.createShipmentFromTPToCP)
-router.get('/getShipmentTransaction',isTransactionStaff,  shipmentControllers.getShipmentTransaction)
-router.get('/getShipmentTransactionBystatus',isTransactionStaff,  shipmentControllers.getShipmentTransactionBystatus)
+router.get('/getShipmentTransaction',auth,  shipmentControllers.getShipmentTransaction)
+router.get('/getShipmentTransactionBystatus',auth,  shipmentControllers.getShipmentTransactionBystatus)
 router.post('/confirmShipmentSuOrCa',isTransactionStaff,  shipmentControllers.confirmShipmentSuOrCa)
 router.post('/createShipmentToUser',isTransactionStaff,  shipmentControllers.createShipmentToUser)
 router.post('/confirmShipmentFromCPToTP',isTransactionStaff,  shipmentControllers.confirmShipmentFromCPToTP)
@@ -46,8 +48,8 @@ router.post('/createShipmentFromCPToCP',isCollectionStaff,  shipmentControllers.
 router.post('/confirmShipmentFromCPToCP',isCollectionStaff,  shipmentControllers.confirmShipmentFromCPToCP)
 router.post('/confirmShipmentFromTPToCP',isCollectionStaff,  shipmentControllers.confirmShipmentFromTPToCP)
 router.post('/createShipmentFromCPToTP',isCollectionStaff,  shipmentControllers.createShipmentFromCPToTP)
-router.get('/getShipmentCollectionBystatus',isCollectionStaff,  shipmentControllers.getShipmentCollectionBystatus)
+router.get('/getShipmentCollectionBystatus',auth,  shipmentControllers.getShipmentCollectionBystatus)
 
-router.get('/getShipmentCollection',isCollectionStaff,  shipmentControllers.getShipmentCollection)
+router.get('/getShipmentCollection',auth,  shipmentControllers.getShipmentCollection)
 
 module.exports = router

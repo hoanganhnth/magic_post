@@ -140,7 +140,6 @@ router.beforeEach((to, from, next) => {
       switch (storedRole) {
         case "leader":
           if (
-            to.name === "Boss" ||
             to.name === "Boss Employee" ||
             to.name === "Boss Collection" ||
             to.name === "Boss Statistical"

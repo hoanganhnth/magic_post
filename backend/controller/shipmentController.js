@@ -709,18 +709,19 @@ async function createShipmentCancel(req, res) {
 }
 
 async function getShipmentCollection(req, res) {
-  const {status} = req.body.status
-  if (!status) {
-    return res.status(400).json({error_code: 1, message: "Missing status" });
-  }
+  // const {status} = req.body.status
+  // if (!status) {
+  //   return res.status(400).json({error_code: 1, message: "Missing status" });
+  // }
   try {
     const permission = await Permission.findOne({name: req.user.permission})
     if (!permission) {
       return res.status(404).json({error_code: 1, message: "Permission not found" });
     }
+    const collectionPoint = await CollectionPoint.findById(permission.collectionPoint_id)
     const collectionShipment = await CollectionShipment.find({
       collectionPoint_id: permission.collectionPoint_id,
-      status: status,
+      // status: status,
     });
 
     const shipmentIds = collectionShipment.map(
@@ -731,7 +732,7 @@ async function getShipmentCollection(req, res) {
     const shipments = await Shipment.find({
       _id: { $in: shipmentIds },
     });
-    return req.status(200).json({error_code: 0, data: {shipments}})
+    return res.status(200).json({error_code: 0, data: {shipments, collectionPoint}})
   } catch (error) {
     console.error("Get shipment collection point error:", error);
     return res.status(500)
@@ -871,6 +872,71 @@ async function updatePoint(req, res)  {
   }
 }
 
+
+async function getShipmentByCollectionPoint(req, res) {
+  try {
+    const collectionPointName = req.query.collectionPointName;
+    if (!collectionPointName) {
+      return res.status(400).json({error_code: 1, message: "Missing collectionPoint" });
+    }
+    const collectionPoint = await CollectionPoint.findOne({name: collectionPointName});
+    // Tìm các shipment có _id giống với shipment_id trong danh sách đã lấy
+    const collectionShipments = await CollectionShipment.find({ collectionPoint_id: collectionPoint._id }, 'shipment_id');
+    const shipmentIds = collectionShipments.map(item => item.shipment_id);
+    const shipments = await Shipment.find({ _id: { $in: shipmentIds } });
+    const relatedShipments = await Promise.all(shipments.map(async (shipment) => {
+      return {
+        ...shipment.toObject(),
+        collectionName: collectionPointName,
+      };
+    }));
+    return res.status(200).json({error_code: 0, data: {relatedShipments }});
+  } catch (error) {
+    console.error("get shipment collection point error:", error);
+    return res
+      .status(500)
+      .json({error_code:1, message: "Could not get shipment collection point" });
+  }
+}
+
+async function getShipmentByTransactionPoint(req, res) {
+  try {
+    const transactionPointName = req.query.transactionPointName;
+    if (!transactionPointName) {
+      return res.status(400).json({error_code: 1, message: "Missing transactionPointName" });
+    }
+    const transactionPoint = await TransactionPoint.findOne({name: transactionPointName});
+    // Tìm các shipment có _id giống với shipment_id trong danh sách đã lấy
+    const transactionShipments = await TransactionShipment.find({ transactionPoint_id: transactionPoint._id }, 'shipment_id');
+    const shipmentIds = transactionShipments.map(item => item.shipment_id);
+    const shipments = await Shipment.find({ _id: { $in: shipmentIds } });
+    const relatedShipments = await Promise.all(shipments.map(async (shipment) => {
+      return {
+        ...shipment.toObject(),
+        transactionName: transactionPointName,
+      };
+    }));
+    return res.status(200).json({error_code: 0, data: {relatedShipments }});
+  } catch (error) {
+    console.error("get shipment transaction point error:", error);
+    return res
+      .status(500)
+      .json({error_code:1, message: "Could not get shipment transaction point" });
+  }
+}
+
+// async function caculatorTotalShipment(req, res) {
+//   try {
+//     const 
+//   } catch (error) {
+//     console.error("caculator Total Shipment error:", error);
+//     return res
+//       .status(500)
+//       .json({error_code:1, message: "Can not caculator Total Shipment" });
+//   }
+// }
+
+
 module.exports = {
   createNewShipment,
   deleteNewShipment,
@@ -890,6 +956,8 @@ module.exports = {
   searchShipment,
   getShipmentTransactionBystatus, 
   updatePoint,
-  getShipmentCollectionBystatus
+  getShipmentCollectionBystatus,
+  getShipmentByCollectionPoint,
+  getShipmentByTransactionPoint
 };
 

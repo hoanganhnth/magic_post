@@ -127,7 +127,7 @@ export default {
     },
     navigation(newVal) {
       if (newVal === "leader") {
-        this.$router.push({ name: "Boss" });
+        this.$router.push({ name: "Boss Statistical" });
       } else if (newVal === "Collection staff") {
         this.$router.push({ name: "Employee Collection" });
       } else if (newVal === "Transaction staff") {
