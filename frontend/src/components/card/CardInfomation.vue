@@ -14,7 +14,7 @@
           <v-icon id="icon" size="20" class="me-2">
             <i class="far fa-calendar-alt"></i>
           </v-icon>
-          <p style="font-weight: bold">Ngày gửi:</p>
+          <p style="font-weight: bold">Cập nhật lúc:</p>
           <p>{{ date }}</p>
         </v-col>
       </v-row>
@@ -94,6 +94,7 @@
 </template>
 
 <script>
+import { CustomerService } from "../../service/CustomerService";
 export default {
   props: {
     idOder: String,
@@ -117,6 +118,33 @@ export default {
       },
       date: "",
     };
+  },
+  created() {
+    this.initialize();
+  },
+  methods: {
+    async initialize() {
+      try {
+        const res = await CustomerService.searchShipment(this.idOder);
+        if (res.error_code === 0) {
+          console.log(res.data);
+          this.sender.name = res.data.address.sender_username;
+          this.sender.address = res.data.address.sender_address;
+          this.sender.phone = res.data.address.sender_phone;
+          this.receiver.name = res.data.address.sender_username;
+          this.receiver.address = res.data.address.sender_address;
+          this.receiver.phone = res.data.address.sender_phone;
+          this.order.weight = res.data.shipment.goods_weight;
+          this.order.name = res.data.shipment.name;
+          this.order.type = res.data.shipment.goods_type;
+          this.date = res.data.shipment.updated_at;
+
+          //gán thêm data vào đây
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    },
   },
 };
 </script>

@@ -83,9 +83,10 @@ export const StaffService = {
     try {
       const { data } = await useApiPrivate().post(
         `/api/index/confirmShipmentSuOrCa`,
-        {
-          shipmentId: payload,
-        }
+        payload
+        // {
+        //   shipmentId: payload,
+        // }
       );
       return data;
     } catch (error) {
@@ -111,6 +112,17 @@ export const StaffService = {
     try {
       const { data } = await useApiPrivate().get(
         `/api/index/getShipmentTransaction`
+      );
+      return data;
+    } catch (error) {
+      throw error.message;
+    }
+  },
+
+  async getShipmentDeliver() {
+    try {
+      const { data } = await useApiPrivate().get(
+        `/api/index/getShipmentDeliver`
       );
       return data;
     } catch (error) {

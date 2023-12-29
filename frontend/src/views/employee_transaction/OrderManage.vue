@@ -35,24 +35,24 @@ export default {
       shipments: [],
       orderItems: [],
       list_order: [
-        {
-          id: 1,
-          created_at: "21/10/2022",
-          goods_weight: "500g",
-          status: "Nhận từ điểm tập kết",
-        },
-        {
-          id: 2,
-          created_at: "21/10/2022",
-          goods_weight: "500g",
-          status: "Nhận từ điểm tập kết",
-        },
-        {
-          id: 3,
-          created_at: "21/10/2022",
-          goods_weight: "500g",
-          status: "Nhận từ điểm tập kết",
-        },
+        // {
+        //   id: 1,
+        //   created_at: "21/10/2022",
+        //   goods_weight: "500g",
+        //   status: "Nhận từ điểm tập kết",
+        // },
+        // {
+        //   id: 2,
+        //   created_at: "21/10/2022",
+        //   goods_weight: "500g",
+        //   status: "Nhận từ điểm tập kết",
+        // },
+        // {
+        //   id: 3,
+        //   created_at: "21/10/2022",
+        //   goods_weight: "500g",
+        //   status: "Nhận từ điểm tập kết",
+        // },
       ], // biến này lưu các đơn cần xác nhận thành công hay thất bại
     };
   },
@@ -92,6 +92,16 @@ export default {
       } catch (error) {
         console.error(error);
       }
+      try {
+        const res3 = await StaffService.getShipmentDeliver();
+        if (res3.error_code === 0) {
+          this.list_order = res3.data.relatedShipments;
+        } else {
+          console.log(res3.message);
+        }
+      } catch (error) {
+        console.error(error);
+      }
     },
     async confirmOrder(data) {
       // console.log(data);
@@ -124,17 +134,50 @@ export default {
       console.log(data);
       this.loadData = false;
     },
-    failedOrder(data) {
-      (this.loadData = true),
-        (this.list_order = this.list_order.filter(function (items) {
-          return items !== data;
-        }));
-      console.log(data);
-      this.loadData = false;
+    async failedOrder(data) {
+      try {
+        const payload = {
+          Success: false,
+          shipmentId: data.id,
+        };
+        const res = await StaffService.confirmShipmentSuOrCa(payload);
+        if (res.error_code === 0) {
+          console.log(res.message);
+          data.status = "Cancel";
+          this.shipments.push(data);
+          (this.loadData = true),
+            (this.list_order = this.list_order.filter(function (items) {
+              return items !== data;
+            }));
+          // console.log(data);
+          this.loadData = false;
+        } else {
+          console.log(res.message);
+        }
+      } catch (error) {
+        console.error(error);
+      }
     },
-    successOrder(data) {
-      this.shipments.push(data);
-      this.failedOrder(data);
+    async successOrder(data) {
+      try {
+        const payload = {
+          Success: true,
+          shipmentId: data.id,
+        };
+        const res = await StaffService.confirmShipmentSuOrCa(payload);
+        if (res.error_code === 0) {
+          console.log(res.message);
+          (this.loadData = true),
+            (this.list_order = this.list_order.filter(function (items) {
+              return items !== data;
+            }));
+          // console.log(data);
+        } else {
+          console.log(res.message);
+        }
+      } catch (error) {
+        console.error(error);
+      }
     },
   },
 };

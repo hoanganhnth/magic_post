@@ -468,7 +468,7 @@ async function confirmShipmentSuOrCa(req, res) {
       if (!updatedShipment) {
         return res.status(500).json({error_code:1, message: "Status is updated" });
       }
-      await TransactionShipment.findOneAndDelete({shipment_id: shipmentId, status: transactionStatus.Transfer})
+      // await TransactionShipment.findOneAndDelete({shipment_id: shipmentId, status: transactionStatus.Transfer})
       transactionPoint.success_shipment += 1;
       await transactionPoint.save();
     return res.json({error_code:0,message: "Confirm shipment to user success"})
@@ -741,7 +741,7 @@ async function getShipmentCollection(req, res) {
 }
 
 async function searchShipment(req, res) {
-  const shipmentId = req.body.shipmentId
+  const shipmentId = req.query.shipmentId
   if (!shipmentId) { 
     return res.status(400).json({error_code:1, message: "Missing shipmentId" });
   }
@@ -750,24 +750,26 @@ async function searchShipment(req, res) {
     if (!shipment) {
       return res.status(404).json({error_code:1, message: "Shipment not found"})
     }
+    const address = await UserAddress.findById(shipment.user_address_id);
+  
     switch (shipment.status) {
       case shipmentStatus.Canceled:
-        return res.status(200).json({error_code:0, message: `Shipment has been cancelled }` })
+        return res.status(200).json({error_code:0, data: {shipment, address}, message: `Shipment has been cancelled }` })
       case shipmentStatus.Successed:
-        return res.status(200).json({error_code:0, message: `Shipment has been delivered successfully at ${shipment.updatedAt}` })
+        return res.status(200).json({error_code:0, data: {shipment, address}, message: `Shipment has been delivered successfully at ${shipment.updatedAt}` })
       case shipmentStatus.ShippedFromCollectionPoint:
       case shipmentStatus.ShippedFromTransactionPoint:
-        return res.status(200).json({error_code:0, message: "Shipment is being shipped to next location"})
+        return res.status(200).json({error_code:0, data: {shipment, address}, message: "Shipment is being shipped to next location"})
       case shipmentStatus.Preparing:
-        return res.status(200).json({error_code:0, message: "Shipment is ready to ship"})
+        return res.status(200).json({error_code:0, data: {shipment, address}, message: "Shipment is ready to ship"})
       case shipmentStatus.Delivering:
-        return res.status(200).json({error_code:0, message: "Shipment is being shipped to location"})
+        return res.status(200).json({error_code:0, data: {shipment, address}, message: "Shipment is being shipped to location"})
       case shipmentStatus.ArrivedDestinationToC:
       case shipmentStatus.ArrivedDestinationToT: 
       case shipmentStatus.ArrivedDestinationToU:
-        return res.status(200).json({error_code:0, message: `Shipment is in ${shipment.now_address}`})
+        return res.status(200).json({error_code:0, data: {shipment, address}, message: `Shipment is in ${shipment.now_address}`})
       default:
-        return res.status(500).json({error_code:1,  message: "Error when update status shipment" });
+        return res.status(500).json({error_code:1,   message: "Error when update status shipment" });
 
     } 
   } catch (error) {
@@ -925,6 +927,37 @@ async function getShipmentByTransactionPoint(req, res) {
   }
 }
 
+async function getShipmentDeliver(req, res) {
+  try {
+    
+    const permission = await Permission.findOne({name: req.user.permission});
+    if (!permission) {
+      return res.status(404).json({error_code:1, message: "Permission not found" });
+    }
+    const transactionShipment = await TransactionShipment.find({
+      transactionPoint_id: permission.transactionPoint_id,
+    });
+    let  transactionPoint = await TransactionPoint.findById(permission.transactionPoint_id);
+    const transactionShipmentIds = transactionShipment.map(
+      (transaction) => transaction.shipment_id
+    );
+
+    // Tìm các shipment có _id giống với shipment_id trong danh sách đã lấy
+    const relatedShipments = await Shipment.find({
+      _id: { $in: transactionShipmentIds },
+      status: shipmentStatus.Delivering,
+    });
+    return res.status(200).json({error_code: 0, data: {
+      relatedShipments,  
+      transactionPoint
+    }});
+  } catch (error) {
+    console.error("get shipment transaction point error:", error);
+    return res
+      .status(500)
+      .json({error_code:1, message: "Could not get shipment transaction point" });
+  }
+}
 // async function caculatorTotalShipment(req, res) {
 //   try {
 //     const 
@@ -958,6 +991,7 @@ module.exports = {
   updatePoint,
   getShipmentCollectionBystatus,
   getShipmentByCollectionPoint,
-  getShipmentByTransactionPoint
+  getShipmentByTransactionPoint,
+  getShipmentDeliver
 };
 
