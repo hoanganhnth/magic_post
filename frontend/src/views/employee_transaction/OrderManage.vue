@@ -11,7 +11,10 @@
           ></creat-order>
           <confirm-component
             v-on:confirmOrder="confirmOrder"
+            v-on:failedOrder="failedOrder"
+            v-on:successOrder="successOrder"
             :orderItems="orderItems"
+            :list_order="list_order"
           ></confirm-component>
         </v-col>
       </div>
@@ -31,6 +34,26 @@ export default {
       loadData: false,
       shipments: [],
       orderItems: [],
+      list_order: [
+        {
+          id: 1,
+          created_at: "21/10/2022",
+          goods_weight: "500g",
+          status: "Nhận từ điểm tập kết",
+        },
+        {
+          id: 2,
+          created_at: "21/10/2022",
+          goods_weight: "500g",
+          status: "Nhận từ điểm tập kết",
+        },
+        {
+          id: 3,
+          created_at: "21/10/2022",
+          goods_weight: "500g",
+          status: "Nhận từ điểm tập kết",
+        },
+      ], // biến này lưu các đơn cần xác nhận thành công hay thất bại
     };
   },
   components: {
@@ -100,6 +123,17 @@ export default {
         }));
       console.log(data);
       this.loadData = false;
+    },
+    failedOrder(data) {
+      (this.loadData = true),
+        (this.list_order = this.list_order.filter(function (items) {
+          return items !== data;
+        }));
+      console.log(data);
+      this.loadData = false;
+    },
+    successOrder(data) {
+      this.shipments.push(data);
     },
   },
 };
