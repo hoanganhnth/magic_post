@@ -134,6 +134,7 @@ export default {
     },
     successOrder(data) {
       this.shipments.push(data);
+      this.failedOrder(data);
     },
   },
 };
