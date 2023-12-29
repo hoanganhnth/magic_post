@@ -98,143 +98,19 @@
               </v-card>
             </v-col>
           </v-row>
-          <v-btn @click="submit" color="primary">Xác nhận</v-btn>
         </v-form>
+        <br>
+        <div class="pdf">
+        <v-btn @click="dowloadPDF" color="primary">In vận đơn</v-btn>
+      </div>
       </v-col>
-      <v-col cols="8" id="bill">
-        <v-container class="ml-auto">
-          <v-container class="header">
-            <h3 style="font-family: Trebuchet MS; font-weight: bold">
-              MAGICPOST
-            </h3>
-            <div>
-              <v-row>
-                <v-col cols="6">
-                  <p style="font-style: italic">Dịch vụ chuyển phát nhanh</p>
-                </v-col>
-                <v-col cols="2">
-                  <qr-code
-                    :text="id"
-                    size="50"
-                    color="black"
-                    bg-color="white"
-                    error-level="L"
-                  >
-                  </qr-code>
-                </v-col>
-                <v-col cols="4">
-                  <p>ID:{{ id }}</p>
-                </v-col>
-              </v-row>
-            </div>
-          </v-container>
-          <v-row>
-            <!-- Cột thứ nhất -->
-            <v-col cols="12" md="6">
-              <v-row class="no-gutters">
-                <v-col cols="12">
-                  <v-card>
-                    <v-card-title>1.Người gửi</v-card-title>
-                    <v-card-text
-                      >Họ tên: {{ displayedInfo.sender_username }}</v-card-text
-                    >
-                    <v-card-text
-                      >Số điện thoại:
-                      {{ displayedInfo.sender_phone }}</v-card-text
-                    >
-                    <v-card-text
-                      >Địa chỉ: {{ displayedInfo.sender_address }}</v-card-text
-                    >
-                  </v-card>
-                </v-col>
-                <v-col cols="12">
-                  <v-card>
-                    <v-card-title>3.Loại hàng gửi</v-card-title>
-                    <v-card-text>
-                      Tên mặt hàng: {{ displayedInfo.product_name }}
-                    </v-card-text>
-                    <v-card-text>
-                      Loại: {{ displayedInfo.product_type }}
-                    </v-card-text>
-                    <v-card-text
-                      >Khối lượng:
-                      {{ displayedInfo.product_weight }} (g)</v-card-text
-                    >
-                  </v-card>
-                </v-col>
-                <v-col cols="12">
-                  <v-card id="reponsive">
-                    <v-card-title>5.Cam kết</v-card-title>
-                    <v-card-text
-                      >Tôi chấp nhận các điều khoản và cam đoan bưu gửi không có
-                      chứa những mặt hàng cấm gửi. Trường hợp không phát được,
-                      tôi sẽ trả cước chuyển khoản.
-                    </v-card-text>
-                    <v-card-text class="content"
-                      >Ngày gửi: {{ date }}</v-card-text
-                    >
-                    <v-card-text class="signature" style="font-weight: bold"
-                      >Chữ ký người gửi</v-card-text
-                    >
-                  </v-card>
-                </v-col>
-              </v-row>
-            </v-col>
-
-            <!-- Cột thứ hai -->
-            <v-col cols="12" md="6">
-              <v-row class="no-gutters">
-                <v-col cols="12">
-                  <v-card>
-                    <v-card-title>2.Người nhận</v-card-title>
-                    <v-card-text>
-                      Họ tên: {{ displayedInfo.receiver_username }}
-                    </v-card-text>
-                    <v-card-text>
-                      Số điện thoại:
-                      {{ displayedInfo.receiver_phone }}
-                    </v-card-text>
-                    <v-card-text>
-                      Địa chỉ: {{ displayedInfo.receiver_address }}
-                    </v-card-text>
-                  </v-card>
-                </v-col>
-                <v-col cols="12">
-                  <v-card>
-                    <v-card-title>4.Cước phí</v-card-title>
-                    <v-card-text>Cước phí chính :</v-card-text>
-                    <v-card-text>Phụ phí: </v-card-text>
-                    <v-card-text>Thuế (VAT 10%):</v-card-text>
-                    <v-card-text>Tổng cước: </v-card-text>
-                  </v-card>
-                </v-col>
-                <v-col cols="12">
-                  <v-card>
-                    <v-card-title>6.Trạng thái</v-card-title>
-                    <v-card-text>Đã thu của người nhận: </v-card-text>
-                    <v-card-text>Còn lại: </v-card-text>
-                  </v-card>
-                </v-col>
-                <v-col cols="12">
-                  <v-card>
-                    <v-card-title>7.Bưu cục chấp nhận</v-card-title>
-                    <v-card-text class="signature"
-                      >Chữ ký của giao dịch viên
-                    </v-card-text>
-                  </v-card>
-                </v-col>
-              </v-row>
-            </v-col>
-          </v-row>
-        </v-container>
-      </v-col>
-      <v-btn @click="print" color="primary">In vận đơn</v-btn>
     </v-row>
   </v-app>
 </template>
 
 <script>
 import { StaffService } from "../../../service/StaffService";
+import jspdf  from 'jspdf'; 
 export default {
   data() {
     return {
@@ -269,6 +145,15 @@ export default {
     };
   },
   methods: {
+    dowloadPDF() {
+      const logo = require('@/assets/images/sos.png');
+
+      const doc = new jspdf();
+      var imgLogo = new Image();
+      imgLogo.src = logo;
+      doc.addImage(imgLogo, 'PNG', 0, 0, 200, 141);
+      doc.save("Vận đơn.pdf");
+    }, 
     async submit() {
       // this.id = "12344A12D";
       this.displayedInfo.receiver_username = this.receiver.name;
