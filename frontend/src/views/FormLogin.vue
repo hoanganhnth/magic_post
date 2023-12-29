@@ -54,7 +54,7 @@
                       >
                     </div>
 
-                    <div class="pt-1 mb-4">
+                    <div class="pt-1 mb-4 text-white">
                       <button
                         class="btn btn-dark btn-lg btn-block"
                         type="submit"
