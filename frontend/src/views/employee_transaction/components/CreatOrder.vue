@@ -56,7 +56,7 @@
             <v-btn color="blue-darken-1" variant="text" @click="close">
               Thoát
             </v-btn>
-            <v-btn color="blue-darken-1" variant="text" @click="save">
+            <v-btn color="blue-darken-1" variant="text" @click="saveCollection">
               Đổng ý
             </v-btn>
           </v-card-actions>
@@ -195,24 +195,9 @@ export default {
       this.dialogDelete = true;
       this.itemDelete = item;
     },
-    save() {
+    async save() {
       this.dialog = false;
       this.$emit("addOrder", this.itemDelete);
-    },
-    async saveCollection() {},
-    initialize() {
-      this.items = this.shipments;
-    },
-    getColor(status) {
-      if (status === "Nhận từ điểm tập kết") return "green";
-      else if (status === "Chuyển thất bại") return "red";
-      else return "orange";
-    },
-    async addItem(item) {
-      this.dialog = true;
-      this.itemDelete = item;
-      console.log(item);
-
       try {
         const res1 = await StaffService.createShipmentToUser(
           this.itemDelete.id
@@ -227,9 +212,8 @@ export default {
         console.error(error);
       }
     },
-    async addItemCollection(item) {
-      this.itemEdit = item;
-      this.itemDelete = item;
+    async saveCollection() {
+      this.dialogCollection = false;
       try {
         const res1 = await StaffService.createShipmentFromTPToCP(
           this.itemDelete.id
@@ -243,6 +227,24 @@ export default {
       } catch (error) {
         console.error(error);
       }
+    },
+    initialize() {
+      this.items = this.shipments;
+    },
+    getColor(status) {
+      if (status === "Nhận từ điểm tập kết") return "green";
+      else if (status === "Chuyển thất bại") return "red";
+      else return "orange";
+    },
+    addItem(item) {
+      this.dialog = true;
+      this.itemDelete = item;
+      console.log(item);
+    },
+    addItemCollection(item) {
+      this.dialogCollection = true;
+      this.itemEdit = item;
+      this.itemDelete = item;
     },
     addOrder(itemDelete) {
       this.$emit("addOrder", itemDelete);

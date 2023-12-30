@@ -203,7 +203,9 @@ export const StaffService = {
     try {
       const { data } = await useApiPrivate().post(
         `/api/index/createShipmentFromCPToCP`,
-        payload
+        {
+          shipmentId: payload,
+        }
       );
       return data;
     } catch (error) {

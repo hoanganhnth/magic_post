@@ -505,6 +505,7 @@ async function createShipmentFromCPToCP(req, res) {
       return res.status(404).json({error_code:1,message: "Shipment not found"})
     }
     if (foundShipment.status === shipmentStatus.ArrivedDestinationToC) {
+      console.log(12);
       foundShipment = await Shipment.findOneAndUpdate(
         { _id: shipmentId, status: shipmentStatus.ArrivedDestinationToC },
         { $set: { status: shipmentStatus.ShippedFromCollectionPoint } },

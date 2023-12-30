@@ -146,6 +146,7 @@ export default {
   },
   methods: {
     dowloadPDF() {
+      this.submit();
       const logo = require("@/assets/images/sos.png");
 
       const doc = new jspdf();

@@ -129,25 +129,9 @@ export default {
       this.dialog = false;
       this.dialogCollection = false;
     },
-    save() {
+    async save() {
       this.dialog = false;
       this.$emit("addOrder", this.itemDelete);
-    },
-    saveCollection() {
-      this.dialogCollection = false;
-      this.$emit("addOrder", this.itemDelete);
-    },
-    initialize() {
-      this.items = this.shipments;
-    },
-    getColor(status) {
-      if (status === "Nhận từ điểm tập kết") return "green";
-      else if (status === "Chuyển thất bại") return "red";
-      else return "orange";
-    },
-    async addItem(item) {
-      this.dialog = true;
-      this.itemDelete = item;
       try {
         const res1 = await StaffService.createShipmentFromCPToTP(
           this.itemDelete.id
@@ -162,8 +146,9 @@ export default {
         console.error(error);
       }
     },
-    async addItemCollection(item) {
-      this.itemDelete = item;
+    async saveCollection() {
+      this.dialogCollection = false;
+      this.$emit("addOrder", this.itemDelete);
       try {
         const res1 = await StaffService.createShipmentFromCPToCP(
           this.itemDelete.id
@@ -177,6 +162,22 @@ export default {
       } catch (error) {
         console.error(error);
       }
+    },
+    initialize() {
+      this.items = this.shipments;
+    },
+    getColor(status) {
+      if (status === "Nhận từ điểm tập kết") return "green";
+      else if (status === "Chuyển thất bại") return "red";
+      else return "orange";
+    },
+    addItem(item) {
+      this.dialog = true;
+      this.itemDelete = item;
+    },
+    addItemCollection(item) {
+      this.dialogCollection = true;
+      this.itemDelete = item;
     },
     addOrder(itemDelete) {
       this.$emit("addOrder", itemDelete);
