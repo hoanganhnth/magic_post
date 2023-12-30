@@ -45,7 +45,7 @@
                               label="Email"
                             ></v-text-field>
                           </v-col>
-                          <v-col cols="12" sm="6" md="4">
+                          <v-col cols="12" sm="12" md="6">
                             <v-select
                               v-model="selectedCollectionPoint"
                               :items="collectionPoint"
@@ -101,6 +101,28 @@
                     </v-card-actions>
                   </v-card>
                 </v-dialog>
+                <v-dialog v-model="dialogPassword" max-width="500px">
+                  <v-card>
+                    <v-card-title class="text-h6"
+                      >Thông tin tài khoàn</v-card-title
+                    >
+                    <v-card-text>
+                      <p>Tên đang nhập: {{ username }}</p>
+                      <br />
+                      <p>Mật khẩu: {{ password }}</p>
+                    </v-card-text>
+                    <v-card-actions>
+                      <v-spacer></v-spacer>
+                      <v-btn
+                        color="blue-darken-1"
+                        variant="text"
+                        @click="closePass"
+                        >Đóng</v-btn
+                      >
+                      <v-spacer></v-spacer>
+                    </v-card-actions>
+                  </v-card>
+                </v-dialog>
               </v-toolbar>
             </template>
             <template v-slot:[`item.actions`]="{ item }">
@@ -139,6 +161,7 @@ export default {
     selectedCollectionPoint: null,
     dialog: false,
     dialogDelete: false,
+    dialogPassword: false,
     headers: [
       {
         title: "ID",
@@ -154,6 +177,8 @@ export default {
     ],
     list_employee: [],
     editedIndex: -1,
+    password: "",
+    username: "",
     editedItem: {
       id: "",
       first_name: "",
@@ -230,7 +255,9 @@ export default {
         console.error(error);
       }
     },
-
+    closePass() {
+      this.dialogPassword = false;
+    },
     close() {
       this.dialog = false;
       this.$nextTick(() => {
@@ -248,6 +275,7 @@ export default {
     },
 
     async save() {
+      this.dialogPassword = true;
       const selectedCollectionPoint = this.collectionPoint.find(
         (item) => item.name === this.selectedCollectionPoint
       );
@@ -280,6 +308,8 @@ export default {
           const res = await LeadService.createAccountHead(payload);
           if (res.error_code === 0) {
             console.log(res.data.username, res.data.password);
+            this.password = res.data.password;
+            this.username = res.data.username;
             this.editedItem.id = res.data.id;
             this.editedItem.username = res.data.username;
             this.editedItem.permission = this.selectedCollectionPoint;

@@ -3,7 +3,7 @@
     <v-main>
       <v-card>
         <v-card-title>
-          Thống kê hàng hóa tại {{ transactionPoint.name }}
+          Thống kê hàng hóa tại Điểm giao dịch Hà Nội 1
         </v-card-title>
 
         <v-card-text>

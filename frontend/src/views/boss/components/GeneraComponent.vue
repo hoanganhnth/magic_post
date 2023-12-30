@@ -110,7 +110,7 @@ export default {
       this.totalOrders = 100;
       this.ordersReceived = 70;
       this.ordersSuccess = 50;
-      this.ordersFail = 60;
+      this.ordersFail = 10;
       this.address = 10;
     },
   },

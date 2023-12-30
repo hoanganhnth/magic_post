@@ -27,7 +27,7 @@
         </a></router-link
       >
       <div class="nav-item-divider"></div>
-      <router-link to="">
+      <router-link to="" @click="logout">
         <a href="#" class="dashboard-nav-item"
           ><i class="fas fa-sign-out-alt"></i> Đăng xuất</a
         ></router-link
