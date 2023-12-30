@@ -2,7 +2,7 @@
   <v-app>
     <v-main>
       <v-card>
-        <v-card-title>Đơn hàng từ điêm tập kết</v-card-title>
+        <v-card-title>Đơn hàng từ điểm tập kết</v-card-title>
 
         <v-card-text>
           <v-row>
@@ -113,11 +113,11 @@ export default {
           sortable: false,
           key: "id",
         },
-        { title: "Điểm tập kết", key: "transactionName", align: "end" },
-        { title: "Thời gian gửi", key: "created_at", align: "end" },
-        { title: "Cập nhật lúc", key: "updated_at", align: "end" },
-        { title: "Khối lượng (g)", key: "goods_weight", align: "end" },
-        { title: "Giá", key: "fee", align: "end" },
+        { title: "Điểm tập kết", key: "transactionName", align: "center" },
+        { title: "Thời gian gửi", key: "created_at", align: "center" },
+        { title: "Cập nhật lúc", key: "updated_at", align: "center" },
+        { title: "Khối lượng (g)", key: "goods_weight", align: "center" },
+        { title: "Giá", key: "fee", align: "center" },
       ],
       headersCollection: [
         {
@@ -126,11 +126,11 @@ export default {
           sortable: false,
           key: "id",
         },
-        { title: "Điểm giao dịch", key: "collectionName", align: "end" },
-        { title: "Thời gian gửi", key: "created_at", align: "end" },
-        { title: "Cập nhật lúc", key: "updated_at", align: "end" },
-        { title: "Khối lượng (g)", key: "goods_weight", align: "end" },
-        { title: "Giá", key: "fee", align: "end" },
+        { title: "Điểm giao dịch", key: "collectionName", align: "center" },
+        { title: "Thời gian gửi", key: "created_at", align: "center" },
+        { title: "Cập nhật lúc", key: "updated_at", align: "center" },
+        { title: "Khối lượng (g)", key: "goods_weight", align: "center" },
+        { title: "Giá", key: "fee", align: "center" },
       ],
     };
   },

@@ -102,7 +102,7 @@
                 <v-dialog v-model="dialogPassword" max-width="500px">
                   <v-card>
                     <v-card-title class="text-h6"
-                      >Thông tin tài khoàn</v-card-title
+                      >Thông tin tài khoản</v-card-title
                     >
                     <v-card-text>
                       <p>Tên đang nhập: {{ username }}</p>
@@ -275,7 +275,10 @@ export default {
     },
 
     async save() {
-      this.dialogPassword = true;
+      if (this.editedIndex == -1) {
+        this.dialogPassword = true;
+      }
+      // this.dialogPassword = true;
       const selectedTransaction = this.transactionPoint.find(
         (item) => item.name === this.selectedTransaction
       );

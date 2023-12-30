@@ -53,8 +53,12 @@ export default {
       this.items = this.shipments;
     },
     getColor(status) {
-      if (status === "Chuyển thành công") return "green";
-      else if (status === "Chuyển thất bại") return "red";
+      if (status === "Arrived Destination To TransactionPoint") return "purple";
+      else if (status === "Canceled") return "red";
+      else if (status === "Shipped from CollectionPoint") return "blue";
+      else if (status === "Delivering") return "green";
+      else if (status === "Arrived Destination To CollectionPoint")
+        return "gray";
       else return "orange";
     },
   },

@@ -228,10 +228,13 @@ async function getShipmentTransaction(req, res) {
   }
 }
 async function deleteNewShipment(req, res) {
-  const shipmentId = req.body.shipmentId;
+  const shipmentId = req.query.shipmentId;
+  // console.log(req.query)
   try {
+    console.log(shipmentId)
     const shipment = await Shipment.findById(shipmentId);
     if (!shipment) {
+      
       return res.status(404).json({error_code:1, message: "Shipment not found" });
     }
     const permission = await Permission.findOne({name: req.user.permission});
@@ -239,10 +242,6 @@ async function deleteNewShipment(req, res) {
       return res.status(404).json({error_code:1, message: "Permission not found" });
     }
     const transactionPoint = await TransactionPoint.findById(permission.transactionPoint_id);
-    const product = await Product.findById(shipment.product_id);
-    if (!product) {
-      return res.status(404).json({error_code:1, message: "Product not found" });
-    }
     const address = await UserAddress.findById(shipment.user_address_id);
     if (!address) {
       return res.status(404).json({error_code:1, message: "address not found" });
@@ -254,7 +253,7 @@ async function deleteNewShipment(req, res) {
       shipment_id: shipment._id,
     });
 
-    await product.deleteOne();
+
     await address.deleteOne();
     await shipment.deleteOne();
     transactionPoint.total_shipment -= 1;
@@ -838,8 +837,6 @@ async function getShipmentTransactionBystatus(req, res) {
     // Tìm các shipment có _id giống với shipment_id trong danh sách đã lấy
     const relatedShipments = await Shipment.find({
       _id: { $in: transactionShipmentIds },
-      now_address: transactionPoint.name
-
     });
     return res.status(200).json({error_code: 0, data: {relatedShipments }});
   } catch (error) {

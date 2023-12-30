@@ -58,10 +58,10 @@
               label="Thuộc điểm tập kết"
               item-title="name"
             ></v-select>
-            <v-text-field
+            <!-- <v-text-field
               v-model="newTransactionPoint.email"
               label="Tài khoản quản lý"
-            ></v-text-field>
+            ></v-text-field> -->
             <!-- Các trường thông tin khác nếu cần -->
 
             <v-btn type="submit" color="primary">Lưu</v-btn>
@@ -135,11 +135,15 @@ export default {
           sortable: false,
           key: "id",
         },
-        { title: "Tên điểm giao dịch", key: "name", align: "end" },
-        { title: "Địa chỉ", key: "address", align: "end" },
-        { title: "Thuộc điểm tập kết", key: "collectionPoint", align: "end" },
-        { title: "Tổng số đơn hàng", key: "orders", align: "end" },
-        { title: "Tài khoản quản lý", key: "manageAccount", align: "end" },
+        { title: "Tên điểm giao dịch", key: "name", align: "center" },
+        { title: "Địa chỉ", key: "address", align: "center" },
+        {
+          title: "Thuộc điểm tập kết",
+          key: "collectionPoint",
+          align: "center",
+        },
+        { title: "Tổng số đơn hàng", key: "total_shipment", align: "center" },
+        { title: "Tài khoản quản lý", key: "manageAccount", align: "center" },
       ],
 
       collectionHeaders: [
@@ -149,10 +153,19 @@ export default {
           sortable: false,
           key: "id",
         },
-        { title: "Tên điểm tập kết", key: "name", align: "end" },
-        { title: "Địa chỉ", key: "address", align: "end" },
-        { title: "Tổng số đơn hàng", key: "orders", align: "end" },
-        { title: "Tài khoản quản lý", key: "manageAccount", align: "end" },
+        { title: "Tên điểm tập kết", key: "name", align: "center" },
+        { title: "Địa chỉ", key: "address", align: "center" },
+        {
+          title: "Tổng số đơn hàng nhận",
+          key: "receive_shipment",
+          align: "center",
+        },
+        {
+          title: "Tổng số đơn hàng chuyển",
+          key: "transfer_shipment",
+          align: "center",
+        },
+        { title: "Tài khoản quản lý", key: "manageAccount", align: "center" },
       ],
       loading: false,
     };
@@ -187,6 +200,8 @@ export default {
     initialize() {
       this.collection_points = this.collectionPoints;
       this.transaction_points = this.transactionPoints;
+      console.log(this.collection_points);
+      console.log(this.transaction_points);
     },
     async addTransactionPoint() {
       this.loading = true;

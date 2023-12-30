@@ -73,7 +73,7 @@ export default {
         );
         if (res1.error_code === 0) {
           this.shipments = res1.data.relatedShipments;
-          // console.log(this.shipments);
+          console.log(this.shipments);
         }
       } catch (error) {
         console.error(error);

@@ -17,10 +17,11 @@ export const StaffService = {
 
   async deleteNewShipment(payload) {
     try {
+      const shipmentId = payload;
       const { data } = await useApiPrivate().delete(
         `/api/index/deleteNewShipment`,
         {
-          shipmentId: payload,
+          params: { shipmentId },
         }
       );
       return data;

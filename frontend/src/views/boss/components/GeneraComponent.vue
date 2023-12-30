@@ -107,10 +107,10 @@ export default {
   },
   methods: {
     initialize() {
-      this.totalOrders = 100;
-      this.ordersReceived = 70;
-      this.ordersSuccess = 50;
-      this.ordersFail = 10;
+      this.totalOrders = 50;
+      this.ordersReceived = 30;
+      this.ordersSuccess = 15;
+      this.ordersFail = 5;
       this.address = 10;
     },
   },

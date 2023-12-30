@@ -167,7 +167,7 @@ export default {
       this.items = this.shipments;
     },
     getColor(status) {
-      if (status === "Nhận từ điểm tập kết") return "green";
+      if (status === "Arrived Destination To TransactionPoint") return "green";
       else if (status === "Chuyển thất bại") return "red";
       else return "orange";
     },

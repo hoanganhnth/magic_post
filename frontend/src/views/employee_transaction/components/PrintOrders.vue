@@ -148,7 +148,7 @@ export default {
     dowloadPDF() {
       this.submit();
       const logo = require("@/assets/images/sos.png");
-      this.submit();
+      // this.submit();
       const doc = new jspdf();
       var imgLogo = new Image();
       imgLogo.src = logo;

@@ -145,7 +145,12 @@ export default {
         { title: "Khối lượng (g)", key: "goods_weight", align: "center" },
         { title: "Giá", key: "fee", align: "center" },
         { title: "Trạng thái đơn hàng", key: "status", align: "center" },
-        { title: "Thêm đơn hàng chuyển đến", key: "add", sortable: false },
+        {
+          title: "Thêm đơn hàng chuyển đến",
+          key: "add",
+          align: "center",
+          sortable: false,
+        },
         { title: "Hành động", key: "actions", sortable: false },
       ],
     };
@@ -179,7 +184,9 @@ export default {
     },
     async saveDelete() {
       this.dialogDelete = false;
-      this.$emit("addOrder", this.itemDelete);
+      // this.$emit("addOrder", this.itemDelete);
+      console.log(this.itemDelete.id);
+      console.log("not");
       try {
         const res1 = await StaffService.deleteNewShipment(this.itemDelete.id);
         if (res1.error_code === 0) {
