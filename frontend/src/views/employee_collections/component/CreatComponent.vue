@@ -164,6 +164,7 @@ export default {
     },
     async addItemCollection(item) {
       this.itemDelete = item;
+      // console.log(this.itemDelete.id);
       try {
         const res1 = await StaffService.createShipmentFromCPToCP(
           this.itemDelete.id

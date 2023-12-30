@@ -498,6 +498,7 @@ async function createShipmentFromCPToCP(req, res) {
     return res.status(400).json({error_code:1, message: "Missing shipmentId" });
   }
   try {
+    console.log(1)
     const route = await Route.findOne({shipment_id: shipmentId})
     let foundShipment = await Shipment.findOne({ _id: shipmentId });
     const collectionPoint = await CollectionPoint.findById(route.collectionPoint1)
@@ -585,7 +586,7 @@ async function createShipmentFromCPToTP(req, res) {
     if (foundShipment.status === shipmentStatus.ArrivedDestinationToT) {
       foundShipment = await Shipment.findOneAndUpdate(
         { _id: shipmentId, status: shipmentStatus.ArrivedDestinationToT },
-        { $set: { status: shipmentStatus.ShippedFromTransactionPoint } },
+        { $set: { status: shipmentStatus.ShippedFromCollectionPoint } },
         { new: true }
       )
       if (!foundShipment) {
@@ -665,11 +666,12 @@ async function createShipmentCancel(req, res) {
   if (!shipmentId) {
     return res.status(400).json({error_code:1, message: "Missing shipmentId" });
   }
-  const shipment = await Shipment.findOne({_id: shipmentId, status: shipmentStatus.Canceled})
-  if (!shipment) {
-    return res.status(500).json({error_code:1, message: "Shipment is not canceled"})
-  }
+ 
   try {
+    const shipment = await Shipment.findOne({_id: shipmentId, status: shipmentStatus.Canceled})
+    if (!shipment) {
+      return res.status(500).json({error_code:1, message: "Shipment is not canceled"})
+    }
     const transactionShipment = await TransactionShipment.findOneAndUpdate(
       {status: transactionStatus.Transfer, shipment_id: shipmentId},
       {$set: {status: transactionStatus.Cancel}},

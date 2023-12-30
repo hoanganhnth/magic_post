@@ -101,7 +101,7 @@
         </v-form>
         <br />
         <div class="pdf">
-          <v-btn @click="dowloadPDF" color="primary">In vận đơn</v-btn>
+          <v-btn @click="dowloadPDF" color="primary">Tạo và xuất đơn</v-btn>
         </div>
       </v-col>
     </v-row>
@@ -147,7 +147,7 @@ export default {
   methods: {
     dowloadPDF() {
       const logo = require("@/assets/images/sos.png");
-
+      this.submit();
       const doc = new jspdf();
       var imgLogo = new Image();
       imgLogo.src = logo;
