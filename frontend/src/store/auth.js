@@ -77,8 +77,8 @@ export const useAuthStore = defineStore("auth", {
     async logout() {
       try {
         await useApiPrivate().post(`/api/auth/logout`);
-        this.accessToken = "";
-        this.user = {};
+        // this.accessToken = "";
+        // this.user = {};
         localStorage.removeItem("token");
         localStorage.removeItem("userrole");
         localStorage.removeItem("permission");

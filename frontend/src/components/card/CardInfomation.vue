@@ -122,6 +122,13 @@ export default {
   created() {
     this.initialize();
   },
+  // watch: {
+  //   idOder(newVal, oldVal) {
+  //     if (newVal !== oldVal) {
+  //       this.initialize();
+  //     }
+  //   },
+  // },
   methods: {
     async initialize() {
       try {
