@@ -643,12 +643,13 @@ async function createShipmentToUser(req, res) {
     if (!updatedShipment) {
       return res.status(500).json({error_code:1, message: "Shipment have been delivering" })
     }
-
+    
     const oldTransactionShipment = await TransactionShipment.findOneAndUpdate(
-      {status: transactionStatus.Receive, shipmentId: shipmentId},
+      {status: transactionStatus.Receive, shipment_id: shipmentId, transactionPoint_id: transactionPoint._id},
       {$set: {status: transactionStatus.Transfer}},
       {new: true}
     )
+    console.log(oldTransactionShipment)
     transactionPoint.transfer_shipment += 1;
     await transactionPoint.save();
     return res.json({error_code:0, data:{ updatedShipment, oldTransactionShipment}});
@@ -825,6 +826,7 @@ async function getShipmentTransactionBystatus(req, res) {
     if (!permission) {
       return res.status(404).json({error_code:1, message: "Permission not found" });
     }
+    const transactionPoint = await TransactionPoint.findById(permission.transactionPoint_id)
     const transactionShipment = await TransactionShipment.find({
       transactionPoint_id: permission.transactionPoint_id,
       status: status
@@ -832,10 +834,11 @@ async function getShipmentTransactionBystatus(req, res) {
     const transactionShipmentIds = transactionShipment.map(
       (transaction) => transaction.shipment_id,
     );
-
+    // const excludedStatuses = [shipmentStatus.Delivering, shipmentStatus.Delivering, shipmentStatus.Delivering];
     // Tìm các shipment có _id giống với shipment_id trong danh sách đã lấy
     const relatedShipments = await Shipment.find({
       _id: { $in: transactionShipmentIds },
+      now_address: transactionPoint.name
 
     });
     return res.status(200).json({error_code: 0, data: {relatedShipments }});
